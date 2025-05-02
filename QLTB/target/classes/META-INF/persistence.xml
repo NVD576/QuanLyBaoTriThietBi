@@ -9,5 +9,14 @@
     <class>com.nvd.pojo.Issue</class>
     <class>com.nvd.pojo.MaintenanceSchedule</class>
     <class>com.nvd.pojo.Repair</class>
+    <class>com.nvd.configs.SupportTicket</class>
+    <class>com.nvd.configs.Issue</class>
+    <class>com.nvd.configs.EquipmentType</class>
+    <class>com.nvd.configs.Equipment</class>
+    <class>com.nvd.configs.Repair</class>
+    <class>com.nvd.configs.MaintenanceSchedule</class>
+    <class>com.nvd.configs.Account</class>
+    <class>com.nvd.configs.ForumMessage</class>
+    <class>com.nvd.pojo.EquipmentType</class>
   </persistence-unit>
 </persistence>

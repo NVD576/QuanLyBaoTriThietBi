@@ -4,6 +4,7 @@ D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\config
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\IndexController.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\Account.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\Equipment.java
+D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\EquipmentType.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\ForumMessage.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\Issue.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\MaintenanceSchedule.java
@@ -11,3 +12,4 @@ D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\R
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\SupportTicket.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\qltb\JakartaRestConfiguration.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\qltb\resources\JakartaEE10Resource.java
+D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\repository\EquipmentRepository.java

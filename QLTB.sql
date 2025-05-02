@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `maintenance_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `maintenance_db`;
 -- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
 --
 -- Host: localhost    Database: maintenance_db
@@ -58,16 +56,18 @@ CREATE TABLE `equipment` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `manufacturer` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `purchase_date` date DEFAULT NULL,
   `status` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `location` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_id` bigint DEFAULT NULL,
+  `type_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`),
   KEY `account_id` (`account_id`),
-  CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE SET NULL
+  KEY `equipment_ibfk_2` (`type_id`),
+  CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `equipment_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `equipment_type` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -77,8 +77,33 @@ CREATE TABLE `equipment` (
 
 LOCK TABLES `equipment` WRITE;
 /*!40000 ALTER TABLE `equipment` DISABLE KEYS */;
-INSERT INTO `equipment` VALUES (1,'Máy in','PRINTER001','In ấn','HP','2023-01-15','Hoạt động','Phòng IT',3),(2,'Máy CNC','CNC002','Gia công','Haas','2022-06-10','Bảo trì','Xưởng sản xuất',4);
+INSERT INTO `equipment` VALUES (1,'Máy in','PRINTER001','HP','2023-01-15','Hoạt động','Phòng IT',3,1),(2,'Máy CNC','CNC002','Haas','2022-06-10','Bảo trì','Xưởng sản xuất',4,2);
 /*!40000 ALTER TABLE `equipment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `equipment_type`
+--
+
+DROP TABLE IF EXISTS `equipment_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `equipment_type` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equipment_type`
+--
+
+LOCK TABLES `equipment_type` WRITE;
+/*!40000 ALTER TABLE `equipment_type` DISABLE KEYS */;
+INSERT INTO `equipment_type` VALUES (2,'Gia công'),(1,'In ấn');
+/*!40000 ALTER TABLE `equipment_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -239,4 +264,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-30 12:59:26
+-- Dump completed on 2025-05-02 21:28:48

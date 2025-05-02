@@ -4,7 +4,12 @@
  */
 package com.nvd.controllers;
 
+import jakarta.persistence.Query;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -14,9 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class IndexController {
+    @Autowired
+    private LocalSessionFactoryBean factory;
     @RequestMapping("/")
+    @Transactional
     public String index(Model model){
-        model.addAttribute("msg", "MY APP");
+        Session s= factory.getObject().getCurrentSession();
+        Query q= s.createQuery("FROM Equipment");
+        model.addAttribute("equipment", q.getResultList());
         return "index";
     }
 }

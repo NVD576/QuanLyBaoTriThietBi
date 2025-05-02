@@ -39,7 +39,6 @@ import java.util.Set;
     @NamedQuery(name = "Equipment.findById", query = "SELECT e FROM Equipment e WHERE e.id = :id"),
     @NamedQuery(name = "Equipment.findByName", query = "SELECT e FROM Equipment e WHERE e.name = :name"),
     @NamedQuery(name = "Equipment.findByCode", query = "SELECT e FROM Equipment e WHERE e.code = :code"),
-    @NamedQuery(name = "Equipment.findByType", query = "SELECT e FROM Equipment e WHERE e.type = :type"),
     @NamedQuery(name = "Equipment.findByManufacturer", query = "SELECT e FROM Equipment e WHERE e.manufacturer = :manufacturer"),
     @NamedQuery(name = "Equipment.findByPurchaseDate", query = "SELECT e FROM Equipment e WHERE e.purchaseDate = :purchaseDate"),
     @NamedQuery(name = "Equipment.findByStatus", query = "SELECT e FROM Equipment e WHERE e.status = :status"),
@@ -62,9 +61,6 @@ public class Equipment implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "code")
     private String code;
-    @Size(max = 50)
-    @Column(name = "type")
-    private String type;
     @Size(max = 100)
     @Column(name = "manufacturer")
     private String manufacturer;
@@ -86,6 +82,9 @@ public class Equipment implements Serializable {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private Account accountId;
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    @ManyToOne
+    private EquipmentType typeId;
 
     public Equipment() {
     }
@@ -122,14 +121,6 @@ public class Equipment implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getManufacturer() {
@@ -197,6 +188,14 @@ public class Equipment implements Serializable {
 
     public void setAccountId(Account accountId) {
         this.accountId = accountId;
+    }
+
+    public EquipmentType getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(EquipmentType typeId) {
+        this.typeId = typeId;
     }
 
     @Override
