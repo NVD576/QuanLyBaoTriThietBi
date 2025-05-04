@@ -4,6 +4,7 @@
  */
 package com.nvd.controllers;
 
+import com.nvd.pojo.Equipment;
 import jakarta.persistence.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class IndexController {
     @Transactional
     public String index(Model model){
         Session s= factory.getObject().getCurrentSession();
-        Query q= s.createQuery("FROM Equipment");
+        Query q= s.createQuery("FROM Equipment",  Equipment.class);
         model.addAttribute("equipment", q.getResultList());
         return "index";
     }
