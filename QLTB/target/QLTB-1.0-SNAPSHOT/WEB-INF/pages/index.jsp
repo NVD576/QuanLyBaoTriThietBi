@@ -16,7 +16,7 @@
         <h1>Hello World!</h1>
         <ul>
             <c:forEach items="${equipment}" var="p">
-                <li>${p.id} - ${p.name} - ${p.code}</li>
+                <li>${p.id} - ${p.name} - ${p.code}- dsads</li>
             </c:forEach>
         </ul>
     </body>

@@ -3,6 +3,7 @@ com\nvd\pojo\Account.class
 com\nvd\pojo\Equipment.class
 com\nvd\configs\HibernateConfig.class
 com\nvd\qltb\JakartaRestConfiguration.class
+com\nvd\repository\Impl\EquipmentRepositoryImpl.class
 com\nvd\configs\WebAppContextConfigs.class
 com\nvd\pojo\Repair.class
 com\nvd\pojo\EquipmentType.class
@@ -11,5 +12,6 @@ com\nvd\qltb\resources\JakartaEE10Resource.class
 com\nvd\configs\DispatcherServletInit.class
 com\nvd\controllers\IndexController.class
 com\nvd\pojo\MaintenanceSchedule.class
+com\nvd\service\EquipmentService.class
 com\nvd\repository\EquipmentRepository.class
 com\nvd\pojo\ForumMessage.class

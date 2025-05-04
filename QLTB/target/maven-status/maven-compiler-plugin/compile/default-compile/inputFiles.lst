@@ -13,3 +13,5 @@ D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\pojo\S
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\qltb\JakartaRestConfiguration.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\qltb\resources\JakartaEE10Resource.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\repository\EquipmentRepository.java
+D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\repository\Impl\EquipmentRepositoryImpl.java
+D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\service\EquipmentService.java
