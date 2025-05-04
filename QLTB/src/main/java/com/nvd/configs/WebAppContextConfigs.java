@@ -22,7 +22,9 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
-    "com.nvd.controllers"
+    "com.nvd.controllers",
+    "com.nvd.repository",
+    "com.nvd.service"
 })
 public class WebAppContextConfigs implements WebMvcConfigurer{
 

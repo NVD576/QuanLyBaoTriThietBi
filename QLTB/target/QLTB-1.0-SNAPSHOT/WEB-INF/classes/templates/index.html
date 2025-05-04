@@ -7,7 +7,7 @@
     <body>
         <div th:replace="base :: header"></div>
         <ul>
-            <li th:each="p : ${equipment}" th:text="${p.id + ' - ' + p.name + ' - ' + p.code}"></li>
+            <li th:each="p : ${equipments}" th:text="${p.id + ' - ' + p.name + ' - ' + p.code}"></li>
         </ul>
         <div th:replace="base :: footer"></div>
     </body>

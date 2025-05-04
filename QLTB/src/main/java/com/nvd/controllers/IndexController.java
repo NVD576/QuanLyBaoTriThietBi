@@ -4,15 +4,14 @@
  */
 package com.nvd.controllers;
 
-import com.nvd.pojo.Equipment;
-import jakarta.persistence.Query;
-import org.hibernate.Session;
+import com.nvd.service.EquipmentService;
+import com.nvd.service.EquipmentTypeService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -21,13 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
     @Autowired
-    private LocalSessionFactoryBean factory;
+    private EquipmentService equipmentService;
+    @Autowired
+    private EquipmentTypeService equipmentTypeService;
+    
     @RequestMapping("/")
-    @Transactional
-    public String index(Model model){
-        Session s= factory.getObject().getCurrentSession();
-        Query q= s.createQuery("FROM Equipment",  Equipment.class);
-        model.addAttribute("equipment", q.getResultList());
+    public String index(Model model, @RequestParam Map<String, String> params){
+        model.addAttribute("equipmentTypes", this.equipmentTypeService.getEquipmentType());
+        model.addAttribute("equipments", this.equipmentService.getEquipments(params));
         return "index";
     }
 }
