@@ -11,5 +11,6 @@ com\nvd\qltb\resources\JakartaEE10Resource.class
 com\nvd\configs\DispatcherServletInit.class
 com\nvd\controllers\IndexController.class
 com\nvd\pojo\MaintenanceSchedule.class
+com\nvd\configs\ThymeleafConfig.class
 com\nvd\repository\EquipmentRepository.class
 com\nvd\pojo\ForumMessage.class
