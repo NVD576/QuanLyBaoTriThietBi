@@ -30,4 +30,20 @@ public class EquipmentServiceImpl implements EquipmentService {
         return this.equipmentRepo.getEquipments(params);
     }
 
+    @Override
+    public int countEquipment() {
+        return this.equipmentRepo.countEquipment();
+    }
+
+    @Override
+    public int countEquipmentByType(int typeId) {
+        return this.equipmentRepo.countEquipmentByType(typeId);
+    }
+
+    @Override
+    public Equipment getEquipmentById(int id) {
+        return this.equipmentRepo.getEquipmentById(id);
+    }
+
+
 }

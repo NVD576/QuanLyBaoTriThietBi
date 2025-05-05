@@ -18,5 +18,7 @@
     <class>com.nvd.configs.Account</class>
     <class>com.nvd.configs.ForumMessage</class>
     <class>com.nvd.pojo.EquipmentType</class>
+    <class>com.nvd.pojo.Category</class>
+    <class>com.nvd.pojo.Status</class>
   </persistence-unit>
 </persistence>

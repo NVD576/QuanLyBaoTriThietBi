@@ -4,26 +4,25 @@
  */
 package com.nvd.service.Impl;
 
-import com.nvd.pojo.EquipmentType;
-import com.nvd.repository.EquipmentTypeRepositoy;
-import com.nvd.service.EquipmentTypeService;
+import com.nvd.pojo.Category;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Service;
+import com.nvd.service.CategoryService;
+import com.nvd.repository.CategoryRepository;
 
 /**
  *
  * @author ADMIN
  */
 @Service
-public class EquipmentTypeServiveImpl implements  EquipmentTypeService{
+public class CategoryServiveImpl implements  CategoryService{
 
     @Autowired
-    private EquipmentTypeRepositoy equipmentTypeRepo;
+    private CategoryRepository cateRepo;
 
     @Override
-    public List<EquipmentType> getEquipmentType() {
-        return this.equipmentTypeRepo.getEquipmentType();
+    public List<Category> getCates() {
+        return this.cateRepo.getCates();
     }
 }

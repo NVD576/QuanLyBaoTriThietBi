@@ -37,7 +37,8 @@ import java.util.Set;
     @NamedQuery(name = "Account.findByRole", query = "SELECT a FROM Account a WHERE a.role = :role"),
     @NamedQuery(name = "Account.findByName", query = "SELECT a FROM Account a WHERE a.name = :name"),
     @NamedQuery(name = "Account.findByContactInfo", query = "SELECT a FROM Account a WHERE a.contactInfo = :contactInfo"),
-    @NamedQuery(name = "Account.findByAddress", query = "SELECT a FROM Account a WHERE a.address = :address")})
+    @NamedQuery(name = "Account.findByAddress", query = "SELECT a FROM Account a WHERE a.address = :address"),
+    @NamedQuery(name = "Account.findByAvatar", query = "SELECT a FROM Account a WHERE a.avatar = :avatar")})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,6 +73,9 @@ public class Account implements Serializable {
     @Size(max = 255)
     @Column(name = "address")
     private String address;
+    @Size(max = 100)
+    @Column(name = "avatar")
+    private String avatar;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
     private Set<SupportTicket> supportTicketSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
@@ -148,6 +152,14 @@ public class Account implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @XmlTransient

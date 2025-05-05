@@ -14,4 +14,7 @@ import java.util.Map;
  */
 public interface EquipmentRepository {
     List<Equipment> getEquipments(Map<String, String> params);
+    int countEquipment();
+    int countEquipmentByType(int typeId);
+    Equipment getEquipmentById(int id);
 }

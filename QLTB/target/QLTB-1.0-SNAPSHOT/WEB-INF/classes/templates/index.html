@@ -3,13 +3,52 @@
     <head>
         <title>Trang quản lý thiết bị</title>
     <th:block th:replace="base :: styles"> </th:block>
-    </head>
-    <body>
-        <div th:replace="base :: header"></div>
-        <ul>
-            <li th:each="p : ${equipments}" th:text="${p.id + ' - ' + p.name + ' - ' + p.code}"></li>
-        </ul>
-        <div th:replace="base :: footer"></div>
-    </body>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+
+    <div>
+        <div>
+            <a th:href="@{/equipments}">Thêm Thiết Bị </a>
+        </div>
+
+        <span>
+            <span>
+                Trang hiện tại: 
+            </span>
+            <span th:text="${currentPage}"></span>
+
+        </span>
+
+        <!-- Hiển thị phân trang nếu tổng số trang >= 2 -->
+        <div th:if="${totalPages >= 2}">
+            <!-- Trang trước -->
+            <a th:if="${currentPage > 1}"
+               th:href="@{/(page=${currentPage - 1},typeId=${param.typeId})}">Trang trước</a>
+
+            <!-- Danh sách số trang -->
+            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:href="@{/(page=${i},typeId=${param.typeId})}"
+                   th:text="${i}"
+                   th:classappend="${i == currentPage} ? 'active' : ''">
+                </a>
+            </span>
+
+            <!-- Trang sau -->
+            <a th:if="${currentPage < totalPages}"
+               th:href="@{/(page=${currentPage + 1},typeId=${param.typeId})}">Trang sau</a>
+        </div>
+    </div>
+
+    <ul>
+        <li th:each="p : ${equipments}">
+            <a th:href="@{'/equipment/' + ${p.id}}" 
+               th:text="${p.id + ' - ' + p.name + ' - ' + p.code}">
+            </a>
+        </li>
+    </ul>
+    <div th:replace="base :: footer"></div>
+</body>
 </html>
 

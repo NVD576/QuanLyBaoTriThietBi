@@ -4,13 +4,13 @@
  */
 package com.nvd.service;
 
-import com.nvd.pojo.EquipmentType;
+import com.nvd.pojo.Category;
 import java.util.List;
 
 /**
  *
  * @author ADMIN
  */
-public interface EquipmentTypeService {
-    List<EquipmentType> getEquipmentType();
+public interface CategoryService {
+    List<Category> getCates();
 }

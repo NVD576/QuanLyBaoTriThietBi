@@ -30,9 +30,10 @@ CREATE TABLE `account` (
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `contact_info` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `avatar` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,8 +42,33 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'admin','$2a$10$exampleHashForAdmin','ADMIN','Quản trị viên',NULL,NULL),(2,'employee','$2a$10$exampleHashForUser','USER','Nhân viên bảo trì',NULL,NULL),(3,'cust001','$2a$10$exampleHashForCustomer','CUSTOMER','Công ty ABC','abc@example.com, 0901234567','123 Đường Láng, Hà Nội'),(4,'cust002','$2a$10$exampleHashForCustomer','CUSTOMER','Công ty XYZ','xyz@example.com, 0912345678','456 Lê Lợi, TP.HCM');
+INSERT INTO `account` VALUES (1,'admin','$2a$10$exampleHashForAdmin','ADMIN','Quản trị viên',NULL,NULL,NULL),(2,'employee','$2a$10$exampleHashForUser','USER','Nhân viên bảo trì',NULL,NULL,NULL),(3,'cust001','$2a$10$exampleHashForCustomer','CUSTOMER','Công ty ABC','abc@example.com, 0901234567','123 Đường Láng, Hà Nội',NULL),(4,'cust002','$2a$10$exampleHashForCustomer','CUSTOMER','Công ty XYZ','xyz@example.com, 0912345678','456 Lê Lợi, TP.HCM',NULL),(5,'admin_user','password123','USER','Nguyễn Văn A','customer@example.com','123 Đường ABC, Hà Nội','admin_avatar.jpg'),(6,'customer1','password456','CUSTOMER','Lê Thị B','customer1@example.com','456 Đường DEF, Hà Nội','customer1_avatar.jpg'),(7,'customer2','password456','CUSTOMER','Trần Minh C','customer2@example.com','789 Đường GHI, Hà Nội','customer2_avatar.jpg'),(8,'customer3','password456','CUSTOMER','Phạm Ngọc D','customer3@example.com','101 Đường JKL, Hà Nội','customer3_avatar.jpg'),(9,'customer4','password456','CUSTOMER','Vũ Hoàng E','customer4@example.com','202 Đường MNO, Hà Nội','customer4_avatar.jpg'),(10,'customer5','password456','CUSTOMER','Đỗ Thùy F','customer5@example.com','303 Đường PQR, Hà Nội','customer5_avatar.jpg');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `category` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category`
+--
+
+LOCK TABLES `category` WRITE;
+/*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (7,'Bảo trì'),(5,'Đóng gói'),(2,'Gia công'),(1,'In ấn'),(10,'Khác'),(4,'Kiểm tra'),(3,'Lắp ráp'),(9,'Lưu trữ'),(8,'Quản lý'),(6,'Vận chuyển');
+/*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -62,13 +88,14 @@ CREATE TABLE `equipment` (
   `location` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_id` bigint DEFAULT NULL,
   `type_id` bigint DEFAULT NULL,
+  `avatar` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`),
   KEY `account_id` (`account_id`),
   KEY `equipment_ibfk_2` (`type_id`),
   CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `equipment_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `equipment_type` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `equipment_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,33 +104,8 @@ CREATE TABLE `equipment` (
 
 LOCK TABLES `equipment` WRITE;
 /*!40000 ALTER TABLE `equipment` DISABLE KEYS */;
-INSERT INTO `equipment` VALUES (1,'Máy in','PRINTER001','HP','2023-01-15','Hoạt động','Phòng IT',3,1),(2,'Máy CNC','CNC002','Haas','2022-06-10','Bảo trì','Xưởng sản xuất',4,2);
+INSERT INTO `equipment` VALUES (1,'Máy in','PRINTER001','HP','2023-01-15','Hoạt động','Phòng IT',3,1,'printer.jpg'),(2,'Máy CNC','CNC002','Haas','2022-06-10','Bảo trì','Xưởng sản xuất',4,2,'cnc.jpg'),(3,'Máy lắp ráp tự động','AUTO001','Mitsubishi','2022-03-20','Hoạt động','Xưởng lắp ráp',2,3,'auto1.jpg'),(4,'Máy kiểm tra điện','TEST001','Fluke','2021-11-01','Bảo trì','Phòng kiểm tra',3,4,'test1.jpg'),(5,'Máy đóng gói','PACK001','Bosch','2023-02-15','Hoạt động','Khu đóng gói',5,5,'pack1.jpg'),(6,'Xe nâng','FORK001','Toyota','2020-12-12','Ngưng sử dụng','Kho vận chuyển',2,6,'forklift.jpg'),(7,'Máy hàn','WELD001','Lincoln','2022-09-30','Hoạt động','Xưởng gia công',4,2,'weld1.jpg'),(8,'Máy scan 3D','SCAN001','Artec','2023-05-05','Hoạt động','Phòng thiết kế',1,4,'scan3d.jpg'),(9,'Tủ lưu trữ','STOR001','Samsung','2021-04-18','Hoạt động','Phòng lưu trữ',3,9,'storage.jpg'),(10,'Máy in tem','LABEL001','Zebra','2023-08-22','Bảo trì','Khu đóng gói',5,1,'label.jpg');
 /*!40000 ALTER TABLE `equipment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `equipment_type`
---
-
-DROP TABLE IF EXISTS `equipment_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `equipment_type` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `equipment_type`
---
-
-LOCK TABLES `equipment_type` WRITE;
-/*!40000 ALTER TABLE `equipment_type` DISABLE KEYS */;
-INSERT INTO `equipment_type` VALUES (2,'Gia công'),(1,'In ấn');
-/*!40000 ALTER TABLE `equipment_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -160,7 +162,6 @@ CREATE TABLE `issue` (
 
 LOCK TABLES `issue` WRITE;
 /*!40000 ALTER TABLE `issue` DISABLE KEYS */;
-INSERT INTO `issue` VALUES (1,1,'Máy in kẹt giấy','LOW','2025-04-20 10:00:00','OPEN'),(2,2,'Máy CNC lỗi động cơ','HIGH','2025-04-25 14:30:00','IN_PROGRESS');
 /*!40000 ALTER TABLE `issue` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +190,6 @@ CREATE TABLE `maintenance_schedule` (
 
 LOCK TABLES `maintenance_schedule` WRITE;
 /*!40000 ALTER TABLE `maintenance_schedule` DISABLE KEYS */;
-INSERT INTO `maintenance_schedule` VALUES (1,1,'Hàng tháng','Kiểm tra định kỳ','2025-05-15'),(2,2,'Hàng quý','Bảo dưỡng toàn diện','2025-07-01');
 /*!40000 ALTER TABLE `maintenance_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -218,7 +218,6 @@ CREATE TABLE `repair` (
 
 LOCK TABLES `repair` WRITE;
 /*!40000 ALTER TABLE `repair` DISABLE KEYS */;
-INSERT INTO `repair` VALUES (1,1,'2025-03-10 09:00:00','Thay mực in',500000.00),(2,2,'2025-04-01 11:00:00','Sửa động cơ',2000000.00);
 /*!40000 ALTER TABLE `repair` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-02 21:28:48
+-- Dump completed on 2025-05-05 21:08:49

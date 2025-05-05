@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chỉnh sửa thiết bị</title>
+    <th:block th:replace="base :: styles"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+    <div>
+        <h2>Chỉnh sửa thiết bị</h2>
+
+        <form th:action="@{/equipment/update}" th:object="${equipment}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <p><strong>Tên:</strong>
+                <input type="text" th:field="*{name}" required />
+            </p>
+
+            <p><strong>Loại:</strong>
+                <select th:field="*{typeId.id}">
+                    <option th:each="type : ${types}"
+                            th:value="${type.id}"
+                            th:text="${type.name}"
+                            th:selected="${type.id == equipment.typeId.id}">
+                    </option>
+                </select>
+            </p>
+
+            <p><strong>Mã:</strong>
+                <input type="text" th:field="*{code}" required />
+            </p>
+
+            <p><strong>Vị trí:</strong>
+                <input type="text" th:field="*{location}" />
+            </p>
+
+            <p><strong>Nhà sản xuất:</strong>
+                <input type="text" th:field="*{manufacturer}" />
+            </p>
+
+            <p><strong>Ngày mua:</strong>
+                <input type="date" th:field="*{purchaseDate}" />
+            </p>
+
+            <p><strong>Khách hàng:</strong>
+                <select th:field="*{accountId.id}">
+                    <option th:each="acc : ${accounts}"
+                            th:value="${acc.id}"
+                            th:text="${acc.name}"
+                            th:selected="${acc.id == equipment.accountId.id}">
+                    </option>
+                </select>
+            </p>
+
+            <p><strong>Trạng thái:</strong>
+                <select th:field="*{statusId.id}">
+                    <option th:each="st : ${statuses}"
+                            th:value="${st.id}"
+                            th:text="${st.name}"
+                            th:selected="${st.id == equipment.statusId.id}">
+                    </option>
+                </select>
+            </p>
+
+            <p><strong>Avatar:</strong>
+                <input type="text" th:field="*{avatar}" />
+            </p>
+
+            <button type="submit">Lưu</button>
+        </form>
+
+        <a href="/QLTB">← Quay lại danh sách</a>
+    </div>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

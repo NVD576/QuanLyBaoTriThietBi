@@ -41,8 +41,8 @@ import java.util.Set;
     @NamedQuery(name = "Equipment.findByCode", query = "SELECT e FROM Equipment e WHERE e.code = :code"),
     @NamedQuery(name = "Equipment.findByManufacturer", query = "SELECT e FROM Equipment e WHERE e.manufacturer = :manufacturer"),
     @NamedQuery(name = "Equipment.findByPurchaseDate", query = "SELECT e FROM Equipment e WHERE e.purchaseDate = :purchaseDate"),
-    @NamedQuery(name = "Equipment.findByStatus", query = "SELECT e FROM Equipment e WHERE e.status = :status"),
-    @NamedQuery(name = "Equipment.findByLocation", query = "SELECT e FROM Equipment e WHERE e.location = :location")})
+    @NamedQuery(name = "Equipment.findByLocation", query = "SELECT e FROM Equipment e WHERE e.location = :location"),
+    @NamedQuery(name = "Equipment.findByAvatar", query = "SELECT e FROM Equipment e WHERE e.avatar = :avatar")})
 public class Equipment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -67,12 +67,12 @@ public class Equipment implements Serializable {
     @Column(name = "purchase_date")
     @Temporal(TemporalType.DATE)
     private Date purchaseDate;
-    @Size(max = 50)
-    @Column(name = "status")
-    private String status;
     @Size(max = 100)
     @Column(name = "location")
     private String location;
+    @Size(max = 100)
+    @Column(name = "avatar")
+    private String avatar;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
     private Set<Repair> repairSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
@@ -84,7 +84,10 @@ public class Equipment implements Serializable {
     private Account accountId;
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @ManyToOne
-    private EquipmentType typeId;
+    private Category typeId;
+    @JoinColumn(name = "status_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Status statusId;
 
     public Equipment() {
     }
@@ -139,20 +142,20 @@ public class Equipment implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getLocation() {
         return location;
     }
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @XmlTransient
@@ -190,12 +193,20 @@ public class Equipment implements Serializable {
         this.accountId = accountId;
     }
 
-    public EquipmentType getTypeId() {
+    public Category getTypeId() {
         return typeId;
     }
 
-    public void setTypeId(EquipmentType typeId) {
+    public void setTypeId(Category typeId) {
         this.typeId = typeId;
+    }
+
+    public Status getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Status statusId) {
+        this.statusId = statusId;
     }
 
     @Override

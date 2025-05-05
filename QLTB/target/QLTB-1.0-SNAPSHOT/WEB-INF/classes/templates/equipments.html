@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thêm Thiết Bị</title>
+    <th:block th:replace="base :: styles"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <div class="container">
+        <h2>Thêm Thiết Bị Mới</h2>
+
+        <form th:action="@{/equipment/add}" method="post" th:object="${equipment}">
+            <div>
+                <label for="name">Tên thiết bị:</label>
+                <input type="text" id="name" th:field="*{name}" required />
+            </div>
+
+            <div>
+                <label for="code">code</label>
+                <input id="code" th:field="*{code}" required></input>
+            </div>
+
+            <div>
+                <label for="typeId">Loại thiết bị:</label>
+                <select id="typeId" th:field="*{typeId.id}">
+                    <option th:each="t : ${types}"
+                            th:value="${t.id}"
+                            th:text="${t.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label for="statusId">Loại thiết bị:</label>
+                <select id="statusId" th:field="*{statusId.id}">
+                    <option th:each="t : ${status}"
+                            th:value="${t.id}"
+                            th:text="${t.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label for="avatar">Ảnh:</label>
+                <input type="file" accept="image/*" id="avatar" th:field="*{avatar}" placeholder="URL ảnh" />
+            </div>
+
+            <div>
+                <button type="submit">Thêm</button>
+            </div>
+        </form>
+    </div>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

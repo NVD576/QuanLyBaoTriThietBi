@@ -4,8 +4,7 @@
  */
 package com.nvd.repository.Impl;
 
-import com.nvd.pojo.EquipmentType;
-import com.nvd.repository.EquipmentTypeRepositoy;
+import com.nvd.pojo.Category;
 import jakarta.persistence.Query;
 import java.util.List;
 import org.hibernate.Session;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import com.nvd.repository.CategoryRepository;
 
 /**
  *
@@ -20,14 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class EquipmentTypeRepositoryImpl implements EquipmentTypeRepositoy{
+public class CategoryRepositoryImpl implements CategoryRepository{
     @Autowired
     private LocalSessionFactoryBean factory;
 
     @Override
-    public List<EquipmentType> getEquipmentType() {
+    public List<Category> getCates() {
         Session s = this.factory.getObject().getCurrentSession();
-        Query q = s.createQuery("From EquipmentType", EquipmentType.class);
+        Query q = s.createQuery("FROM Category ORDER BY id ASC", Category.class);
         return q.getResultList();
                
     }
