@@ -84,17 +84,19 @@ CREATE TABLE `equipment` (
   `code` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `manufacturer` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `purchase_date` date DEFAULT NULL,
-  `status` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `location` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_id` bigint DEFAULT NULL,
   `type_id` bigint DEFAULT NULL,
   `avatar` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`),
   KEY `account_id` (`account_id`),
   KEY `equipment_ibfk_2` (`type_id`),
+  KEY `idx_equipment_status_id` (`status_id`),
   CONSTRAINT `equipment_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `equipment_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
+  CONSTRAINT `equipment_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `category` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_status` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -104,7 +106,7 @@ CREATE TABLE `equipment` (
 
 LOCK TABLES `equipment` WRITE;
 /*!40000 ALTER TABLE `equipment` DISABLE KEYS */;
-INSERT INTO `equipment` VALUES (1,'Máy in','PRINTER001','HP','2023-01-15','Hoạt động','Phòng IT',3,1,'printer.jpg'),(2,'Máy CNC','CNC002','Haas','2022-06-10','Bảo trì','Xưởng sản xuất',4,2,'cnc.jpg'),(3,'Máy lắp ráp tự động','AUTO001','Mitsubishi','2022-03-20','Hoạt động','Xưởng lắp ráp',2,3,'auto1.jpg'),(4,'Máy kiểm tra điện','TEST001','Fluke','2021-11-01','Bảo trì','Phòng kiểm tra',3,4,'test1.jpg'),(5,'Máy đóng gói','PACK001','Bosch','2023-02-15','Hoạt động','Khu đóng gói',5,5,'pack1.jpg'),(6,'Xe nâng','FORK001','Toyota','2020-12-12','Ngưng sử dụng','Kho vận chuyển',2,6,'forklift.jpg'),(7,'Máy hàn','WELD001','Lincoln','2022-09-30','Hoạt động','Xưởng gia công',4,2,'weld1.jpg'),(8,'Máy scan 3D','SCAN001','Artec','2023-05-05','Hoạt động','Phòng thiết kế',1,4,'scan3d.jpg'),(9,'Tủ lưu trữ','STOR001','Samsung','2021-04-18','Hoạt động','Phòng lưu trữ',3,9,'storage.jpg'),(10,'Máy in tem','LABEL001','Zebra','2023-08-22','Bảo trì','Khu đóng gói',5,1,'label.jpg');
+INSERT INTO `equipment` VALUES (1,'Máy in','PRINTER001','HP','2023-01-15','Phòng IT',3,1,'printer.jpg',1),(2,'Máy CNC','CNC002','Haas','2022-06-10','Xưởng sản xuất',4,2,'cnc.jpg',2),(3,'Máy lắp ráp tự động','AUTO001','Mitsubishi','2022-03-20','Xưởng lắp ráp',2,3,'auto1.jpg',1),(4,'Máy kiểm tra điện','TEST001','Fluke','2021-11-01','Phòng kiểm tra',3,4,'test1.jpg',2),(5,'Máy đóng gói','PACK001','Bosch','2023-02-15','Khu đóng gói',5,5,'pack1.jpg',1),(6,'Xe nâng','FORK001','Toyota','2020-12-12','Kho vận chuyển',2,6,'forklift.jpg',3),(7,'Máy hàn','WELD001','Lincoln','2022-09-30','Xưởng gia công',4,2,'weld1.jpg',1),(8,'Máy scan 3D','SCAN001','Artec','2023-05-05','Phòng thiết kế',1,4,'scan3d.jpg',1),(9,'Tủ lưu trữ','STOR001','Samsung','2021-04-18','Phòng lưu trữ',3,9,'storage.jpg',1),(10,'Máy in tem','LABEL001','Zebra','2023-08-22','Khu đóng gói',5,1,'label.jpg',2);
 /*!40000 ALTER TABLE `equipment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -222,6 +224,31 @@ LOCK TABLES `repair` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `status`
+--
+
+DROP TABLE IF EXISTS `status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `status` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `status`
+--
+
+LOCK TABLES `status` WRITE;
+/*!40000 ALTER TABLE `status` DISABLE KEYS */;
+INSERT INTO `status` VALUES (2,'Bảo trì'),(1,'Hoạt động'),(3,'Ngưng sử dụng');
+/*!40000 ALTER TABLE `status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `support_ticket`
 --
 
@@ -263,4 +290,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-05 21:08:49
+-- Dump completed on 2025-05-05 23:10:33
