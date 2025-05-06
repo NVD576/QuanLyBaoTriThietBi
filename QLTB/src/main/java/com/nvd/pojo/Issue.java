@@ -39,12 +39,6 @@ import java.util.Date;
     @NamedQuery(name = "Issue.findByStatus", query = "SELECT i FROM Issue i WHERE i.status = :status")})
 public class Issue implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -53,14 +47,28 @@ public class Issue implements Serializable {
     private String description;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 6)
-    @Column(name = "severity")
-    private String severity;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_resolved")
+    private boolean isResolved;
+    @JoinColumn(name = "severity_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private SeverityLevel severityId;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 6)
+    @Column(name = "severity")
+    private String severity;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 11)
@@ -93,13 +101,6 @@ public class Issue implements Serializable {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getSeverity() {
         return severity;
@@ -109,13 +110,6 @@ public class Issue implements Serializable {
         this.severity = severity;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     public String getStatus() {
         return status;
@@ -156,6 +150,38 @@ public class Issue implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.Issue[ id=" + id + " ]";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public boolean getIsResolved() {
+        return isResolved;
+    }
+
+    public void setIsResolved(boolean isResolved) {
+        this.isResolved = isResolved;
+    }
+
+    public SeverityLevel getSeverityId() {
+        return severityId;
+    }
+
+    public void setSeverityId(SeverityLevel severityId) {
+        this.severityId = severityId;
     }
     
 }

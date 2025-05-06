@@ -45,12 +45,6 @@ import java.util.Set;
     @NamedQuery(name = "Equipment.findByAvatar", query = "SELECT e FROM Equipment e WHERE e.avatar = :avatar")})
 public class Equipment implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -64,15 +58,22 @@ public class Equipment implements Serializable {
     @Size(max = 100)
     @Column(name = "manufacturer")
     private String manufacturer;
-    @Column(name = "purchase_date")
-    @Temporal(TemporalType.DATE)
-    private Date purchaseDate;
     @Size(max = 100)
     @Column(name = "location")
     private String location;
     @Size(max = 100)
     @Column(name = "avatar")
     private String avatar;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "purchase_date")
+    @Temporal(TemporalType.DATE)
+    private Date purchaseDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
     private Set<Repair> repairSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
@@ -110,29 +111,6 @@ public class Equipment implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
 
     public Date getPurchaseDate() {
         return purchaseDate;
@@ -142,21 +120,6 @@ public class Equipment implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     @XmlTransient
     public Set<Repair> getRepairSet() {
@@ -232,6 +195,46 @@ public class Equipment implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.Equipment[ id=" + id + " ]";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
     
 }

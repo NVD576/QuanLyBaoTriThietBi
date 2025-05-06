@@ -27,19 +27,13 @@ import java.util.Set;
  * @author ADMIN
  */
 @Entity
-@Table(name = "status")
+@Table(name = "severity_level")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Status.findAll", query = "SELECT s FROM Status s"),
-    @NamedQuery(name = "Status.findById", query = "SELECT s FROM Status s WHERE s.id = :id"),
-    @NamedQuery(name = "Status.findByName", query = "SELECT s FROM Status s WHERE s.name = :name")})
-public class Status implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "name")
-    private String name;
+    @NamedQuery(name = "SeverityLevel.findAll", query = "SELECT s FROM SeverityLevel s"),
+    @NamedQuery(name = "SeverityLevel.findById", query = "SELECT s FROM SeverityLevel s WHERE s.id = :id"),
+    @NamedQuery(name = "SeverityLevel.findByName", query = "SELECT s FROM SeverityLevel s WHERE s.name = :name")})
+public class SeverityLevel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,17 +41,22 @@ public class Status implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "statusId")
-    private Set<Equipment> equipmentSet;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "name")
+    private String name;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "severityId")
+    private Set<Issue> issueSet;
 
-    public Status() {
+    public SeverityLevel() {
     }
 
-    public Status(Long id) {
+    public SeverityLevel(Long id) {
         this.id = id;
     }
 
-    public Status(Long id, String name) {
+    public SeverityLevel(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -70,14 +69,21 @@ public class Status implements Serializable {
         this.id = id;
     }
 
-
-    @XmlTransient
-    public Set<Equipment> getEquipmentSet() {
-        return equipmentSet;
+    public String getName() {
+        return name;
     }
 
-    public void setEquipmentSet(Set<Equipment> equipmentSet) {
-        this.equipmentSet = equipmentSet;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @XmlTransient
+    public Set<Issue> getIssueSet() {
+        return issueSet;
+    }
+
+    public void setIssueSet(Set<Issue> issueSet) {
+        this.issueSet = issueSet;
     }
 
     @Override
@@ -90,10 +96,10 @@ public class Status implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Status)) {
+        if (!(object instanceof SeverityLevel)) {
             return false;
         }
-        Status other = (Status) object;
+        SeverityLevel other = (SeverityLevel) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -102,15 +108,7 @@ public class Status implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nvd.pojo.Status[ id=" + id + " ]";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return "com.nvd.pojo.SeverityLevel[ id=" + id + " ]";
     }
     
 }

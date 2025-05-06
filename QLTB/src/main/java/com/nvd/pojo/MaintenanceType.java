@@ -27,19 +27,13 @@ import java.util.Set;
  * @author ADMIN
  */
 @Entity
-@Table(name = "status")
+@Table(name = "maintenance_type")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Status.findAll", query = "SELECT s FROM Status s"),
-    @NamedQuery(name = "Status.findById", query = "SELECT s FROM Status s WHERE s.id = :id"),
-    @NamedQuery(name = "Status.findByName", query = "SELECT s FROM Status s WHERE s.name = :name")})
-public class Status implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "name")
-    private String name;
+    @NamedQuery(name = "MaintenanceType.findAll", query = "SELECT m FROM MaintenanceType m"),
+    @NamedQuery(name = "MaintenanceType.findById", query = "SELECT m FROM MaintenanceType m WHERE m.id = :id"),
+    @NamedQuery(name = "MaintenanceType.findByName", query = "SELECT m FROM MaintenanceType m WHERE m.name = :name")})
+public class MaintenanceType implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,17 +41,22 @@ public class Status implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "statusId")
-    private Set<Equipment> equipmentSet;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "name")
+    private String name;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeId")
+    private Set<MaintenanceSchedule> maintenanceScheduleSet;
 
-    public Status() {
+    public MaintenanceType() {
     }
 
-    public Status(Long id) {
+    public MaintenanceType(Long id) {
         this.id = id;
     }
 
-    public Status(Long id, String name) {
+    public MaintenanceType(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -70,14 +69,21 @@ public class Status implements Serializable {
         this.id = id;
     }
 
-
-    @XmlTransient
-    public Set<Equipment> getEquipmentSet() {
-        return equipmentSet;
+    public String getName() {
+        return name;
     }
 
-    public void setEquipmentSet(Set<Equipment> equipmentSet) {
-        this.equipmentSet = equipmentSet;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @XmlTransient
+    public Set<MaintenanceSchedule> getMaintenanceScheduleSet() {
+        return maintenanceScheduleSet;
+    }
+
+    public void setMaintenanceScheduleSet(Set<MaintenanceSchedule> maintenanceScheduleSet) {
+        this.maintenanceScheduleSet = maintenanceScheduleSet;
     }
 
     @Override
@@ -90,10 +96,10 @@ public class Status implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Status)) {
+        if (!(object instanceof MaintenanceType)) {
             return false;
         }
-        Status other = (Status) object;
+        MaintenanceType other = (MaintenanceType) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -102,15 +108,7 @@ public class Status implements Serializable {
 
     @Override
     public String toString() {
-        return "com.nvd.pojo.Status[ id=" + id + " ]";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return "com.nvd.pojo.MaintenanceType[ id=" + id + " ]";
     }
     
 }

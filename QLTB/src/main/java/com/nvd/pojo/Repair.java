@@ -39,6 +39,20 @@ import java.util.Date;
     @NamedQuery(name = "Repair.findByCost", query = "SELECT r FROM Repair r WHERE r.cost = :cost")})
 public class Repair implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "cost")
+    private BigDecimal cost;
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private RepairType typeId;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,19 +61,9 @@ public class Repair implements Serializable {
     private Long id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "type")
     private String type;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "cost")
-    private BigDecimal cost;
     @JoinColumn(name = "equipment_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Equipment equipmentId;
@@ -86,13 +90,6 @@ public class Repair implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
     public String getType() {
         return type;
@@ -102,13 +99,6 @@ public class Repair implements Serializable {
         this.type = type;
     }
 
-    public BigDecimal getCost() {
-        return cost;
-    }
-
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
-    }
 
     public Equipment getEquipmentId() {
         return equipmentId;
@@ -141,6 +131,30 @@ public class Repair implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.Repair[ id=" + id + " ]";
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public RepairType getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(RepairType typeId) {
+        this.typeId = typeId;
     }
     
 }

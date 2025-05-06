@@ -38,12 +38,6 @@ import java.util.Date;
     @NamedQuery(name = "SupportTicket.findByTimestamp", query = "SELECT s FROM SupportTicket s WHERE s.timestamp = :timestamp")})
 public class SupportTicket implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -52,14 +46,25 @@ public class SupportTicket implements Serializable {
     private String issue;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 11)
-    @Column(name = "status")
-    private String status;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "timestamp")
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_open")
+    private boolean isOpen;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 11)
+    @Column(name = "status")
+    private String status;
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Account accountId;
@@ -86,13 +91,6 @@ public class SupportTicket implements Serializable {
         this.id = id;
     }
 
-    public String getIssue() {
-        return issue;
-    }
-
-    public void setIssue(String issue) {
-        this.issue = issue;
-    }
 
     public String getStatus() {
         return status;
@@ -102,13 +100,6 @@ public class SupportTicket implements Serializable {
         this.status = status;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public Account getAccountId() {
         return accountId;
@@ -141,6 +132,30 @@ public class SupportTicket implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.SupportTicket[ id=" + id + " ]";
+    }
+
+    public String getIssue() {
+        return issue;
+    }
+
+    public void setIssue(String issue) {
+        this.issue = issue;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public boolean getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(boolean isOpen) {
+        this.isOpen = isOpen;
     }
     
 }

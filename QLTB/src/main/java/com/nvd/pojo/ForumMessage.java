@@ -37,12 +37,6 @@ import java.util.Date;
     @NamedQuery(name = "ForumMessage.findByTimestamp", query = "SELECT f FROM ForumMessage f WHERE f.timestamp = :timestamp")})
 public class ForumMessage implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -54,6 +48,13 @@ public class ForumMessage implements Serializable {
     @Column(name = "timestamp")
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Account accountId;
@@ -79,21 +80,6 @@ public class ForumMessage implements Serializable {
         this.id = id;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public Account getAccountId() {
         return accountId;
@@ -126,6 +112,22 @@ public class ForumMessage implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.ForumMessage[ id=" + id + " ]";
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
     
 }

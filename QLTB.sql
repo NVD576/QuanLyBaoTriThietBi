@@ -149,13 +149,15 @@ CREATE TABLE `issue` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `equipment_id` bigint NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `severity` enum('LOW','MEDIUM','HIGH') COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` datetime NOT NULL,
-  `status` enum('OPEN','IN_PROGRESS','RESOLVED') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `severity_id` bigint NOT NULL,
+  `is_resolved` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `equipment_id` (`equipment_id`),
+  KEY `fk_issue_severity` (`severity_id`),
+  CONSTRAINT `fk_issue_severity` FOREIGN KEY (`severity_id`) REFERENCES `severity_level` (`id`) ON DELETE RESTRICT,
   CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,7 +166,33 @@ CREATE TABLE `issue` (
 
 LOCK TABLES `issue` WRITE;
 /*!40000 ALTER TABLE `issue` DISABLE KEYS */;
+INSERT INTO `issue` VALUES (1,1,'Máy in bị kẹt giấy','2025-05-01 00:00:00',1,0),(2,2,'Máy chiếu không hiển thị','2025-05-02 00:00:00',2,1),(3,3,'Lỗi bàn phím laptop','2025-05-03 00:00:00',3,0),(4,4,'Máy quạt quá nhiệt','2025-05-04 00:00:00',1,1),(5,5,'Máy lạnh không làm mát','2025-05-05 00:00:00',2,0);
 /*!40000 ALTER TABLE `issue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `maintenance_frequency`
+--
+
+DROP TABLE IF EXISTS `maintenance_frequency`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `maintenance_frequency` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `maintenance_frequency`
+--
+
+LOCK TABLES `maintenance_frequency` WRITE;
+/*!40000 ALTER TABLE `maintenance_frequency` DISABLE KEYS */;
+INSERT INTO `maintenance_frequency` VALUES (3,'Hàng năm'),(2,'Hàng quý'),(1,'Hàng tháng'),(4,'Theo sự cố');
+/*!40000 ALTER TABLE `maintenance_frequency` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -177,13 +205,18 @@ DROP TABLE IF EXISTS `maintenance_schedule`;
 CREATE TABLE `maintenance_schedule` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `equipment_id` bigint NOT NULL,
-  `frequency` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `frequency_id` bigint NOT NULL,
+  `type_id` bigint NOT NULL,
+  `date` date NOT NULL,
   `next_date` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `equipment_id` (`equipment_id`),
-  CONSTRAINT `maintenance_schedule_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `frequency_id` (`frequency_id`),
+  KEY `type_id` (`type_id`),
+  CONSTRAINT `maintenance_schedule_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `maintenance_schedule_ibfk_2` FOREIGN KEY (`frequency_id`) REFERENCES `maintenance_frequency` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `maintenance_schedule_ibfk_3` FOREIGN KEY (`type_id`) REFERENCES `maintenance_type` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +225,33 @@ CREATE TABLE `maintenance_schedule` (
 
 LOCK TABLES `maintenance_schedule` WRITE;
 /*!40000 ALTER TABLE `maintenance_schedule` DISABLE KEYS */;
+INSERT INTO `maintenance_schedule` VALUES (1,1,1,1,'2025-05-01','2025-06-01'),(2,2,2,2,'2025-04-01','2025-07-01'),(3,3,3,3,'2025-01-15','2026-01-15'),(4,4,4,4,'2025-05-03','2025-05-10');
 /*!40000 ALTER TABLE `maintenance_schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `maintenance_type`
+--
+
+DROP TABLE IF EXISTS `maintenance_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `maintenance_type` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `maintenance_type`
+--
+
+LOCK TABLES `maintenance_type` WRITE;
+/*!40000 ALTER TABLE `maintenance_type` DISABLE KEYS */;
+INSERT INTO `maintenance_type` VALUES (2,'Bảo trì toàn diện'),(1,'Kiểm tra định kỳ'),(4,'Sửa chữa khẩn cấp'),(3,'Sửa chữa lớn');
+/*!40000 ALTER TABLE `maintenance_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -206,12 +265,14 @@ CREATE TABLE `repair` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `equipment_id` bigint NOT NULL,
   `date` datetime NOT NULL,
-  `type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type_id` bigint NOT NULL,
   `cost` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `equipment_id` (`equipment_id`),
-  CONSTRAINT `repair_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `type_id` (`type_id`),
+  CONSTRAINT `repair_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipment` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `repair_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `repair_type` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,7 +281,58 @@ CREATE TABLE `repair` (
 
 LOCK TABLES `repair` WRITE;
 /*!40000 ALTER TABLE `repair` DISABLE KEYS */;
+INSERT INTO `repair` VALUES (1,1,'2025-05-01 10:00:00',1,1500000.00),(2,2,'2025-04-15 14:30:00',2,3000000.00),(3,3,'2025-03-20 09:00:00',1,500000.00),(4,4,'2025-05-02 11:00:00',2,4500000.00);
 /*!40000 ALTER TABLE `repair` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `repair_type`
+--
+
+DROP TABLE IF EXISTS `repair_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `repair_type` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `repair_type`
+--
+
+LOCK TABLES `repair_type` WRITE;
+/*!40000 ALTER TABLE `repair_type` DISABLE KEYS */;
+INSERT INTO `repair_type` VALUES (2,'Bảo trì'),(1,'Sửa chữa');
+/*!40000 ALTER TABLE `repair_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `severity_level`
+--
+
+DROP TABLE IF EXISTS `severity_level`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `severity_level` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `severity_level`
+--
+
+LOCK TABLES `severity_level` WRITE;
+/*!40000 ALTER TABLE `severity_level` DISABLE KEYS */;
+INSERT INTO `severity_level` VALUES (3,'HIGH'),(1,'LOW'),(2,'MEDIUM');
+/*!40000 ALTER TABLE `severity_level` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -259,8 +371,8 @@ CREATE TABLE `support_ticket` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `account_id` bigint NOT NULL,
   `issue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('OPEN','IN_PROGRESS','CLOSED') COLLATE utf8mb4_unicode_ci NOT NULL,
   `timestamp` datetime NOT NULL,
+  `is_open` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'True nếu ticket đang mở hoặc xử lý, False nếu đã đóng',
   PRIMARY KEY (`id`),
   KEY `account_id` (`account_id`),
   CONSTRAINT `support_ticket_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE
@@ -273,7 +385,7 @@ CREATE TABLE `support_ticket` (
 
 LOCK TABLES `support_ticket` WRITE;
 /*!40000 ALTER TABLE `support_ticket` DISABLE KEYS */;
-INSERT INTO `support_ticket` VALUES (1,3,'Yêu cầu hỗ trợ cài đặt phần mềm cho máy in','OPEN','2025-04-28 09:00:00'),(2,2,'Cần hỗ trợ kiểm tra máy CNC','IN_PROGRESS','2025-04-28 10:00:00');
+INSERT INTO `support_ticket` VALUES (1,3,'Yêu cầu hỗ trợ cài đặt phần mềm cho máy in','2025-04-28 09:00:00',1),(2,2,'Cần hỗ trợ kiểm tra máy CNC','2025-04-28 10:00:00',1);
 /*!40000 ALTER TABLE `support_ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,4 +402,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-05 23:10:33
+-- Dump completed on 2025-05-06 10:40:19

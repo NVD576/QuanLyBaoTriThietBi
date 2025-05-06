@@ -38,6 +38,23 @@ import java.util.Date;
     @NamedQuery(name = "MaintenanceSchedule.findByNextDate", query = "SELECT m FROM MaintenanceSchedule m WHERE m.nextDate = :nextDate")})
 public class MaintenanceSchedule implements Serializable {
 
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private Date date;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "next_date")
+    @Temporal(TemporalType.DATE)
+    private Date nextDate;
+    @JoinColumn(name = "frequency_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private MaintenanceFrequency frequencyId;
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private MaintenanceType typeId;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,11 +71,6 @@ public class MaintenanceSchedule implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "type")
     private String type;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "next_date")
-    @Temporal(TemporalType.DATE)
-    private Date nextDate;
     @JoinColumn(name = "equipment_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Equipment equipmentId;
@@ -140,6 +152,38 @@ public class MaintenanceSchedule implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.MaintenanceSchedule[ id=" + id + " ]";
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getNextDate() {
+        return nextDate;
+    }
+
+    public void setNextDate(Date nextDate) {
+        this.nextDate = nextDate;
+    }
+
+    public MaintenanceFrequency getFrequencyId() {
+        return frequencyId;
+    }
+
+    public void setFrequencyId(MaintenanceFrequency frequencyId) {
+        this.frequencyId = frequencyId;
+    }
+
+    public MaintenanceType getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(MaintenanceType typeId) {
+        this.typeId = typeId;
     }
     
 }
