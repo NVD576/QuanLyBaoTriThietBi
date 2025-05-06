@@ -61,7 +61,4 @@ public class IndexController {
         model.addAttribute("totalPages", totalPages);
         return "index";
     }
-    
-
-    
 }

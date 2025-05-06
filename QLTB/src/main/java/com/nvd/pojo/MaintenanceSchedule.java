@@ -162,14 +162,6 @@ public class MaintenanceSchedule implements Serializable {
         this.date = date;
     }
 
-    public Date getNextDate() {
-        return nextDate;
-    }
-
-    public void setNextDate(Date nextDate) {
-        this.nextDate = nextDate;
-    }
-
     public MaintenanceFrequency getFrequencyId() {
         return frequencyId;
     }
