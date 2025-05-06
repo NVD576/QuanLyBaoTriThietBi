@@ -42,7 +42,7 @@ public class EquipmentControler {
         return "equipments";
     }
 
-    @GetMapping("/equipment/{id}")
+    @GetMapping("/equipment/edit/{id}")
     public String getEquipmentDetails(@PathVariable("id") int id, Model model) {
         model.addAttribute("equipment", this.equipmentService.getEquipmentById(id));
         // Truyền dữ liệu dropdown
@@ -52,4 +52,10 @@ public class EquipmentControler {
         return "equipment-detail";
     }
     
+    @GetMapping("/equipment/{id}")
+    public String getEquipmentShow(@PathVariable("id") int id, Model model) {
+        model.addAttribute("equipment", this.equipmentService.getEquipmentById(id));
+        
+        return "equipment-show";
+    }
 }

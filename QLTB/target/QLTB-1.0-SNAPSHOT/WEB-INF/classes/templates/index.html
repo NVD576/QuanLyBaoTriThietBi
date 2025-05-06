@@ -20,16 +20,6 @@
             </span>
         </div>
 
-
-<!--        <ul class="list-group mb-4">
-            <li class="list-group-item" th:each="p : ${equipments}">
-                <a th:href="@{'/equipment/' + ${p.id}}"
-                   th:text="${p.id + ' - ' + p.name + ' - ' + p.code}"
-                   class="text-decoration-none text-dark d-block">
-                </a>
-            </li>
-        </ul>-->
-
         <ul class="list-group mb-4">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 th:each="p : ${equipments}">
