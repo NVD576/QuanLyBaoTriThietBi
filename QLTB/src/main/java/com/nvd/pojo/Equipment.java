@@ -38,32 +38,11 @@ import java.util.Set;
     @NamedQuery(name = "Equipment.findAll", query = "SELECT e FROM Equipment e"),
     @NamedQuery(name = "Equipment.findById", query = "SELECT e FROM Equipment e WHERE e.id = :id"),
     @NamedQuery(name = "Equipment.findByName", query = "SELECT e FROM Equipment e WHERE e.name = :name"),
-    @NamedQuery(name = "Equipment.findByCode", query = "SELECT e FROM Equipment e WHERE e.code = :code"),
     @NamedQuery(name = "Equipment.findByManufacturer", query = "SELECT e FROM Equipment e WHERE e.manufacturer = :manufacturer"),
     @NamedQuery(name = "Equipment.findByPurchaseDate", query = "SELECT e FROM Equipment e WHERE e.purchaseDate = :purchaseDate"),
     @NamedQuery(name = "Equipment.findByLocation", query = "SELECT e FROM Equipment e WHERE e.location = :location"),
     @NamedQuery(name = "Equipment.findByAvatar", query = "SELECT e FROM Equipment e WHERE e.avatar = :avatar")})
 public class Equipment implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "name")
-    private String name;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "code")
-    private String code;
-    @Size(max = 100)
-    @Column(name = "manufacturer")
-    private String manufacturer;
-    @Size(max = 100)
-    @Column(name = "location")
-    private String location;
-    @Size(max = 100)
-    @Column(name = "avatar")
-    private String avatar;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -71,24 +50,38 @@ public class Equipment implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "name")
+    private String name;
+    @Size(max = 100)
+    @Column(name = "manufacturer")
+    private String manufacturer;
     @Column(name = "purchase_date")
     @Temporal(TemporalType.DATE)
     private Date purchaseDate;
+    @Size(max = 100)
+    @Column(name = "location")
+    private String location;
+    @Size(max = 100)
+    @Column(name = "avatar")
+    private String avatar;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
     private Set<Repair> repairSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
-    private Set<MaintenanceSchedule> maintenanceScheduleSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
     private Set<Issue> issueSet;
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private Account accountId;
-    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne
-    private Category typeId;
+    private Category categoryId;
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Status statusId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipmentId")
+    private Set<MaintenanceSchedule> maintenanceScheduleSet;
 
     public Equipment() {
     }
@@ -97,10 +90,9 @@ public class Equipment implements Serializable {
         this.id = id;
     }
 
-    public Equipment(Long id, String name, String code) {
+    public Equipment(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.code = code;
     }
 
     public Long getId() {
@@ -111,6 +103,21 @@ public class Equipment implements Serializable {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
 
     public Date getPurchaseDate() {
         return purchaseDate;
@@ -120,6 +127,21 @@ public class Equipment implements Serializable {
         this.purchaseDate = purchaseDate;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     @XmlTransient
     public Set<Repair> getRepairSet() {
@@ -128,15 +150,6 @@ public class Equipment implements Serializable {
 
     public void setRepairSet(Set<Repair> repairSet) {
         this.repairSet = repairSet;
-    }
-
-    @XmlTransient
-    public Set<MaintenanceSchedule> getMaintenanceScheduleSet() {
-        return maintenanceScheduleSet;
-    }
-
-    public void setMaintenanceScheduleSet(Set<MaintenanceSchedule> maintenanceScheduleSet) {
-        this.maintenanceScheduleSet = maintenanceScheduleSet;
     }
 
     @XmlTransient
@@ -156,12 +169,12 @@ public class Equipment implements Serializable {
         this.accountId = accountId;
     }
 
-    public Category getTypeId() {
-        return typeId;
+    public Category getCategoryId() {
+        return categoryId;
     }
 
-    public void setTypeId(Category typeId) {
-        this.typeId = typeId;
+    public void setCategoryId(Category categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Status getStatusId() {
@@ -170,6 +183,15 @@ public class Equipment implements Serializable {
 
     public void setStatusId(Status statusId) {
         this.statusId = statusId;
+    }
+
+    @XmlTransient
+    public Set<MaintenanceSchedule> getMaintenanceScheduleSet() {
+        return maintenanceScheduleSet;
+    }
+
+    public void setMaintenanceScheduleSet(Set<MaintenanceSchedule> maintenanceScheduleSet) {
+        this.maintenanceScheduleSet = maintenanceScheduleSet;
     }
 
     @Override
@@ -195,46 +217,6 @@ public class Equipment implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.Equipment[ id=" + id + " ]";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
     
 }

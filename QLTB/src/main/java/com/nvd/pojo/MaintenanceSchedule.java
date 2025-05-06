@@ -18,7 +18,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,11 +32,16 @@ import java.util.Date;
 @NamedQueries({
     @NamedQuery(name = "MaintenanceSchedule.findAll", query = "SELECT m FROM MaintenanceSchedule m"),
     @NamedQuery(name = "MaintenanceSchedule.findById", query = "SELECT m FROM MaintenanceSchedule m WHERE m.id = :id"),
-    @NamedQuery(name = "MaintenanceSchedule.findByFrequency", query = "SELECT m FROM MaintenanceSchedule m WHERE m.frequency = :frequency"),
-    @NamedQuery(name = "MaintenanceSchedule.findByType", query = "SELECT m FROM MaintenanceSchedule m WHERE m.type = :type"),
+    @NamedQuery(name = "MaintenanceSchedule.findByDate", query = "SELECT m FROM MaintenanceSchedule m WHERE m.date = :date"),
     @NamedQuery(name = "MaintenanceSchedule.findByNextDate", query = "SELECT m FROM MaintenanceSchedule m WHERE m.nextDate = :nextDate")})
 public class MaintenanceSchedule implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "date")
@@ -48,32 +52,15 @@ public class MaintenanceSchedule implements Serializable {
     @Column(name = "next_date")
     @Temporal(TemporalType.DATE)
     private Date nextDate;
+    @JoinColumn(name = "equipment_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Equipment equipmentId;
     @JoinColumn(name = "frequency_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private MaintenanceFrequency frequencyId;
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private MaintenanceType typeId;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "frequency")
-    private String frequency;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "type")
-    private String type;
-    @JoinColumn(name = "equipment_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Equipment equipmentId;
 
     public MaintenanceSchedule() {
     }
@@ -82,10 +69,9 @@ public class MaintenanceSchedule implements Serializable {
         this.id = id;
     }
 
-    public MaintenanceSchedule(Long id, String frequency, String type, Date nextDate) {
+    public MaintenanceSchedule(Long id, Date date, Date nextDate) {
         this.id = id;
-        this.frequency = frequency;
-        this.type = type;
+        this.date = date;
         this.nextDate = nextDate;
     }
 
@@ -97,20 +83,12 @@ public class MaintenanceSchedule implements Serializable {
         this.id = id;
     }
 
-    public String getFrequency() {
-        return frequency;
+    public Date getDate() {
+        return date;
     }
 
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Date getNextDate() {
@@ -127,6 +105,22 @@ public class MaintenanceSchedule implements Serializable {
 
     public void setEquipmentId(Equipment equipmentId) {
         this.equipmentId = equipmentId;
+    }
+
+    public MaintenanceFrequency getFrequencyId() {
+        return frequencyId;
+    }
+
+    public void setFrequencyId(MaintenanceFrequency frequencyId) {
+        this.frequencyId = frequencyId;
+    }
+
+    public MaintenanceType getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(MaintenanceType typeId) {
+        this.typeId = typeId;
     }
 
     @Override
@@ -152,38 +146,6 @@ public class MaintenanceSchedule implements Serializable {
     @Override
     public String toString() {
         return "com.nvd.pojo.MaintenanceSchedule[ id=" + id + " ]";
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Date getNextDate() {
-        return nextDate;
-    }
-
-    public void setNextDate(Date nextDate) {
-        this.nextDate = nextDate;
-    }
-
-    public MaintenanceFrequency getFrequencyId() {
-        return frequencyId;
-    }
-
-    public void setFrequencyId(MaintenanceFrequency frequencyId) {
-        this.frequencyId = frequencyId;
-    }
-
-    public MaintenanceType getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(MaintenanceType typeId) {
-        this.typeId = typeId;
     }
     
 }

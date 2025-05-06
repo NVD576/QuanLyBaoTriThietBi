@@ -41,13 +41,19 @@ import java.util.Set;
     @NamedQuery(name = "Account.findByAvatar", query = "SELECT a FROM Account a WHERE a.avatar = :avatar")})
 public class Account implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "username")
     private String username;
     @Basic(optional = false)
-    @NotNull()
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "password")
     private String password;
@@ -70,12 +76,6 @@ public class Account implements Serializable {
     @Size(max = 100)
     @Column(name = "avatar")
     private String avatar;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
     private Set<SupportTicket> supportTicketSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
@@ -104,68 +104,6 @@ public class Account implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-
-    public String getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
-    }
-
-
-    @XmlTransient
-    public Set<SupportTicket> getSupportTicketSet() {
-        return supportTicketSet;
-    }
-
-    public void setSupportTicketSet(Set<SupportTicket> supportTicketSet) {
-        this.supportTicketSet = supportTicketSet;
-    }
-
-    @XmlTransient
-    public Set<ForumMessage> getForumMessageSet() {
-        return forumMessageSet;
-    }
-
-    public void setForumMessageSet(Set<ForumMessage> forumMessageSet) {
-        this.forumMessageSet = forumMessageSet;
-    }
-
-    @XmlTransient
-    public Set<Equipment> getEquipmentSet() {
-        return equipmentSet;
-    }
-
-    public void setEquipmentSet(Set<Equipment> equipmentSet) {
-        this.equipmentSet = equipmentSet;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Account)) {
-            return false;
-        }
-        Account other = (Account) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.nvd.pojo.Account[ id=" + id + " ]";
     }
 
     public String getUsername() {
@@ -222,6 +160,58 @@ public class Account implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    @XmlTransient
+    public Set<SupportTicket> getSupportTicketSet() {
+        return supportTicketSet;
+    }
+
+    public void setSupportTicketSet(Set<SupportTicket> supportTicketSet) {
+        this.supportTicketSet = supportTicketSet;
+    }
+
+    @XmlTransient
+    public Set<ForumMessage> getForumMessageSet() {
+        return forumMessageSet;
+    }
+
+    public void setForumMessageSet(Set<ForumMessage> forumMessageSet) {
+        this.forumMessageSet = forumMessageSet;
+    }
+
+    @XmlTransient
+    public Set<Equipment> getEquipmentSet() {
+        return equipmentSet;
+    }
+
+    public void setEquipmentSet(Set<Equipment> equipmentSet) {
+        this.equipmentSet = equipmentSet;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Account)) {
+            return false;
+        }
+        Account other = (Account) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.nvd.pojo.Account[ id=" + id + " ]";
     }
     
 }

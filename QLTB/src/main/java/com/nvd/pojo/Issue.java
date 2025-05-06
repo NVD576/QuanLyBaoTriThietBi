@@ -34,11 +34,16 @@ import java.util.Date;
 @NamedQueries({
     @NamedQuery(name = "Issue.findAll", query = "SELECT i FROM Issue i"),
     @NamedQuery(name = "Issue.findById", query = "SELECT i FROM Issue i WHERE i.id = :id"),
-    @NamedQuery(name = "Issue.findBySeverity", query = "SELECT i FROM Issue i WHERE i.severity = :severity"),
     @NamedQuery(name = "Issue.findByDate", query = "SELECT i FROM Issue i WHERE i.date = :date"),
-    @NamedQuery(name = "Issue.findByStatus", query = "SELECT i FROM Issue i WHERE i.status = :status")})
+    @NamedQuery(name = "Issue.findByIsResolved", query = "SELECT i FROM Issue i WHERE i.isResolved = :isResolved")})
 public class Issue implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Long id;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -54,29 +59,12 @@ public class Issue implements Serializable {
     @NotNull
     @Column(name = "is_resolved")
     private boolean isResolved;
-    @JoinColumn(name = "severity_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private SeverityLevel severityId;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 6)
-    @Column(name = "severity")
-    private String severity;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 11)
-    @Column(name = "status")
-    private String status;
     @JoinColumn(name = "equipment_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Equipment equipmentId;
+    @JoinColumn(name = "severity_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private SeverityLevel severityId;
 
     public Issue() {
     }
@@ -85,12 +73,11 @@ public class Issue implements Serializable {
         this.id = id;
     }
 
-    public Issue(Long id, String description, String severity, Date date, String status) {
+    public Issue(Long id, String description, Date date, boolean isResolved) {
         this.id = id;
         this.description = description;
-        this.severity = severity;
         this.date = date;
-        this.status = status;
+        this.isResolved = isResolved;
     }
 
     public Long getId() {
@@ -99,57 +86,6 @@ public class Issue implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Equipment getEquipmentId() {
-        return equipmentId;
-    }
-
-    public void setEquipmentId(Equipment equipmentId) {
-        this.equipmentId = equipmentId;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Issue)) {
-            return false;
-        }
-        Issue other = (Issue) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.nvd.pojo.Issue[ id=" + id + " ]";
     }
 
     public String getDescription() {
@@ -176,12 +112,45 @@ public class Issue implements Serializable {
         this.isResolved = isResolved;
     }
 
+    public Equipment getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(Equipment equipmentId) {
+        this.equipmentId = equipmentId;
+    }
+
     public SeverityLevel getSeverityId() {
         return severityId;
     }
 
     public void setSeverityId(SeverityLevel severityId) {
         this.severityId = severityId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Issue)) {
+            return false;
+        }
+        Issue other = (Issue) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.nvd.pojo.Issue[ id=" + id + " ]";
     }
     
 }
