@@ -10,20 +10,20 @@
     <div class="container">
         <h2>Thêm Thiết Bị Mới</h2>
 
-        <form th:action="@{/equipment/add}" method="post" th:object="${equipment}">
-            <div>
-                <label for="name">Tên thiết bị:</label>
-                <input type="text" id="name" th:field="*{name}" required />
+        <form th:action="@{/equipment/add}" method="post" th:object="${equipment}" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên thiết bị:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required />
             </div>
 
-            <div>
-                <label for="code">code</label>
-                <input id="code" th:field="*{code}" required></input>
+            <div class="mb-3">
+                <label for="code" class="form-label">Mã thiết bị:</label>
+                <input id="code" class="form-control" th:field="*{code}" required></input>
             </div>
 
-            <div>
-                <label for="typeId">Loại thiết bị:</label>
-                <select id="typeId" th:field="*{typeId.id}">
+            <div class="mb-3">
+                <label for="typeId" class="form-label">Loại thiết bị:</label>
+                <select class="form-select" id="typeId" th:field="*{typeId.id}">
                     <option th:each="t : ${types}"
                             th:value="${t.id}"
                             th:text="${t.name}">
@@ -31,9 +31,9 @@
                 </select>
             </div>
 
-            <div>
-                <label for="statusId">Loại thiết bị:</label>
-                <select id="statusId" th:field="*{statusId.id}">
+            <div class="mb-3">
+                <label for="statusId" class="form-label">Trạng thái thiết bị:</label>
+                <select class="form-select" id="statusId" th:field="*{statusId.id}">
                     <option th:each="t : ${status}"
                             th:value="${t.id}"
                             th:text="${t.name}">
@@ -41,13 +41,13 @@
                 </select>
             </div>
 
-            <div>
-                <label for="avatar">Ảnh:</label>
-                <input type="file" accept="image/*" id="avatar" th:field="*{avatar}" placeholder="URL ảnh" />
+            <div class="mb-3">
+                <label for="avatar" class="form-label">Ảnh:</label>
+                <input type="file" class="form-control" accept="image/*" id="avatar" th:field="*{avatar}" placeholder="URL ảnh" />
             </div>
 
             <div>
-                <button type="submit">Thêm</button>
+                <button type="submit" class="btn btn-primary">Thêm</button>
             </div>
         </form>
     </div>

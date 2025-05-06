@@ -37,7 +37,6 @@ public class EquipmentRepositoryImpl implements EquipmentRepository {
     private Environment env;
 
     @Override
-
     public List<Equipment> getEquipments(Map<String, String> params) {
         Session session = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = session.getCriteriaBuilder();
@@ -100,5 +99,4 @@ public class EquipmentRepositoryImpl implements EquipmentRepository {
         return s.get(Equipment.class, id);
 
     }
-
 }

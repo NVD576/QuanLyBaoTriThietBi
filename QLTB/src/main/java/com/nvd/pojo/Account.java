@@ -138,14 +138,6 @@ public class Account implements Serializable {
         this.name = name;
     }
 
-    public String getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
-    }
-
     public String getAddress() {
         return address;
     }

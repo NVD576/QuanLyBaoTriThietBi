@@ -7,47 +7,73 @@
 <body>
     <div th:replace="base :: header"></div>
 
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center my-3 px-3">
+            <!-- Nút Thêm Thiết Bị -->
+            <a th:href="@{/equipments}" class="btn btn-success">
+                Thêm Thiết Bị
+            </a>
 
-    <div>
-        <div>
-            <a th:href="@{/equipments}">Thêm Thiết Bị </a>
+            <!-- Thông tin Trang hiện tại -->
+            <span class="badge bg-primary fs-6">
+                Trang hiện tại: <span th:text="${currentPage}"></span>
+            </span>
         </div>
 
-        <span>
-            <span>
-                Trang hiện tại: 
-            </span>
-            <span th:text="${currentPage}"></span>
+        <ul class="list-group mb-4">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+                th:each="p : ${equipments}">
 
-        </span>
+                <!-- Thông tin thiết bị -->
+                <span th:text="${p.id + ' - ' + p.name + ' - ' + p.code}"></span>
+
+                <!-- Các nút chức năng -->
+                <div class="btn-group" role="group">
+                    <!-- Xem -->
+                    <a th:href="@{'/equipment/' + ${p.id}}"
+                       class="btn btn-sm btn-outline-primary">
+                        Xem
+                    </a>
+
+                    <!-- Sửa -->
+                    <a th:href="@{'/equipment/edit/' + ${p.id}}"
+                       class="btn btn-sm btn-outline-secondary">
+                        Sửa
+                    </a>
+
+                    <!-- Xóa -->
+                    <a th:href="@{'/equipment/delete/' + ${p.id}}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Bạn có chắc muốn xóa thiết bị này?');">
+                        Xóa
+                    </a>
+                </div>
+            </li>
+        </ul>
 
         <!-- Hiển thị phân trang nếu tổng số trang >= 2 -->
-        <div th:if="${totalPages >= 2}">
+        <div th:if="${totalPages >= 2}" class="d-flex justify-content-end mt-3 me-3">
             <!-- Trang trước -->
             <a th:if="${currentPage > 1}"
-               th:href="@{/(page=${currentPage - 1},typeId=${param.typeId})}">Trang trước</a>
+               th:href="@{/(page=${currentPage - 1},typeId=${param.typeId})}"
+               class="btn btn-outline-primary me-2">Trang trước</a>
 
             <!-- Danh sách số trang -->
-            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-                <a th:href="@{/(page=${i},typeId=${param.typeId})}"
+            <div class="btn-group me-2" role="group" aria-label="Pagination">
+                <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+                   th:href="@{/(page=${i},typeId=${param.typeId})}"
                    th:text="${i}"
-                   th:classappend="${i == currentPage} ? 'active' : ''">
+                   class="btn"
+                   th:classappend="${i == currentPage} ? 'btn-primary' : 'btn-outline-primary'">
                 </a>
-            </span>
+            </div>
 
             <!-- Trang sau -->
             <a th:if="${currentPage < totalPages}"
-               th:href="@{/(page=${currentPage + 1},typeId=${param.typeId})}">Trang sau</a>
+               th:href="@{/(page=${currentPage + 1},typeId=${param.typeId})}"
+               class="btn btn-outline-primary">Trang sau</a>
         </div>
     </div>
-
-    <ul>
-        <li th:each="p : ${equipments}">
-            <a th:href="@{'/equipment/' + ${p.id}}" 
-               th:text="${p.id + ' - ' + p.name + ' - ' + p.code}">
-            </a>
-        </li>
-    </ul>
     <div th:replace="base :: footer"></div>
 </body>
 </html>

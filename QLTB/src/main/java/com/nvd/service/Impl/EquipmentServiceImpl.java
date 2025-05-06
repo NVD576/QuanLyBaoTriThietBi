@@ -45,5 +45,4 @@ public class EquipmentServiceImpl implements EquipmentService {
         return this.equipmentRepo.getEquipmentById(id);
     }
 
-
 }

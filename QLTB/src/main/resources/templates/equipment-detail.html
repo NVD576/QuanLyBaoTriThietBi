@@ -1,76 +1,99 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Chỉnh sửa thiết bị</title>
+    <head>
+        <title>Chỉnh sửa thiết bị</title>
     <th:block th:replace="base :: styles"></th:block>
 </head>
 <body>
     <div th:replace="base :: header"></div>
-    <div>
-        <h2>Chỉnh sửa thiết bị</h2>
+    
+    <div class="container mt-4">
+        <h2 class="mb-4">Chỉnh sửa thiết bị</h2>
 
-        <form th:action="@{/equipment/update}" th:object="${equipment}" method="post">
+        <form th:action="@{/equipment/update}" th:object="${equipment}" method="post" class="row g-3">
             <input type="hidden" th:field="*{id}" />
 
-            <p><strong>Tên:</strong>
-                <input type="text" th:field="*{name}" required />
-            </p>
+            <!-- Tên -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Tên:</strong></label>
+                <input type="text" th:field="*{name}" class="form-control" required />
+            </div>
 
-            <p><strong>Loại:</strong>
-                <select th:field="*{typeId.id}">
+            <!-- Loại thiết bị -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Loại:</strong></label>
+                <select th:field="*{typeId.id}" class="form-select">
                     <option th:each="type : ${types}"
                             th:value="${type.id}"
                             th:text="${type.name}"
                             th:selected="${type.id == equipment.typeId.id}">
                     </option>
                 </select>
-            </p>
+            </div>
 
-            <p><strong>Mã:</strong>
-                <input type="text" th:field="*{code}" required />
-            </p>
+            <!-- Mã thiết bị -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Mã:</strong></label>
+                <input type="text" th:field="*{code}" class="form-control" required />
+            </div>
 
-            <p><strong>Vị trí:</strong>
-                <input type="text" th:field="*{location}" />
-            </p>
+            <!-- Vị trí -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Vị trí:</strong></label>
+                <input type="text" th:field="*{location}" class="form-control" />
+            </div>
 
-            <p><strong>Nhà sản xuất:</strong>
-                <input type="text" th:field="*{manufacturer}" />
-            </p>
+            <!-- Nhà sản xuất -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Nhà sản xuất:</strong></label>
+                <input type="text" th:field="*{manufacturer}" class="form-control" />
+            </div>
 
-            <p><strong>Ngày mua:</strong>
-                <input type="date" th:field="*{purchaseDate}" />
-            </p>
+            <!-- Ngày mua -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Ngày mua:</strong></label>
+                <input type="date" th:field="*{purchaseDate}" class="form-control" />
+            </div>
 
-            <p><strong>Khách hàng:</strong>
-                <select th:field="*{accountId.id}">
+            <!-- Khách hàng -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Khách hàng:</strong></label>
+                <select th:field="*{accountId.id}" class="form-select">
                     <option th:each="acc : ${accounts}"
                             th:value="${acc.id}"
                             th:text="${acc.name}"
                             th:selected="${acc.id == equipment.accountId.id}">
                     </option>
                 </select>
-            </p>
+            </div>
 
-            <p><strong>Trạng thái:</strong>
-                <select th:field="*{statusId.id}">
+            <!-- Trạng thái -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Trạng thái:</strong></label>
+                <select th:field="*{statusId.id}" class="form-select">
                     <option th:each="st : ${statuses}"
                             th:value="${st.id}"
                             th:text="${st.name}"
                             th:selected="${st.id == equipment.statusId.id}">
                     </option>
                 </select>
-            </p>
+            </div>
 
-            <p><strong>Avatar:</strong>
-                <input type="text" th:field="*{avatar}" />
-            </p>
+            <!-- Avatar -->
+            <div class="col-md-12">
+                <label class="form-label"><strong>Avatar (link ảnh):</strong></label>
+                <input type="text" th:field="*{avatar}" class="form-control" />
+            </div>
 
-            <button type="submit">Lưu</button>
+            <!-- Nút lưu -->
+            <div class="col-12 d-flex justify-content-between align-items-center mt-4">
+                <a href="/QLTB" class="btn btn-secondary">← Quay lại danh sách</a>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
         </form>
-
-        <a href="/QLTB">← Quay lại danh sách</a>
     </div>
+
+
 
     <div th:replace="base :: footer"></div>
 </body>
