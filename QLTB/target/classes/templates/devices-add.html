@@ -14,6 +14,9 @@
             <div class="mb-3">
                 <label for="name" class="form-label">Tên thiết bị:</label>
                 <input type="text" class="form-control" id="name" th:field="*{name}" required />
+                <div th:if="${#fields.hasErrors('name')}" class="text-danger">
+                    <span th:errors="*{name}">Tên thiết bị không hợp lệ</span>
+                </div>
             </div>
 
 
@@ -60,13 +63,13 @@
 
             <div class="mb-3">
                 <label for="image" class="form-label">Ảnh:</label>
-                <div th:if="*{image != null}">
-                    <img th:src="@{${image}}" alt="Ảnh hiện tại" style="max-width: 150px; max-height: 150px;" class="mb-2" />
-                </div>
-                <input type="file" class="form-control" accept="image/*" id="image" th:field="*{image}" placeholder="URL ảnh" />
+                <input type="file" class="form-control" th:field="*{file}" placeholder="URL ảnh" /> <!-- accept="image/*"-->
+                <img th:if="${device.image != null}" th:src="${device.image}" style="max-width: 150px; max-height: 150px;" class="mb-2" />
             </div>
 
-            <div>
+            <div class="mb-3 mt-3">
+                <input type="hidden" class="form-control" th:field="*{id}"  />
+                <input type="hidden" class="form-control" th:field="*{image}"  />
                 <button type="submit" class="btn btn-primary">Thêm</button>
             </div>
         </form>

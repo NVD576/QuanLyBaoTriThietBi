@@ -49,7 +49,7 @@ public class DeviceControler {
     @PostMapping("/device/add")
     public String add(@ModelAttribute(value = "device") Device p, BindingResult result,
                       Model model) {
-        if (deviceService.addOrUpdateDevice(p) == true) {
+        if(this.deviceService.addOrUpdateDevice(p) != null) {
             return "redirect:/";
         }
         return "devices-add";

@@ -4,6 +4,8 @@
  */
 package com.nvd.service.Impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.nvd.pojo.Device;
 import com.nvd.service.DeviceService;
 import java.util.List;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,6 +28,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
     private DeviceRepository deviceRepo;
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,8 +53,18 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public boolean addOrUpdateDevice(Device p) {
-        p.setImage("https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg");
+    public Device addOrUpdateDevice(Device p) {
+        if (!p.getFile().isEmpty() ) {
+            try {
+                Map res = cloudinary.uploader().upload(p.getFile().getBytes(),
+                        ObjectUtils.asMap("resource_type", "auto"));
+                p.setImage(res.get("secure_url").toString());
+            } catch (IOException ex) {
+                Logger.getLogger(DeviceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+//        p.setImage("https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg");
+            
         return this.deviceRepo.addOrUpdateDevice(p);
     }
 
