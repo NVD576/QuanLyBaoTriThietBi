@@ -24,5 +24,10 @@
     <class>com.nvd.pojo.SeverityLevel</class>
     <class>com.nvd.pojo.MaintenanceType</class>
     <class>com.nvd.pojo.RepairType</class>
+    <class>com.nvd.pojo.Frequency</class>
+    <class>com.nvd.pojo.Device</class>
+    <class>com.nvd.pojo.Base</class>
+    <class>com.nvd.pojo.Maintenance</class>
+    <class>com.nvd.pojo.IncidentLevel</class>
   </persistence-unit>
 </persistence>

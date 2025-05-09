@@ -5,7 +5,6 @@
 package com.nvd.pojo;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +31,7 @@ import java.util.Set;
 @NamedQueries({
     @NamedQuery(name = "MaintenanceType.findAll", query = "SELECT m FROM MaintenanceType m"),
     @NamedQuery(name = "MaintenanceType.findById", query = "SELECT m FROM MaintenanceType m WHERE m.id = :id"),
-    @NamedQuery(name = "MaintenanceType.findByName", query = "SELECT m FROM MaintenanceType m WHERE m.name = :name")})
+    @NamedQuery(name = "MaintenanceType.findByType", query = "SELECT m FROM MaintenanceType m WHERE m.type = :type")})
 public class MaintenanceType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,50 +39,50 @@ public class MaintenanceType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "name")
-    private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeId")
-    private Set<MaintenanceSchedule> maintenanceScheduleSet;
+    @Size(min = 1, max = 100)
+    @Column(name = "type")
+    private String type;
+    @OneToMany(mappedBy = "typeId")
+    private Set<Maintenance> maintenanceSet;
 
     public MaintenanceType() {
     }
 
-    public MaintenanceType(Long id) {
+    public MaintenanceType(Integer id) {
         this.id = id;
     }
 
-    public MaintenanceType(Long id, String name) {
+    public MaintenanceType(Integer id, String type) {
         this.id = id;
-        this.name = name;
+        this.type = type;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
     @XmlTransient
-    public Set<MaintenanceSchedule> getMaintenanceScheduleSet() {
-        return maintenanceScheduleSet;
+    public Set<Maintenance> getMaintenanceSet() {
+        return maintenanceSet;
     }
 
-    public void setMaintenanceScheduleSet(Set<MaintenanceSchedule> maintenanceScheduleSet) {
-        this.maintenanceScheduleSet = maintenanceScheduleSet;
+    public void setMaintenanceSet(Set<Maintenance> maintenanceSet) {
+        this.maintenanceSet = maintenanceSet;
     }
 
     @Override

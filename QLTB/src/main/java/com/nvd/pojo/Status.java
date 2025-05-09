@@ -5,7 +5,6 @@
 package com.nvd.pojo;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,32 +39,32 @@ public class Status implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 100)
     @Column(name = "name")
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "statusId")
-    private Set<Equipment> equipmentSet;
+    @OneToMany(mappedBy = "statusId")
+    private Set<Device> deviceSet;
 
     public Status() {
     }
 
-    public Status(Long id) {
+    public Status(Integer id) {
         this.id = id;
     }
 
-    public Status(Long id, String name) {
+    public Status(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -78,12 +77,12 @@ public class Status implements Serializable {
     }
 
     @XmlTransient
-    public Set<Equipment> getEquipmentSet() {
-        return equipmentSet;
+    public Set<Device> getDeviceSet() {
+        return deviceSet;
     }
 
-    public void setEquipmentSet(Set<Equipment> equipmentSet) {
-        this.equipmentSet = equipmentSet;
+    public void setDeviceSet(Set<Device> deviceSet) {
+        this.deviceSet = deviceSet;
     }
 
     @Override

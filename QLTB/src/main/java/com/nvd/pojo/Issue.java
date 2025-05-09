@@ -11,14 +11,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -34,6 +32,7 @@ import java.util.Date;
 @NamedQueries({
     @NamedQuery(name = "Issue.findAll", query = "SELECT i FROM Issue i"),
     @NamedQuery(name = "Issue.findById", query = "SELECT i FROM Issue i WHERE i.id = :id"),
+    @NamedQuery(name = "Issue.findByDes", query = "SELECT i FROM Issue i WHERE i.des = :des"),
     @NamedQuery(name = "Issue.findByDate", query = "SELECT i FROM Issue i WHERE i.date = :date"),
     @NamedQuery(name = "Issue.findByIsResolved", query = "SELECT i FROM Issue i WHERE i.isResolved = :isResolved")})
 public class Issue implements Serializable {
@@ -43,57 +42,43 @@ public class Issue implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Size(min = 1, max = 65535)
-    @Column(name = "description")
-    private String description;
-    @Basic(optional = false)
-    @NotNull
+    private Integer id;
+    @Size(max = 100)
+    @Column(name = "des")
+    private String des;
     @Column(name = "date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date date;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "is_resolved")
-    private boolean isResolved;
-    @JoinColumn(name = "equipment_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Equipment equipmentId;
-    @JoinColumn(name = "severity_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private SeverityLevel severityId;
+    private Boolean isResolved;
+    @JoinColumn(name = "device_id", referencedColumnName = "id")
+    @ManyToOne
+    private Device deviceId;
+    @JoinColumn(name = "level_id", referencedColumnName = "id")
+    @ManyToOne
+    private IncidentLevel levelId;
 
     public Issue() {
     }
 
-    public Issue(Long id) {
+    public Issue(Integer id) {
         this.id = id;
     }
 
-    public Issue(Long id, String description, Date date, boolean isResolved) {
-        this.id = id;
-        this.description = description;
-        this.date = date;
-        this.isResolved = isResolved;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDes() {
+        return des;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDes(String des) {
+        this.des = des;
     }
 
     public Date getDate() {
@@ -104,28 +89,28 @@ public class Issue implements Serializable {
         this.date = date;
     }
 
-    public boolean getIsResolved() {
+    public Boolean getIsResolved() {
         return isResolved;
     }
 
-    public void setIsResolved(boolean isResolved) {
+    public void setIsResolved(Boolean isResolved) {
         this.isResolved = isResolved;
     }
 
-    public Equipment getEquipmentId() {
-        return equipmentId;
+    public Device getDeviceId() {
+        return deviceId;
     }
 
-    public void setEquipmentId(Equipment equipmentId) {
-        this.equipmentId = equipmentId;
+    public void setDeviceId(Device deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public SeverityLevel getSeverityId() {
-        return severityId;
+    public IncidentLevel getLevelId() {
+        return levelId;
     }
 
-    public void setSeverityId(SeverityLevel severityId) {
-        this.severityId = severityId;
+    public void setLevelId(IncidentLevel levelId) {
+        this.levelId = levelId;
     }
 
     @Override

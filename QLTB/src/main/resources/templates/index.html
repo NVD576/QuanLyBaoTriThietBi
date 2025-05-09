@@ -10,7 +10,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center my-3 px-3">
             <!-- Nút Thêm Thiết Bị -->
-            <a th:href="@{/equipments}" class="btn btn-success">
+            <a th:href="@{/devices}" class="btn btn-success">
                 Thêm Thiết Bị
             </a>
 
@@ -22,27 +22,30 @@
 
         <ul class="list-group mb-4">
             <li class="list-group-item d-flex justify-content-between align-items-center"
-                th:each="p : ${equipments}">
+                th:each="p : ${devices}">
 
                 <!-- Thông tin thiết bị -->
-                <span th:text="${p.id + ' - ' + p.name + ' - ' + p.code}"></span>
+                <img th:src="@{${p.image}}" alt="Hình ảnh thiết bị" style="max-width: 50px; max-height: 50px;" />
 
+                <div class="flex-grow-1 ms-3 text-start">
+                    <span th:text="${p.id + ' - ' + p.name}"></span>
+                </div>
                 <!-- Các nút chức năng -->
                 <div class="btn-group" role="group">
                     <!-- Xem -->
-                    <a th:href="@{'/equipment/' + ${p.id}}"
+                    <a th:href="@{'/device/' + ${p.id}}"
                        class="btn btn-sm btn-outline-primary">
                         Xem
                     </a>
 
                     <!-- Sửa -->
-                    <a th:href="@{'/equipment/edit/' + ${p.id}}"
+                    <a th:href="@{'/device/edit/' + ${p.id}}"
                        class="btn btn-sm btn-outline-secondary">
                         Sửa
                     </a>
 
                     <!-- Xóa -->
-                    <a th:href="@{'/equipment/delete/' + ${p.id}}"
+                    <a th:href="@{'/device/delete/' + ${p.id}}"
                        class="btn btn-sm btn-outline-danger"
                        onclick="return confirm('Bạn có chắc muốn xóa thiết bị này?');">
                         Xóa

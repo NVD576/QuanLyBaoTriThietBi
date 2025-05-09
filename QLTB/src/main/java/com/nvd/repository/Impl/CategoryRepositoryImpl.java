@@ -29,7 +29,6 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         Session s = this.factory.getObject().getCurrentSession();
         Query q = s.createQuery("FROM Category ORDER BY id ASC", Category.class);
         return q.getResultList();
-               
     }
     
 }

@@ -17,7 +17,6 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,42 +41,35 @@ public class Repair implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
+    private Integer id;
     @Column(name = "date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date date;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "cost")
     private BigDecimal cost;
-    @JoinColumn(name = "equipment_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Equipment equipmentId;
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @ManyToOne
+    private Account accountId;
+    @JoinColumn(name = "device_id", referencedColumnName = "id")
+    @ManyToOne
+    private Device deviceId;
     @JoinColumn(name = "type_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private RepairType typeId;
 
     public Repair() {
     }
 
-    public Repair(Long id) {
+    public Repair(Integer id) {
         this.id = id;
     }
 
-    public Repair(Long id, Date date, BigDecimal cost) {
-        this.id = id;
-        this.date = date;
-        this.cost = cost;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -97,12 +89,20 @@ public class Repair implements Serializable {
         this.cost = cost;
     }
 
-    public Equipment getEquipmentId() {
-        return equipmentId;
+    public Account getAccountId() {
+        return accountId;
     }
 
-    public void setEquipmentId(Equipment equipmentId) {
-        this.equipmentId = equipmentId;
+    public void setAccountId(Account accountId) {
+        this.accountId = accountId;
+    }
+
+    public Device getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(Device deviceId) {
+        this.deviceId = deviceId;
     }
 
     public RepairType getTypeId() {

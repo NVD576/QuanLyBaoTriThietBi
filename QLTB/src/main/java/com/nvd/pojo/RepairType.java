@@ -5,7 +5,6 @@
 package com.nvd.pojo;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +31,7 @@ import java.util.Set;
 @NamedQueries({
     @NamedQuery(name = "RepairType.findAll", query = "SELECT r FROM RepairType r"),
     @NamedQuery(name = "RepairType.findById", query = "SELECT r FROM RepairType r WHERE r.id = :id"),
-    @NamedQuery(name = "RepairType.findByName", query = "SELECT r FROM RepairType r WHERE r.name = :name")})
+    @NamedQuery(name = "RepairType.findByType", query = "SELECT r FROM RepairType r WHERE r.type = :type")})
 public class RepairType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,41 +39,41 @@ public class RepairType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "name")
-    private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeId")
+    @Size(min = 1, max = 100)
+    @Column(name = "type")
+    private String type;
+    @OneToMany(mappedBy = "typeId")
     private Set<Repair> repairSet;
 
     public RepairType() {
     }
 
-    public RepairType(Long id) {
+    public RepairType(Integer id) {
         this.id = id;
     }
 
-    public RepairType(Long id, String name) {
+    public RepairType(Integer id, String type) {
         this.id = id;
-        this.name = name;
+        this.type = type;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
     @XmlTransient

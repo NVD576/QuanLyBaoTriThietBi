@@ -4,7 +4,7 @@
  */
 package com.nvd.controllers;
 
-import com.nvd.service.EquipmentService;
+import com.nvd.service.DeviceService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class IndexController {
 
     @Autowired
-    private EquipmentService equipmentService;
+    private DeviceService deviceService;
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -41,7 +41,10 @@ public class IndexController {
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params, @RequestParam(value = "page", defaultValue = "1") int page) {
 
-        model.addAttribute("equipments", this.equipmentService.getEquipments(params));
+        if(params==null || params.isEmpty()){
+            params.put("page", "1");
+        }
+        model.addAttribute("devices", this.deviceService.getDevices(params));
         int pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
         int count;
 
@@ -49,12 +52,12 @@ public class IndexController {
         if (params.containsKey("typeId")) {
             try {
                 int typeId = Integer.parseInt(params.get("typeId"));
-                count = this.equipmentService.countEquipmentByType(typeId);
+                count = this.deviceService.countDeviceByType(typeId);
             } catch (NumberFormatException ex) {
-                count = this.equipmentService.countEquipment(); // fallback nếu typeId không hợp lệ
+                count = this.deviceService.countDevice(); // fallback nếu typeId không hợp lệ
             }
         } else {
-            count = this.equipmentService.countEquipment();
+            count = this.deviceService.countDevice();
         }
         int totalPages = count > 0 ? (int) Math.ceil(count * 1.0 / pageSize) : 1;
         model.addAttribute("currentPage", page);
