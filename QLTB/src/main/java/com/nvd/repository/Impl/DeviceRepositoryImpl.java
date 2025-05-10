@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
 import com.nvd.repository.StatusRepository;
+import java.util.Date;
 
 /**
  *
@@ -38,6 +39,8 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     private LocalSessionFactoryBean factory;
     @Autowired
     private Environment env;
+    @Autowired
+    private StatusRepository statusRepository;
 
     @Override
     public List<Device> getDevices(Map<String, String> params) {
@@ -109,6 +112,15 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         try {
             if (p.getId() == null) {
                 System.out.println("Saving new device: " + p);
+                if (p.getDate() == null) {
+                    p.setDate(new Date()); // Set ngày hiện tại nếu chưa nhập
+                }
+                if (p.getStatusId() == null) {
+                    List<Status> statuses = this.statusRepository.getStatus(); // Hoặc service tương đương
+                    if (!statuses.isEmpty()) {
+                        p.setStatusId(statuses.get(0)); // Lấy status đầu tiên làm mặc định
+                    }
+                }
                 s.persist(p);
             } else {
                 System.out.println("Updating device with ID: " + p.getId());

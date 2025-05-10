@@ -35,8 +35,6 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceRepository deviceRepo;
     @Autowired
     private Cloudinary cloudinary;
-    @Autowired
-    private StatusRepository statusRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -63,15 +61,6 @@ public class DeviceServiceImpl implements DeviceService {
     public Device addOrUpdateDevice(Device p) {
         if (!p.getFile().isEmpty()) {
             try {
-                if (p.getDate() == null) {
-                    p.setDate(new Date()); // Set ngày hiện tại nếu chưa nhập
-                }
-                if (p.getStatusId() == null) {
-                    List<Status> statuses = this.statusRepository.getStatus(); // Hoặc service tương đương
-                    if (!statuses.isEmpty()) {
-                        p.setStatusId(statuses.get(0)); // Lấy status đầu tiên làm mặc định
-                    }
-                }
                 Map res = cloudinary.uploader().upload(p.getFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
                 p.setImage(res.get("secure_url").toString());
