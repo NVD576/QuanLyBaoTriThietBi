@@ -4,8 +4,10 @@ com\nvd\service\MaintenanceTypeService.class
 com\nvd\service\CategoryService.class
 com\nvd\configs\HibernateConfig.class
 com\nvd\service\StatusService.class
+com\nvd\repository\Impl\MaintenanceRepositoryImpl.class
 com\nvd\service\IssueService.class
 com\nvd\repository\AccountRepository.class
+com\nvd\service\MaintenanceService.class
 com\nvd\formatters\StatusFormatter.class
 com\nvd\repository\StatusRepository.class
 com\nvd\configs\DispatcherServletInit.class
@@ -20,6 +22,7 @@ com\nvd\service\Impl\StatusServiceImpl.class
 com\nvd\repository\Impl\StatusRepositoryImpl.class
 com\nvd\formatters\AccountFormatter.class
 com\nvd\configs\WebAppContextConfigs.class
+com\nvd\repository\MaintenanceRepository.class
 com\nvd\repository\Impl\IssueRepositoryImpl.class
 com\nvd\service\BaseService.class
 com\nvd\service\FrequencyService.class
@@ -29,6 +32,7 @@ com\nvd\repository\CategoryRepository.class
 com\nvd\controllers\MaintenanceControllers.class
 com\nvd\repository\Impl\DeviceRepositoryImpl.class
 com\nvd\service\Impl\IssueServiceImpl.class
+com\nvd\controllers\BaseControllers.class
 com\nvd\configs\ThymeleafConfig.class
 com\nvd\service\DeviceService.class
 com\nvd\repository\Impl\FrequencyRepositoryImpl.class
@@ -44,6 +48,7 @@ com\nvd\service\Impl\IncidentLevelServiceImpl.class
 com\nvd\pojo\RepairType.class
 com\nvd\repository\BaseRepository.class
 com\nvd\service\IncidentLevelService.class
+com\nvd\service\Impl\MaintenanceServiceImpl.class
 com\nvd\repository\IncidentLevelRepository.class
 com\nvd\repository\Impl\IncidentLevelRepositoryImpl.class
 com\nvd\service\Impl\AccountServiceImpl.class

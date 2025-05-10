@@ -13,5 +13,6 @@ import java.util.List;
  */
 public interface IssueRepository {
     List<Issue> getIssues();
+    Issue getIssueById(int id);
     Issue addOrUpdateIssue(Issue p);
 }

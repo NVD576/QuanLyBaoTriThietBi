@@ -7,7 +7,6 @@ package com.nvd.service.Impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.nvd.pojo.Device;
-import com.nvd.pojo.Status;
 import com.nvd.service.DeviceService;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
-import com.nvd.repository.StatusRepository;
-import com.nvd.service.StatusService;
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 
 /**
  *

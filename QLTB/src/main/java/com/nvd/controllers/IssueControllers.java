@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
@@ -50,8 +51,16 @@ public class IssueControllers {
     }
 
     @GetMapping("/issue")
-    public String update(Model model) {
-        model.addAttribute("issue", new Issue()); 
+    public String insert(Model model) {
+        model.addAttribute("issue", new Issue());
+        model.addAttribute("levels", this.incidentLevelService.getIncidentLevels());
+        model.addAttribute("devices", this.deviceService.getDevices(null));
+        return "issue-add";
+    }
+
+    @GetMapping("/issue/{id}")
+    public String update(@PathVariable("id") int id,Model model) {
+        model.addAttribute("issue", this.issueService.getIssueById(id));
         model.addAttribute("levels", this.incidentLevelService.getIncidentLevels());
         model.addAttribute("devices", this.deviceService.getDevices(null));
         return "issue-add";

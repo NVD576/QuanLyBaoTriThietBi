@@ -28,5 +28,10 @@ public class IssueServiceImpl implements IssueService{
     public Issue addOrUpdateIssue(Issue p) {
         return this.issueRepo.addOrUpdateIssue(p);
     }
+
+    @Override
+    public Issue getIssueById(int id) {
+        return this.issueRepo.getIssueById(id);
+    }
     
 }

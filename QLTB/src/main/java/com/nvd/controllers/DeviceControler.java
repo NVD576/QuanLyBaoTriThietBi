@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -36,11 +34,7 @@ public class DeviceControler {
     @Autowired
     private StatusService statusService;
     @Autowired
-    private AccountService accountService;
-    @Autowired
     private BaseService baseService;
-    @Autowired
-    private MaintenanceService maintenanceService;
     
     @GetMapping("/devices")
     public String list(Model model) {

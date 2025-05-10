@@ -12,13 +12,17 @@
             Thêm sự cố 
         </a>
         <ul class="navbar-nav me-auto">
-
-            <li class="nav-item" th:each="p : ${issues}" >
-                <div class="nav-link"
-                     th:text="${p.id + ' - ' + p.des + ' - ' + p.date + ' - ' + p.levelId.level+ ' - ' + p.deviceId.name+ ' - ' + p.isResolved}">
+            <li class="nav-item" th:each="p : ${issues}">
+                <div class="nav-link">
+                    <span th:text="${p.id + ' - ' + p.des + ' - ' + p.date + ' - ' + p.levelId.level + ' - ' + p.deviceId.name + ' - ' + p.isResolved}"></span>
+                    <a th:href="@{'/issue/' + ${p.id}}"
+                       class="btn btn-sm btn-outline-secondary ms-2">
+                        Sửa
+                    </a>
                 </div>
             </li>
         </ul>
+
     </div>
     <div th:replace="base :: footer"></div>
 </body>

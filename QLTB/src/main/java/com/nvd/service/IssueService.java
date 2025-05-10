@@ -14,4 +14,5 @@ import java.util.List;
 public interface IssueService {
     List<Issue> getIssues();
     Issue addOrUpdateIssue(Issue p);
+    Issue getIssueById(int id);
 }
