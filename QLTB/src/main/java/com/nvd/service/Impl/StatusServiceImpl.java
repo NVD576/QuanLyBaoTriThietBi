@@ -27,5 +27,10 @@ public class StatusServiceImpl implements StatusService{
     public List<Status> getStatus() {
         return this.statusRepo.getStatus();
     }
+
+    @Override
+    public Status getStatusById(int id) {
+       return this.statusRepo.getStatusById(id);
+    }
     
 }

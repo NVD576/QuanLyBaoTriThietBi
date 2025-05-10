@@ -7,6 +7,7 @@ package com.nvd.service.Impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.nvd.pojo.Device;
+import com.nvd.pojo.Status;
 import com.nvd.service.DeviceService;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
+import com.nvd.repository.StatusRepository;
+import com.nvd.service.StatusService;
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 
 /**
  *
@@ -30,6 +35,8 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceRepository deviceRepo;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    private StatusRepository statusRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -54,8 +61,17 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Device addOrUpdateDevice(Device p) {
-        if (!p.getFile().isEmpty() ) {
+        if (!p.getFile().isEmpty()) {
             try {
+                if (p.getDate() == null) {
+                    p.setDate(new Date()); // Set ngày hiện tại nếu chưa nhập
+                }
+                if (p.getStatusId() == null) {
+                    List<Status> statuses = this.statusRepository.getStatus(); // Hoặc service tương đương
+                    if (!statuses.isEmpty()) {
+                        p.setStatusId(statuses.get(0)); // Lấy status đầu tiên làm mặc định
+                    }
+                }
                 Map res = cloudinary.uploader().upload(p.getFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
                 p.setImage(res.get("secure_url").toString());
@@ -63,8 +79,6 @@ public class DeviceServiceImpl implements DeviceService {
                 Logger.getLogger(DeviceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-//        p.setImage("https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg");
-            
         return this.deviceRepo.addOrUpdateDevice(p);
     }
 

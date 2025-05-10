@@ -31,4 +31,10 @@ public class StatusRepositoryImpl implements StatusRepository {
         return q.getResultList();
     }
 
+    @Override
+    public Status getStatusById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(Status.class, id);
+    }
+
 }

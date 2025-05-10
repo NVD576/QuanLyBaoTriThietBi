@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface StatusRepository {
     List<Status> getStatus();
+    Status getStatusById(int id);
 }

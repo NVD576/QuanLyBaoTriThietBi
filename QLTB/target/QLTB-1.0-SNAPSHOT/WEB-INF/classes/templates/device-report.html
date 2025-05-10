@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Chỉnh sửa thiết bị</title>
+    <th:block th:replace="base :: styles"></th:block>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Chỉnh sửa thiết bị</h2>
+
+        <form th:action="@{/device/update}" th:object="${device}" method="post" class="row g-3">
+            <input type="hidden" th:field="*{id}" />
+
+            <!-- Tên -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Tên:</strong></label>
+                <input type="text" th:field="*{name}" class="form-control" required />
+            </div>
+
+            <!-- Loại thiết bị -->
+            <div class="col-md-6">
+                <label class="form-label"><strong>Loại:</strong></label>
+                <select th:field="*{categoryId}" class="form-select">
+                    <option th:each="type : ${types}"
+                            th:value="${type.id}"
+                            th:text="${type.name}"
+                    </option>
+                </select>
+            </div>
+
+
+
+        <!-- Vị trí -->
+        <div class="mb-3">
+            <label for="baseId" class="form-label">Cơ sở thiết bị:</label>
+            <select class="form-select" id="baseId" th:field="*{baseId.id}">
+                <option th:each="t : ${bases}"
+                        th:value="${t.id}"
+                        th:text="${t.name}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Nhà sản xuất -->
+        <div class="col-md-6">
+            <label class="form-label"><strong>Nhà sản xuất:</strong></label>
+            <input type="text" th:field="*{manufacturer}" class="form-control" />
+        </div>
+
+<!--         Ngày mua -->
+        <div class="col-md-6">
+            <label class="form-label"><strong>Ngày mua:</strong></label>
+            <input type="date" th:field="*{date}" class="form-control" />
+        </div>
+
+        <!-- Trạng thái -->
+        <div class="col-md-6">
+            <label class="form-label"><strong>Trạng thái:</strong></label>
+            <select th:field="*{statusId.id}" class="form-select">
+                <option th:each="st : ${statuses}"
+                        th:value="${st.id}"
+                        th:text="${st.name}"
+            </option>
+        </select>
+    </div>
+
+
+
+    <!-- Image -->
+    <div class="col-md-12">
+        <label class="form-label"><strong>Image (link ảnh):</strong></label>
+        <div>
+            <img th:if="*{image != null}" th:src="@{*{image}}" alt="Ảnh hiện tại"
+                 style="max-width: 150px; max-height: 150px;" class="mb-2" />
+        </div>
+
+        <input type="file" class="form-control" accept="image/*" id="image" th:field="*{image}" placeholder="URL ảnh" />
+    </div>
+
+    <!-- Nút lưu -->
+    <div class="col-12 d-flex justify-content-between align-items-center mt-4">
+        <a href="/QLTB" class="btn btn-secondary">← Quay lại danh sách</a>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</form>
+</div>
+
+
+
+<div th:replace="base :: footer"></div>
+</body>
+</html>

@@ -5,6 +5,7 @@
 package com.nvd.repository.Impl;
 
 import com.nvd.pojo.Device;
+import com.nvd.pojo.Status;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -22,6 +23,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
+import com.nvd.repository.StatusRepository;
 
 /**
  *
