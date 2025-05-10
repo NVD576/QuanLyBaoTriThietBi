@@ -11,9 +11,18 @@
         <h2>Thêm Thiết Bị Mới</h2>
 
         <form th:action="@{/device/add}" method="post" th:object="${device}" enctype="multipart/form-data">
+<<<<<<< HEAD
             <div class="col-md-6">
                 <label class="form-label"><strong>Tên:</strong></label>
                 <input type="text" th:field="*{name}" class="form-control" required />
+=======
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên thiết bị:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required />
+                <div th:if="${#fields.hasErrors('name')}" class="text-danger">
+                    <span th:errors="*{name}">Tên thiết bị không hợp lệ</span>
+                </div>
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
             </div>
 
 
@@ -41,11 +50,12 @@
                 <label class="form-label"><strong>Nhà sản xuất:</strong></label>
                 <input type="text" th:field="*{manufacturer}" class="form-control" />
             </div>
+
             <!-- Ngày mua -->
-            <div class="col-md-6">
-                <label class="form-label"><strong>Ngày mua:</strong></label>
-                <input type="date" th:field="*{date}" class="form-control" />
-            </div>
+            <!--            <div class="col-md-6">
+                            <label class="form-label"><strong>Ngày mua:</strong></label>
+                            <input type="date" th:field="*{date}" class="form-control" />
+                        </div>-->
 
 
             <div class="mb-3">
@@ -60,6 +70,7 @@
 
             <div class="mb-3">
                 <label for="image" class="form-label">Ảnh:</label>
+<<<<<<< HEAD
 
                 <div th:if="*{image} != null and *{image} != ''">
                     <img th:src="@{'/' + ${image}}" alt="Ảnh hiện tại" style="max-width: 150px; max-height: 150px;" class="mb-2" />
@@ -71,6 +82,19 @@
 
             <div>
                 <button type="submit" class="btn btn-primary">Thêm</button>
+=======
+                <input type="file" class="form-control" th:field="*{file}" placeholder="URL ảnh" /> <!-- accept="image/*"-->
+                <img th:if="${device.image != null}" th:src="${device.image}" style="max-width: 150px; max-height: 150px;" class="mb-2" />
+            </div>
+
+            <div class="mb-3 mt-3">
+                <input type="hidden" class="form-control" th:field="*{id}"  />
+                <input type="hidden" class="form-control" th:field="*{image}" />
+                <button class="btn btn-success mt-1" type="submit">
+                    <span th:if="${device.id == null}">Thêm sản phẩm</span>
+                    <span th:unless="${device.id == null}">Cập nhật sản phẩm</span>
+                </button>
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
             </div>
         </form>
     </div>

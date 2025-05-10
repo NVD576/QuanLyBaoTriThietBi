@@ -7,18 +7,16 @@
 <body>
     <div th:replace="base :: header"></div>
 
-    <div class="container">
-        <h2>Thêm Thiết Bị Mới</h2>
+    <div class="container mt-4">
 
-        <form th:action="@{/device/add}" method="post" th:object="${device}" enctype="multipart/form-data">
+        <form th:action="@{/device/add}" method="post" th:object="${device}" enctype="multipart/form-data" class="row g-3">
             <div class="col-md-6">
-                <label class="form-label"><strong>Tên:</strong></label>
-                <input type="text" th:field="*{name}" class="form-control" required />
+                <label for="name" class="form-label"><strong>Tên thiết bị:</strong></label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required />
             </div>
-
-
-            <div class="mb-3">
-                <label for="categoryId" class="form-label">Loại thiết bị:</label>
+            <!-- Loại thiết bị -->
+            <div class="col-md-6">
+                <label for="categoryId" class="form-label"><strong>Loại thiết bị:</strong></label>
                 <select class="form-select" id="categoryId" th:field="*{categoryId.id}">
                     <option th:each="t : ${types}"
                             th:value="${t.id}"
@@ -26,8 +24,9 @@
                     </option>
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="baseId" class="form-label">Cơ sở thiết bị:</label>
+            <!-- Vị trí -->
+            <div class="col-md-6">
+                <label for="baseId" class="form-label"><strong>Cơ sở thiết bị:</strong></label>
                 <select class="form-select" id="baseId" th:field="*{baseId.id}">
                     <option th:each="t : ${bases}"
                             th:value="${t.id}"
@@ -41,14 +40,15 @@
                 <label class="form-label"><strong>Nhà sản xuất:</strong></label>
                 <input type="text" th:field="*{manufacturer}" class="form-control" />
             </div>
+
             <!-- Ngày mua -->
-            <div class="col-md-6">
+            <div class="col-md-6" th:if="${device.id != null}">
                 <label class="form-label"><strong>Ngày mua:</strong></label>
                 <input type="date" th:field="*{date}" class="form-control" />
             </div>
 
 
-            <div class="mb-3">
+            <div class="col-md-6" th:if="${device.id != null}">
                 <label for="statusId" class="form-label">Trạng thái thiết bị:</label>
                 <select class="form-select" id="statusId" th:field="*{statusId.id}">
                     <option th:each="t : ${statuses}"
@@ -58,19 +58,20 @@
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="image" class="form-label">Ảnh:</label>
-
-                <div th:if="*{image} != null and *{image} != ''">
-                    <img th:src="@{'/' + ${image}}" alt="Ảnh hiện tại" style="max-width: 150px; max-height: 150px;" class="mb-2" />
-                </div>
-
-                <input type="file" class="form-control" accept="image/*" id="image" th:field="*{file}" />
+            <div class="col-md-12">
+                <label for="image" class="form-label"><strong>Ảnh:</strong></label>
+                <input type="file" class="form-control" th:field="*{file}" placeholder="URL ảnh" /> <!-- accept="image/*"-->
+                <img th:if="${device.image != null}"  alt="Ảnh minh họa" th:src="${device.image}" style="max-width: 150px; max-height: 150px;" class="mb-2" />
             </div>
 
-
-            <div>
-                <button type="submit" class="btn btn-primary">Thêm</button>
+            <div class="col-12 d-flex justify-content-between align-items-center mt-4">
+                <input type="hidden" class="form-control" th:field="*{id}"  />
+                <input type="hidden" class="form-control" th:field="*{image}" />
+                <a href="/QLTB" class="btn btn-secondary">← Quay lại danh sách</a>
+                <button class="btn btn-success mt-1" type="submit">
+                    <span th:if="${device.id == null}">Thêm sản phẩm</span>
+                    <span th:unless="${device.id == null}">Cập nhật sản phẩm</span>
+                </button>
             </div>
         </form>
     </div>

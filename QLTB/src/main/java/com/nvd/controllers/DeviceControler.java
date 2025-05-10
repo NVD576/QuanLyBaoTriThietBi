@@ -45,33 +45,32 @@ public class DeviceControler {
         model.addAttribute("types", this.categoryService.getCates());
         model.addAttribute("statuses", this.statusService.getStatus());
         model.addAttribute("bases", this.baseService.getBases());
-        return "devices-add";
+        return "devices-edit";
     }
 
     @PostMapping("/device/add")
+<<<<<<< HEAD
     public String add(@ModelAttribute(value = "device") Device p) {
         System.out.println("Device name: " + p.getName());
 
         if (this.deviceService.addOrUpdateDevice(p) == true) {
+=======
+    public String add(@ModelAttribute(value = "device") Device p, BindingResult result,
+                      Model model) {
+        if(this.deviceService.addOrUpdateDevice(p) != null) {
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
             return "redirect:/";
         }
-        return "devices-add";
+        return "devices-edit";
     }
 
-    @GetMapping("/device/edit/{id}")
-    public String getDeviceDetails(@PathVariable("id") int id, Model model) {
+    @GetMapping("/device/{id}")
+    public String update (@PathVariable("id") int id, Model model) {
         model.addAttribute("device", this.deviceService.getDeviceById(id));
         // Truyền dữ liệu dropdown
         model.addAttribute("bases", this.baseService.getBases());
         model.addAttribute("types", this.categoryService.getCates());
         model.addAttribute("statuses", this.statusService.getStatus());
-        return "device-edit";
-    }
-
-    @GetMapping("/device/{id}")
-    public String getDeviceShow(@PathVariable("id") int id, Model model) {
-        model.addAttribute("device", this.deviceService.getDeviceById(id));
-
-        return "device-show";
+        return "devices-edit";
     }
 }

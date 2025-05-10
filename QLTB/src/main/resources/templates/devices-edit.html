@@ -7,27 +7,23 @@
 <body>
     <div th:replace="base :: header"></div>
 
-    <div class="container">
-        <h2>Thêm Thiết Bị Mới</h2>
+    <div class="container mt-4">
 
+<<<<<<< HEAD:QLTB/src/main/resources/templates/devices-add.html
         <form th:action="@{/device/add}" method="post" th:object="${device}" enctype="multipart/form-data">
-<<<<<<< HEAD
             <div class="col-md-6">
                 <label class="form-label"><strong>Tên:</strong></label>
                 <input type="text" th:field="*{name}" class="form-control" required />
 =======
-            <div class="mb-3">
-                <label for="name" class="form-label">Tên thiết bị:</label>
+        <form th:action="@{/device/add}" method="post" th:object="${device}" enctype="multipart/form-data" class="row g-3">
+            <div class="col-md-6">
+                <label for="name" class="form-label"><strong>Tên thiết bị:</strong></label>
                 <input type="text" class="form-control" id="name" th:field="*{name}" required />
-                <div th:if="${#fields.hasErrors('name')}" class="text-danger">
-                    <span th:errors="*{name}">Tên thiết bị không hợp lệ</span>
-                </div>
->>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad:QLTB/src/main/resources/templates/devices-edit.html
             </div>
-
-
-            <div class="mb-3">
-                <label for="categoryId" class="form-label">Loại thiết bị:</label>
+            <!-- Loại thiết bị -->
+            <div class="col-md-6">
+                <label for="categoryId" class="form-label"><strong>Loại thiết bị:</strong></label>
                 <select class="form-select" id="categoryId" th:field="*{categoryId.id}">
                     <option th:each="t : ${types}"
                             th:value="${t.id}"
@@ -35,8 +31,9 @@
                     </option>
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="baseId" class="form-label">Cơ sở thiết bị:</label>
+            <!-- Vị trí -->
+            <div class="col-md-6">
+                <label for="baseId" class="form-label"><strong>Cơ sở thiết bị:</strong></label>
                 <select class="form-select" id="baseId" th:field="*{baseId.id}">
                     <option th:each="t : ${bases}"
                             th:value="${t.id}"
@@ -52,13 +49,13 @@
             </div>
 
             <!-- Ngày mua -->
-            <!--            <div class="col-md-6">
-                            <label class="form-label"><strong>Ngày mua:</strong></label>
-                            <input type="date" th:field="*{date}" class="form-control" />
-                        </div>-->
+            <div class="col-md-6" th:if="${device.id != null}">
+                <label class="form-label"><strong>Ngày mua:</strong></label>
+                <input type="date" th:field="*{date}" class="form-control" />
+            </div>
 
 
-            <div class="mb-3">
+            <div class="col-md-6" th:if="${device.id != null}">
                 <label for="statusId" class="form-label">Trạng thái thiết bị:</label>
                 <select class="form-select" id="statusId" th:field="*{statusId.id}">
                     <option th:each="t : ${statuses}"
@@ -68,9 +65,9 @@
                 </select>
             </div>
 
+<<<<<<< HEAD:QLTB/src/main/resources/templates/devices-add.html
             <div class="mb-3">
                 <label for="image" class="form-label">Ảnh:</label>
-<<<<<<< HEAD
 
                 <div th:if="*{image} != null and *{image} != ''">
                     <img th:src="@{'/' + ${image}}" alt="Ảnh hiện tại" style="max-width: 150px; max-height: 150px;" class="mb-2" />
@@ -83,18 +80,21 @@
             <div>
                 <button type="submit" class="btn btn-primary">Thêm</button>
 =======
+            <div class="col-md-12">
+                <label for="image" class="form-label"><strong>Ảnh:</strong></label>
                 <input type="file" class="form-control" th:field="*{file}" placeholder="URL ảnh" /> <!-- accept="image/*"-->
-                <img th:if="${device.image != null}" th:src="${device.image}" style="max-width: 150px; max-height: 150px;" class="mb-2" />
+                <img th:if="${device.image != null}"  alt="Ảnh minh họa" th:src="${device.image}" style="max-width: 150px; max-height: 150px;" class="mb-2" />
             </div>
 
-            <div class="mb-3 mt-3">
+            <div class="col-12 d-flex justify-content-between align-items-center mt-4">
                 <input type="hidden" class="form-control" th:field="*{id}"  />
                 <input type="hidden" class="form-control" th:field="*{image}" />
+                <a href="/QLTB" class="btn btn-secondary">← Quay lại danh sách</a>
                 <button class="btn btn-success mt-1" type="submit">
                     <span th:if="${device.id == null}">Thêm sản phẩm</span>
                     <span th:unless="${device.id == null}">Cập nhật sản phẩm</span>
                 </button>
->>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad:QLTB/src/main/resources/templates/devices-edit.html
             </div>
         </form>
     </div>

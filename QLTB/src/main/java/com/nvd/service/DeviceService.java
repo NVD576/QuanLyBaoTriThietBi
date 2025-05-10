@@ -17,5 +17,5 @@ public interface DeviceService {
     int countDevice();
     int countDeviceByType(int typeId);
     Device getDeviceById(int id);
-    boolean addOrUpdateDevice(Device p);
+    Device addOrUpdateDevice(Device p);
 }

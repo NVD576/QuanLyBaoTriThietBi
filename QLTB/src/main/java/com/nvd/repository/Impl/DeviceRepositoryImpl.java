@@ -5,6 +5,7 @@
 package com.nvd.repository.Impl;
 
 import com.nvd.pojo.Device;
+import com.nvd.pojo.Status;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -22,6 +23,8 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
+import com.nvd.repository.StatusRepository;
+import java.util.Date;
 
 /**
  *
@@ -36,6 +39,8 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     private LocalSessionFactoryBean factory;
     @Autowired
     private Environment env;
+    @Autowired
+    private StatusRepository statusRepository;
 
     @Override
     public List<Device> getDevices(Map<String, String> params) {
@@ -101,24 +106,41 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     }
 
     @Override
+<<<<<<< HEAD
     public boolean addOrUpdateDevice(Device p) {
         if (p == null) {
             System.err.println("Device is null");
             return false;
         }
+=======
+    @Transactional
+    public Device addOrUpdateDevice(Device p) {
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
         Session s = this.factory.getObject().getCurrentSession();
         try {
             if (p.getId() == null) {
                 System.out.println("Saving new device: " + p);
+<<<<<<< HEAD
+=======
+                if (p.getDate() == null) {
+                    p.setDate(new Date()); // Set ngày hiện tại nếu chưa nhập
+                }
+                if (p.getStatusId() == null) {
+                    List<Status> statuses = this.statusRepository.getStatus(); // Hoặc service tương đương
+                    if (!statuses.isEmpty()) {
+                        p.setStatusId(statuses.get(0)); // Lấy status đầu tiên làm mặc định
+                    }
+                }
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
                 s.persist(p);
             } else {
                 System.out.println("Updating device with ID: " + p.getId());
                 s.merge(p);
             }
-            return true;
         } catch (HibernateException ex) {
             ex.printStackTrace();
-            throw ex; 
         }
+        s.refresh(p);
+        return p;
     }
 }

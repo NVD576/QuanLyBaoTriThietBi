@@ -26,6 +26,10 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+<<<<<<< HEAD
+=======
+import org.springframework.format.annotation.DateTimeFormat;
+>>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -56,6 +60,7 @@ public class Device implements Serializable {
     @Column(name = "name")
     private String name;
     @Column(name = "date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date date;
     @Size(max = 100)
@@ -224,4 +229,20 @@ public class Device implements Serializable {
         this.file = file;
     }
     
+    @Transient
+    private MultipartFile file;
+    
+    /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
 }
