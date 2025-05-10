@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -47,9 +49,10 @@ public class DeviceControler {
     }
 
     @PostMapping("/device/add")
-    public String add(@ModelAttribute(value = "device") Device p, BindingResult result,
-                      Model model) {
-        if (deviceService.addOrUpdateDevice(p) == true) {
+    public String add(@ModelAttribute(value = "device") Device p) {
+        System.out.println("Device name: " + p.getName());
+
+        if (this.deviceService.addOrUpdateDevice(p) == true) {
             return "redirect:/";
         }
         return "devices-add";

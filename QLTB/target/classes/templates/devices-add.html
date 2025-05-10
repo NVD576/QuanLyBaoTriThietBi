@@ -11,9 +11,9 @@
         <h2>Thêm Thiết Bị Mới</h2>
 
         <form th:action="@{/device/add}" method="post" th:object="${device}" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="name" class="form-label">Tên thiết bị:</label>
-                <input type="text" class="form-control" id="name" th:field="*{name}" required />
+            <div class="col-md-6">
+                <label class="form-label"><strong>Tên:</strong></label>
+                <input type="text" th:field="*{name}" class="form-control" required />
             </div>
 
 
@@ -60,11 +60,14 @@
 
             <div class="mb-3">
                 <label for="image" class="form-label">Ảnh:</label>
-                <div th:if="*{image != null}">
-                    <img th:src="@{${image}}" alt="Ảnh hiện tại" style="max-width: 150px; max-height: 150px;" class="mb-2" />
+
+                <div th:if="*{image} != null and *{image} != ''">
+                    <img th:src="@{'/' + ${image}}" alt="Ảnh hiện tại" style="max-width: 150px; max-height: 150px;" class="mb-2" />
                 </div>
-                <input type="file" class="form-control" accept="image/*" id="image" th:field="*{image}" placeholder="URL ảnh" />
+
+                <input type="file" class="form-control" accept="image/*" id="image" th:field="*{file}" />
             </div>
+
 
             <div>
                 <button type="submit" class="btn btn-primary">Thêm</button>

@@ -101,7 +101,6 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     }
 
     @Override
-    @Transactional
     public boolean addOrUpdateDevice(Device p) {
         if (p == null) {
             System.err.println("Device is null");
@@ -111,10 +110,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         try {
             if (p.getId() == null) {
                 System.out.println("Saving new device: " + p);
-                s.save(p);
+                s.persist(p);
             } else {
                 System.out.println("Updating device with ID: " + p.getId());
-                s.update(p);
+                s.merge(p);
             }
             return true;
         } catch (HibernateException ex) {
