@@ -61,7 +61,7 @@
             <select th:field="*{statusId.id}" class="form-select">
                 <option th:each="st : ${statuses}"
                         th:value="${st.id}"
-                        th:text="${st.name}"
+                        th:text="${st.name}">
             </option>
         </select>
     </div>

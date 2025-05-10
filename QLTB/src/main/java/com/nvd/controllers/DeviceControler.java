@@ -9,6 +9,7 @@ import com.nvd.service.AccountService;
 import com.nvd.service.BaseService;
 import com.nvd.service.CategoryService;
 import com.nvd.service.DeviceService;
+import com.nvd.service.MaintenanceService;
 import com.nvd.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,9 @@ public class DeviceControler {
     private AccountService accountService;
     @Autowired
     private BaseService baseService;
-
+    @Autowired
+    private MaintenanceService maintenanceService;
+    
     @GetMapping("/devices")
     public String list(Model model) {
         model.addAttribute("device", new Device());
@@ -49,16 +52,9 @@ public class DeviceControler {
     }
 
     @PostMapping("/device/add")
-<<<<<<< HEAD
-    public String add(@ModelAttribute(value = "device") Device p) {
-        System.out.println("Device name: " + p.getName());
-
-        if (this.deviceService.addOrUpdateDevice(p) == true) {
-=======
     public String add(@ModelAttribute(value = "device") Device p, BindingResult result,
                       Model model) {
         if(this.deviceService.addOrUpdateDevice(p) != null) {
->>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
             return "redirect:/";
         }
         return "devices-edit";
@@ -73,4 +69,6 @@ public class DeviceControler {
         model.addAttribute("statuses", this.statusService.getStatus());
         return "devices-edit";
     }
+    
+
 }

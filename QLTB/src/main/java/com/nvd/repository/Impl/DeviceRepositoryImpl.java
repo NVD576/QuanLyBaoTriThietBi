@@ -106,22 +106,12 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     }
 
     @Override
-<<<<<<< HEAD
-    public boolean addOrUpdateDevice(Device p) {
-        if (p == null) {
-            System.err.println("Device is null");
-            return false;
-        }
-=======
     @Transactional
     public Device addOrUpdateDevice(Device p) {
->>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
         Session s = this.factory.getObject().getCurrentSession();
         try {
             if (p.getId() == null) {
                 System.out.println("Saving new device: " + p);
-<<<<<<< HEAD
-=======
                 if (p.getDate() == null) {
                     p.setDate(new Date()); // Set ngày hiện tại nếu chưa nhập
                 }
@@ -131,7 +121,6 @@ public class DeviceRepositoryImpl implements DeviceRepository {
                         p.setStatusId(statuses.get(0)); // Lấy status đầu tiên làm mặc định
                     }
                 }
->>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
                 s.persist(p);
             } else {
                 System.out.println("Updating device with ID: " + p.getId());

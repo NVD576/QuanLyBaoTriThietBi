@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý sự cố</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+    <div class="container">
+        <form th:action="@{/issue/add}" th:object="${issue}" method="post">
+            <div class="form-group">
+                <label for="des">Mô tả sự cố:</label>
+                <input type="text" class="form-control" id="des" th:field="*{des}" placeholder="Nhập mô tả sự cố" />
+            </div>
+
+            <div class="form-group">
+                <label for="date">Ngày xảy ra:</label>
+                <input type="date" class="form-control" id="date" th:field="*{date}" />
+            </div>
+
+            <div class="form-group">
+                <label for="levelId">Mức độ:</label>
+                <select class="form-control" id="levelId" th:field="*{levelId.id}">
+                    <option th:each="l : ${levels}" th:value="${l.id}" th:text="${l.level}">Mức độ</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="deviceId">Thiết bị liên quan:</label>
+                <select class="form-control" id="deviceId" th:field="*{deviceId.id}">
+                    <option th:each="d : ${devices}" th:value="${d.id}" th:text="${d.name}">Thiết bị</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="isResolved">Đã xử lý:</label>
+                <select class="form-control" id="isResolved" th:field="*{isResolved}">
+                    <option value="true">Đã xử lý</option>
+                    <option value="false">Chưa xử lý</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Thêm sự cố</button>
+        </form>
+
+    </div>
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

@@ -26,10 +26,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
-<<<<<<< HEAD
-=======
 import org.springframework.format.annotation.DateTimeFormat;
->>>>>>> 77fef4c5910abae5973b1687fe74c5a1cd7424ad
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -84,8 +81,7 @@ public class Device implements Serializable {
     private Status statusId;
     @OneToMany(mappedBy = "deviceId")
     private Set<Maintenance> maintenanceSet;
-    @Transient
-    private MultipartFile file;
+
     public Device() {
     }
 
@@ -215,20 +211,7 @@ public class Device implements Serializable {
         return "com.nvd.pojo.Device[ id=" + id + " ]";
     }
 
-    /**
-     * @return the file
-     */
-    public MultipartFile getFile() {
-        return file;
-    }
 
-    /**
-     * @param file the file to set
-     */
-    public void setFile(MultipartFile file) {
-        this.file = file;
-    }
-    
     @Transient
     private MultipartFile file;
     

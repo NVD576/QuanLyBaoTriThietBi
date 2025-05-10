@@ -13,7 +13,14 @@
             <a th:href="@{/devices}" class="btn btn-success">
                 Thêm Thiết Bị
             </a>
+            <!-- Nút quản lý lịch bảo trì -->
+            <a th:href="@{/maintenances}" class="btn btn-success">
+                Quản lý lịch bảo trì
+            </a>
 
+            <a th:href="@{/issues}" class="btn btn-success">
+                Quản lý sự cố
+            </a>
             <!-- Thông tin Trang hiện tại -->
             <span class="badge bg-primary fs-6">
                 Trang hiện tại: <span th:text="${currentPage}"></span>

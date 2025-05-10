@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý sự cố</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+    <div class="container">
+        <a th:href="@{/issue}" class="btn btn-success">
+            Thêm sự cố 
+        </a>
+        <ul class="navbar-nav me-auto">
+
+            <li class="nav-item" th:each="p : ${issues}" >
+                <div class="nav-link"
+                     th:text="${p.id + ' - ' + p.des + ' - ' + p.date + ' - ' + p.levelId.level+ ' - ' + p.deviceId.name+ ' - ' + p.isResolved}">
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div th:replace="base :: footer"></div>
+</body>
+</html>
