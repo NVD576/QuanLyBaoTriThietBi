@@ -12,11 +12,15 @@
             Thêm lịch bảo trì
         </a>
         <ul class="navbar-nav me-auto">
-
             <li class="nav-item" th:each="p : ${maintenances}" >
-                <div class="nav-link"
-                     th:text="${p.deviceId.name + ' - ' + p.frequencyId.frequency + ' - ' + p.date + ' - ' + p.typeId.type}">
+                <div class="nav-link">
+                    <span th:text="${p.deviceId.name + ' - ' + p.frequencyId.frequency + ' - ' + p.date + ' - ' + p.typeId.type}"></span>
+                    <a th:href="@{'/maintenance/' + ${p.id}}"
+                       class="btn btn-sm btn-outline-secondary ms-2">
+                        Sửa
+                    </a>
                 </div>
+
             </li>
         </ul>
     </div>

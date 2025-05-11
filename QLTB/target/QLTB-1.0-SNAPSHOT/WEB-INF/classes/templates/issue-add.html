@@ -43,7 +43,7 @@
 
             <div class="col-12 d-flex justify-content-between align-items-center mt-4">
                 <input type="hidden" class="form-control" th:field="*{id}"  />
-                <a href="/issues" class="btn btn-secondary">← Quay lại</a>
+                <a href="/QLTB/issues" class="btn btn-secondary">← Quay lại</a>
                 <button class="btn btn-success mt-1" type="submit">
                     <span th:if="${issue.id == null}">Thêm sản phẩm</span>
                     <span th:unless="${issue.id == null}">Cập nhật</span>

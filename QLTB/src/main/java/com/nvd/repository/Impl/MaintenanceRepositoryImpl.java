@@ -7,6 +7,7 @@ package com.nvd.repository.Impl;
 import com.nvd.pojo.Category;
 import com.nvd.pojo.Device;
 import com.nvd.pojo.Frequency;
+import com.nvd.pojo.Issue;
 import com.nvd.pojo.Maintenance;
 import com.nvd.pojo.MaintenanceType;
 import com.nvd.pojo.Status;
@@ -53,7 +54,8 @@ public class MaintenanceRepositoryImpl implements MaintenanceRepository {
 
     @Override
     public Maintenance getMaintenanceById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(Maintenance.class, id);
     }
 
     @Override

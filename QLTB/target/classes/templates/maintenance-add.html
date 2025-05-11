@@ -45,8 +45,13 @@
                 </select>
             </div>
 
-            <div>
-                <button type="submit" class="btn btn-primary">Thêm bản ghi</button>
+            <div class="col-12 d-flex justify-content-between align-items-center mt-4">
+                <input type="hidden" class="form-control" th:field="*{id}"  />
+                <a href="/QLTB/maintenances" class="btn btn-secondary">← Quay lại</a>
+                <button class="btn btn-success mt-1" type="submit">
+                    <span th:if="${maintenance.id == null}">Thêm sản phẩm</span>
+                    <span th:unless="${maintenance.id == null}">Cập nhật</span>
+                </button>
             </div>
         </form>
 
