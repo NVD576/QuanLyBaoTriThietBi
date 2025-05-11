@@ -23,7 +23,7 @@
                 <label for="deviceId">Tên thiết bị:</label>
                 <input type="text" class="form-control" th:value="${device.name}" readonly />
                 <!-- hidden để binding -->
-                <input type="hidden" th:field="*{deviceId.id}" th:value="${deviceId}" />
+                <input type="hidden" th:field="*{deviceId.id}" />
             </div>
 
             <div class="form-group">
@@ -35,7 +35,7 @@
 
             <div class="form-group">
                 <label for="date">Ngày:</label>
-                <input type="date" class="form-control" id="date" th:field="*{date}" />
+                <input type="date" class="form-control" id="date" th:field="*{date}" required  />
             </div>
 
             <div class="form-group">

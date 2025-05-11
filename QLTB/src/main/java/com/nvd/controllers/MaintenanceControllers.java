@@ -53,7 +53,7 @@ public class MaintenanceControllers {
     public String add(@ModelAttribute(value = "maintenance") Maintenance p, BindingResult result,
             Model model) {
         if (this.maintenanceService.addOrUpdateMaintenance(p) != null) {
-            return "redirect:/maintenance";
+            return "redirect:/";
         }
         return "maintenance-add";
     }
@@ -69,9 +69,12 @@ public class MaintenanceControllers {
 
     @GetMapping("/maintenance/Device/{id}")
     public String update(@PathVariable("id") int id, Model model) {
-        model.addAttribute("maintenance", new Maintenance());
-        model.addAttribute("device", deviceService.getDeviceById(id));
-        model.addAttribute("deviceId", id);
+        Maintenance m = new Maintenance();
+        Device device = deviceService.getDeviceById(id);
+        m.setDeviceId(device);  // Gán thiết bị cụ thể vào đối tượng maintenance
+
+        model.addAttribute("maintenance", m);
+        model.addAttribute("device", device);
         model.addAttribute("frequencies", frequencyService.getFrequency());
         model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
         return "maintenance-add";
