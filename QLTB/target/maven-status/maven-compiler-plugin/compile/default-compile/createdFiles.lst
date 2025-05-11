@@ -54,6 +54,7 @@ com\nvd\pojo\MaintenanceType.class
 com\nvd\service\Impl\IncidentLevelServiceImpl.class
 com\nvd\pojo\RepairType.class
 com\nvd\repository\BaseRepository.class
+com\nvd\controllers\ApiDeviceControllers.class
 com\nvd\service\IncidentLevelService.class
 com\nvd\repository\RepairRepository.class
 com\nvd\service\Impl\MaintenanceServiceImpl.class
