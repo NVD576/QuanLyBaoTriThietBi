@@ -32,4 +32,9 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         return this.maintenanceRepository.addOrUpdateMaintenance(p);
     }
 
+    @Override
+    public List<Maintenance> getByDeviceId(int id) {
+        return this.maintenanceRepository.getByDeviceId(id);
+    }
+
 }

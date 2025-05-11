@@ -14,4 +14,5 @@ import java.util.List;
 public interface MaintenanceService {
     List<Maintenance> getMaintenances();
     Maintenance addOrUpdateMaintenance(Maintenance p);
+    List<Maintenance> getByDeviceId(int id);
 }

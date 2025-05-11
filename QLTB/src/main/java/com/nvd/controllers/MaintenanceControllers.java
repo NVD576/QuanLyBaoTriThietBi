@@ -35,13 +35,13 @@ public class MaintenanceControllers {
 
     @Autowired
     private MaintenanceTypeService maintenanceTypeService;
-    
+
     @Autowired
     private FrequencyService frequencyService;
-    
+
     @Autowired
     private DeviceService deviceService;
-    
+
     @GetMapping("/maintenances")
     public String show(Model model) {
         // Truyền dữ liệu dropdown
@@ -49,8 +49,6 @@ public class MaintenanceControllers {
         return "maintenances";
     }
 
-    
-    
     @PostMapping("/maintenance/add")
     public String add(@ModelAttribute(value = "maintenance") Maintenance p, BindingResult result,
             Model model) {
@@ -61,11 +59,21 @@ public class MaintenanceControllers {
     }
 
     @GetMapping("/maintenance")
-    public String update(Model model){
+    public String update(Model model) {
         model.addAttribute("maintenance", new Maintenance());
         model.addAttribute("types", this.maintenanceTypeService.getMaintenanceTypes());
         model.addAttribute("frequencies", this.frequencyService.getFrequency());
         model.addAttribute("devices", this.deviceService.getDevices(null));
+        return "maintenance-add";
+    }
+
+    @GetMapping("/maintenance/Device/{id}")
+    public String update(@PathVariable("id") int id, Model model) {
+        model.addAttribute("maintenance", new Maintenance());
+        model.addAttribute("device", deviceService.getDeviceById(id));
+        model.addAttribute("deviceId", id);
+        model.addAttribute("frequencies", frequencyService.getFrequency());
+        model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
         return "maintenance-add";
     }
 }

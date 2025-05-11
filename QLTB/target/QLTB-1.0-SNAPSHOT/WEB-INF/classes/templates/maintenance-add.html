@@ -9,11 +9,21 @@
     <div th:replace="base :: header"></div>
     <div class="container">
         <form th:action="@{/maintenance/add}" th:object="${maintenance}" method="post">
-            <div class="form-group">
+
+            <!-- Nếu có danh sách devices (tự do chọn thiết bị) -->
+            <div class="form-group" th:if="${devices != null}">
                 <label for="deviceId">Tên thiết bị:</label>
                 <select class="form-control" id="deviceId" th:field="*{deviceId.id}">
                     <option th:each="d : ${devices}" th:value="${d.id}" th:text="${d.name}">Thiết bị</option>
                 </select>
+            </div>
+
+            <!-- Nếu chỉ có 1 thiết bị cụ thể -->
+            <div class="form-group" th:unless="${devices != null}">
+                <label for="deviceId">Tên thiết bị:</label>
+                <input type="text" class="form-control" th:value="${device.name}" readonly />
+                <!-- hidden để binding -->
+                <input type="hidden" th:field="*{deviceId.id}" th:value="${deviceId}" />
             </div>
 
             <div class="form-group">
@@ -35,7 +45,9 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">Thêm bản ghi</button>
+            <div>
+                <button type="submit" class="btn btn-primary">Thêm bản ghi</button>
+            </div>
         </form>
 
     </div>

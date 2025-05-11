@@ -35,6 +35,8 @@ public class DeviceControler {
     private StatusService statusService;
     @Autowired
     private BaseService baseService;
+    @Autowired
+    private MaintenanceService maintenanceService;
     
     @GetMapping("/devices")
     public String list(Model model) {
@@ -64,5 +66,11 @@ public class DeviceControler {
         return "devices-edit";
     }
     
-
+    @GetMapping("/device-detail/{id}")
+    public String showDetail (@PathVariable("id") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+        
+        model.addAttribute("maintenances", this.maintenanceService.getByDeviceId(id));
+        return "device-details";
+    }
 }

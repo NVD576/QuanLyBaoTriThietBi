@@ -58,7 +58,7 @@ public class MaintenanceRepositoryImpl implements MaintenanceRepository {
                 if (p.getDate() == null) {
                     p.setDate(new Date()); // Set ngày hiện tại nếu chưa nhập
                 }
-                if (p.getTypeId()== null) {
+                if (p.getTypeId() == null) {
                     List<MaintenanceType> types = this.maintenanceTypeRepository.getMaintenanceTypes(); // Hoặc service tương đương
                     if (!types.isEmpty()) {
                         p.setTypeId(types.get(0)); // Lấy status đầu tiên làm mặc định
@@ -76,6 +76,15 @@ public class MaintenanceRepositoryImpl implements MaintenanceRepository {
         return p;
     }
 
-
+    @Override
+    public List<Maintenance> getByDeviceId(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Query q = s.createQuery(
+                "FROM Maintenance m WHERE m.deviceId.id = :deviceId ORDER BY m.id ASC",
+                Maintenance.class
+        );
+        q.setParameter("deviceId", id);
+        return q.getResultList();
+    }
 
 }
