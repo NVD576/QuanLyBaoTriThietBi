@@ -18,4 +18,5 @@ public interface DeviceRepository {
     int countDeviceByType(int typeId);
     Device getDeviceById(int id);
     Device addOrUpdateDevice(Device p);
+    void deleteDevice(int id);
 }

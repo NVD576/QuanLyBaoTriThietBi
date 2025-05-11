@@ -6,7 +6,6 @@ package com.nvd.controllers;
 
 import com.nvd.pojo.Device;
 import com.nvd.pojo.Maintenance;
-import com.nvd.service.AccountService;
 import com.nvd.service.BaseService;
 import com.nvd.service.CategoryService;
 import com.nvd.service.DeviceService;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author ADMIN
  */
 @Controller
-public class DeviceControler {
+public class DeviceControllers {
 
     @Autowired
     private DeviceService deviceService;
