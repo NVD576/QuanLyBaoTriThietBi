@@ -51,7 +51,12 @@ public class DeviceServiceImpl implements DeviceService {
     public Device getDeviceById(int id) {
         return this.deviceRepo.getDeviceById(id);
     }
-
+    
+    @Override
+    public void deleteDevice(int id){
+        this.deviceRepo.deleteDevice(id);
+    }
+    
     @Override
     public Device addOrUpdateDevice(Device p) {
         if (!p.getFile().isEmpty()) {

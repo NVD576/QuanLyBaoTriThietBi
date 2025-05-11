@@ -83,7 +83,7 @@ public class MaintenanceControllers {
     @GetMapping("/maintenance/{id}")
     public String edit(@PathVariable("id") int id, Model model) {
         model.addAttribute("maintenance", this.maintenanceService.getMaintenanceById(id));
-        model.addAttribute("device", this.deviceService.getDevices(null));
+        model.addAttribute("devices", this.deviceService.getDevices(null));
         model.addAttribute("frequencies", frequencyService.getFrequency());
         model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
         return "maintenance-add";

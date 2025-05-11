@@ -132,4 +132,11 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         s.refresh(p);
         return p;
     }
+
+    @Override
+    public void deleteDevice(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Device p = this.getDeviceById(id);
+        s.remove(p);
+    }
 }

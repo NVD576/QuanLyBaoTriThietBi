@@ -43,6 +43,7 @@ com\nvd\service\DeviceService.class
 com\nvd\repository\Impl\FrequencyRepositoryImpl.class
 com\nvd\pojo\Frequency.class
 com\nvd\repository\Impl\CategoryRepositoryImpl.class
+com\nvd\controllers\DeviceControllers.class
 com\nvd\qltb\JakartaRestConfiguration.class
 com\nvd\formatters\CategoryFormatter.class
 com\nvd\pojo\Category.class
@@ -62,7 +63,6 @@ com\nvd\repository\Impl\IncidentLevelRepositoryImpl.class
 com\nvd\service\Impl\AccountServiceImpl.class
 com\nvd\repository\DeviceRepository.class
 com\nvd\repository\IssueRepository.class
-com\nvd\controllers\DeviceControler.class
 com\nvd\qltb\resources\JakartaEE10Resource.class
 com\nvd\repository\Impl\MaintenanceTypeRepositoryImpl.class
 com\nvd\controllers\IndexController.class

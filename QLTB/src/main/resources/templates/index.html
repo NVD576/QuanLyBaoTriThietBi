@@ -58,7 +58,7 @@
                     <!-- Xóa -->
                     <a th:href="@{'/device/delete/' + ${p.id}}"
                        class="btn btn-sm btn-outline-danger"
-                       onclick="return confirm('Bạn có chắc muốn xóa thiết bị này?');">
+                       th:onclick="'deleteDevice(\''+@{/api/devices/}+'\','+${p.id}+')'">
                         Xóa
                     </a>
                 </div>
