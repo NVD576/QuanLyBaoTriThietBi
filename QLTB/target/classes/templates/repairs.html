@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý sự cố</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+    <div class="container">
+        <a th:href="@{/repair}" class="btn btn-success">
+            Thêm lịch sửa chữa
+        </a>
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item" th:each="p : ${repairs}">
+                <div class="nav-link">
+                    <span th:text="${p.id + ' - ' + p.date + ' - ' + p.cost  + ' - ' + p.deviceId.name + ' - ' + p.typeId.type+ ' - ' + p.accountId.name}"></span>
+                    <a th:href="@{'/repair/' + ${p.id}}"
+                       class="btn btn-sm btn-outline-secondary ms-2">
+                        Sửa
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

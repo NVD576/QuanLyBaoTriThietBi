@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm lịch sửa chữa</title>
+    <th:block th:replace="base :: styles"></th:block>
+</head>
+<body>
+<div th:replace="base :: header"></div>
+
+<div class="container mt-4">
+    <h2>Thêm lịch sửa chữa</h2>
+
+    <form th:action="@{/repair/add}" th:object="${repair}" method="post">
+        <div class="mb-3">
+            <label for="date" class="form-label">Ngày sửa chữa</label>
+            <input type="date" class="form-control" id="date" th:field="*{date}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="cost" class="form-label">Chi phí</label>
+            <input type="number" class="form-control" id="cost" th:field="*{cost}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="deviceId" class="form-label">Thiết bị</label>
+            <select class="form-control" id="deviceId" th:field="*{deviceId}" required>
+                <option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.name}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="typeId" class="form-label">Loại sửa chữa</label>
+            <select class="form-control" id="typeId" th:field="*{typeId}" required>
+                <option th:each="type : ${repairTypes}" th:value="${type.id}" th:text="${type.type}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="accountId" class="form-label">Người thực hiện</label>
+            <select class="form-control" id="accountId" th:field="*{accountId}" required>
+                <option th:each="acc : ${accounts}" th:value="${acc.id}" th:text="${acc.name}"></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <a th:href="@{/repairs}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+
+<div th:replace="base :: footer"></div>
+</body>
+</html>

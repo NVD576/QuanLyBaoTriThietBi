@@ -4,10 +4,8 @@
  */
 package com.nvd.repository.Impl;
 
-import com.nvd.pojo.Device;
 import com.nvd.pojo.IncidentLevel;
 import com.nvd.pojo.Issue;
-import com.nvd.pojo.Status;
 import com.nvd.repository.IncidentLevelRepository;
 import com.nvd.repository.IssueRepository;
 import jakarta.persistence.Query;
