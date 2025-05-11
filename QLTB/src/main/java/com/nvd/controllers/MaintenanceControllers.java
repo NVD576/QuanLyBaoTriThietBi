@@ -35,13 +35,13 @@ public class MaintenanceControllers {
 
     @Autowired
     private MaintenanceTypeService maintenanceTypeService;
-    
+
     @Autowired
     private FrequencyService frequencyService;
-    
+
     @Autowired
     private DeviceService deviceService;
-    
+
     @GetMapping("/maintenances")
     public String show(Model model) {
         // Truyền dữ liệu dropdown
@@ -49,23 +49,34 @@ public class MaintenanceControllers {
         return "maintenances";
     }
 
-    
-    
     @PostMapping("/maintenance/add")
     public String add(@ModelAttribute(value = "maintenance") Maintenance p, BindingResult result,
             Model model) {
         if (this.maintenanceService.addOrUpdateMaintenance(p) != null) {
-            return "redirect:/maintenance";
+            return "redirect:/";
         }
         return "maintenance-add";
     }
 
     @GetMapping("/maintenance")
-    public String update(Model model){
+    public String update(Model model) {
         model.addAttribute("maintenance", new Maintenance());
         model.addAttribute("types", this.maintenanceTypeService.getMaintenanceTypes());
         model.addAttribute("frequencies", this.frequencyService.getFrequency());
         model.addAttribute("devices", this.deviceService.getDevices(null));
+        return "maintenance-add";
+    }
+
+    @GetMapping("/maintenance/Device/{id}")
+    public String update(@PathVariable("id") int id, Model model) {
+        Maintenance m = new Maintenance();
+        Device device = deviceService.getDeviceById(id);
+        m.setDeviceId(device);  // Gán thiết bị cụ thể vào đối tượng maintenance
+
+        model.addAttribute("maintenance", m);
+        model.addAttribute("device", device);
+        model.addAttribute("frequencies", frequencyService.getFrequency());
+        model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
         return "maintenance-add";
     }
 }

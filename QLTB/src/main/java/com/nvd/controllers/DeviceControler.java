@@ -5,6 +5,7 @@
 package com.nvd.controllers;
 
 import com.nvd.pojo.Device;
+import com.nvd.pojo.Maintenance;
 import com.nvd.service.AccountService;
 import com.nvd.service.BaseService;
 import com.nvd.service.CategoryService;
@@ -35,6 +36,9 @@ public class DeviceControler {
     private StatusService statusService;
     @Autowired
     private BaseService baseService;
+    @Autowired
+    private MaintenanceService maintenanceService;
+    
     
     @GetMapping("/devices")
     public String list(Model model) {
@@ -48,7 +52,10 @@ public class DeviceControler {
     @PostMapping("/device/add")
     public String add(@ModelAttribute(value = "device") Device p, BindingResult result,
                       Model model) {
-        if(this.deviceService.addOrUpdateDevice(p) != null) {
+        Device template = this.deviceService.addOrUpdateDevice(p);
+        if(template != null) {
+            Maintenance m = new Maintenance();
+            this.maintenanceService.addNewDevice(m, p);
             return "redirect:/";
         }
         return "devices-edit";
@@ -64,5 +71,11 @@ public class DeviceControler {
         return "devices-edit";
     }
     
-
+    @GetMapping("/device-detail/{id}")
+    public String showDetail (@PathVariable("id") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+        
+        model.addAttribute("maintenances", this.maintenanceService.getByDeviceId(id));
+        return "device-details";
+    }
 }
