@@ -54,3 +54,26 @@
     <div th:replace="base :: footer"></div>
 </body>
 </html>
+
+<script> //Để khóa date
+    document.addEventListener("DOMContentLoaded", function () {
+        const typeSelect = document.getElementById("typeId");
+        const dateInput = document.getElementById("date");
+
+        function toggleDateField() {
+            const selectedText = typeSelect.options[typeSelect.selectedIndex].text;
+            if (selectedText === "Định kỳ") {
+                dateInput.disabled = true;
+                dateInput.value = ""; // Xóa ngày nếu cần
+            } else {
+                dateInput.disabled = false;
+            }
+        }
+
+        // Gọi khi trang vừa load
+        toggleDateField();
+
+        // Gọi khi người dùng thay đổi loại
+        typeSelect.addEventListener("change", toggleDateField);
+    });
+</script>

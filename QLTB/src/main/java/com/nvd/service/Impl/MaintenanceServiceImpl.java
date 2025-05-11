@@ -4,6 +4,7 @@
  */
 package com.nvd.service.Impl;
 
+import com.nvd.pojo.Device;
 import com.nvd.pojo.Maintenance;
 import com.nvd.repository.MaintenanceRepository;
 import com.nvd.service.MaintenanceService;
@@ -35,6 +36,11 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Override
     public List<Maintenance> getByDeviceId(int id) {
         return this.maintenanceRepository.getByDeviceId(id);
+    }
+
+    @Override
+    public Maintenance addNewDevice(Maintenance p, Device d) {
+        return this.maintenanceRepository.addNewDevice(p, d);
     }
 
 }

@@ -20,6 +20,7 @@ import jakarta.persistence.TemporalType;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -41,6 +42,7 @@ public class Maintenance implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date date;
     @JoinColumn(name = "device_id", referencedColumnName = "id")

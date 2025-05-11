@@ -30,6 +30,10 @@
                 </p>
             </div>
         </div>
+        <!-- Nếu không có dữ liệu -->
+        <div class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(maintenances)}">
+            Chưa có lịch bảo trì
+        </div>
     </div>
 
     <div th:replace="base :: footer"></div>

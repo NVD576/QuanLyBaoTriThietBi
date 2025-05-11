@@ -4,6 +4,7 @@
  */
 package com.nvd.repository;
 
+import com.nvd.pojo.Device;
 import com.nvd.pojo.Maintenance;
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface MaintenanceRepository {
     Maintenance getMaintenanceById(int id);
     Maintenance addOrUpdateMaintenance(Maintenance p);
     List<Maintenance> getByDeviceId(int id);
+    Maintenance addNewDevice(Maintenance p, Device d);
 }
