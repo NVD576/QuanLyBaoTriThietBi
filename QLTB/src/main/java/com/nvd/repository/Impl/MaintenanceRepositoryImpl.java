@@ -77,10 +77,10 @@ public class MaintenanceRepositoryImpl implements MaintenanceRepository {
                 System.out.println("Updating Maintenance with ID: " + p.getId());
                 s.merge(p);
             }
+            s.refresh(p);
         } catch (HibernateException ex) {
             ex.printStackTrace();
         }
-        s.refresh(p);
         return p;
     }
 

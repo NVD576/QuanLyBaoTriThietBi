@@ -12,5 +12,8 @@ import java.util.List;
  * @author ADMIN
  */
 public interface BaseRepository {
+
     List<Base> getBases();
+
+    Base getBaseById(int id);
 }

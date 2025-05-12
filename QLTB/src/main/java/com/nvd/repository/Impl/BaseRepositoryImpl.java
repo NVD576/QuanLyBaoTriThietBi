@@ -33,4 +33,10 @@ public class BaseRepositoryImpl implements BaseRepository {
         return q.getResultList();
     }
 
+    @Override
+    public Base getBaseById(int id) {
+        Session session = this.factory.getObject().getCurrentSession();
+        return session.get(Base.class, id);
+    }
+
 }

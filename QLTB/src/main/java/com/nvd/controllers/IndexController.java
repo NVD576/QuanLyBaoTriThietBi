@@ -4,6 +4,7 @@
  */
 package com.nvd.controllers;
 
+import com.nvd.service.BaseService;
 import com.nvd.service.DeviceService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class IndexController {
     private CategoryService categoryService;
     @Autowired
     private Environment env;
+    @Autowired
+    private BaseService baseService;
 
     @ModelAttribute
     public void commonAttr(Model model){
@@ -40,7 +43,9 @@ public class IndexController {
     
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params, @RequestParam(value = "page", defaultValue = "1") int page) {
-
+        // Lấy danh sách các cơ sở
+        model.addAttribute("bases", this.baseService.getBases());
+        
         if(params==null || params.isEmpty()){
             params.put("page", "1");
         }
@@ -49,10 +54,10 @@ public class IndexController {
         int count;
 
         // Đếm số sản phẩm tùy theo typeId
-        if (params.containsKey("typeId")) {
+        if (params.containsKey("cateId")) {
             try {
-                int typeId = Integer.parseInt(params.get("typeId"));
-                count = this.deviceService.countDeviceByType(typeId);
+                int cateId = Integer.parseInt(params.get("cateId"));
+                count = this.deviceService.countDeviceByType(cateId);
             } catch (NumberFormatException ex) {
                 count = this.deviceService.countDevice(); // fallback nếu typeId không hợp lệ
             }

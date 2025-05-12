@@ -4,6 +4,7 @@
  */
 package com.nvd.repository;
 
+import com.nvd.pojo.Base;
 import com.nvd.pojo.Device;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
 public interface DeviceRepository {
     List<Device> getDevices(Map<String, String> params);
     int countDevice();
-    int countDeviceByType(int typeId);
+    int countDeviceByType(int cateId);
     Device getDeviceById(int id);
     Device addOrUpdateDevice(Device p);
     void deleteDevice(int id);

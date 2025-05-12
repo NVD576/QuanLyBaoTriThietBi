@@ -23,5 +23,10 @@ public class BaseServiceImpl implements BaseService{
     public List<Base> getBases() {
         return this.baseRepo.getBases();
     }
+
+    @Override
+    public Base getBaseById(int id) {
+        return this.baseRepo.getBaseById(id);
+    }
     
 }

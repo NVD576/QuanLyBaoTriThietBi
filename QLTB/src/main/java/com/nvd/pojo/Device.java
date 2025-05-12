@@ -5,6 +5,7 @@
 package com.nvd.pojo;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -79,7 +80,7 @@ public class Device implements Serializable {
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     @ManyToOne
     private Status statusId;
-    @OneToMany(mappedBy = "deviceId")
+    @OneToMany(mappedBy = "deviceId", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Maintenance> maintenanceSet;
 
     public Device() {
