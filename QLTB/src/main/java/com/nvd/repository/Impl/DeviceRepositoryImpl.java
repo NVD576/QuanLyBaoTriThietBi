@@ -136,10 +136,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
                 System.out.println("Updating device with ID: " + p.getId());
                 s.merge(p);
             }
+            s.refresh(p);
         } catch (HibernateException ex) {
             ex.printStackTrace();
         }
-        s.refresh(p);
         return p;
     }
 

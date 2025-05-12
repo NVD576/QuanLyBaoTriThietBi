@@ -50,6 +50,16 @@ public class IssueControllers {
         return "issue-add";
     }
 
+    @PostMapping("/issue/resolve/{id}")
+    public String resolveIssue(@PathVariable("id") int id) {
+        Issue issue = issueService.getIssueById(id);
+        if (issue != null && !issue.getIsResolved()) {
+            issue.setIsResolved(true);
+            issueService.addOrUpdateIssue(issue);  // sử dụng lại hàm đã có
+        }
+        return "redirect:/issues";
+    }
+
     @GetMapping("/issue")
     public String insert(Model model) {
         model.addAttribute("issue", new Issue());
@@ -59,7 +69,7 @@ public class IssueControllers {
     }
 
     @GetMapping("/issue/{id}")
-    public String update(@PathVariable("id") int id,Model model) {
+    public String update(@PathVariable("id") int id, Model model) {
         model.addAttribute("issue", this.issueService.getIssueById(id));
         model.addAttribute("levels", this.incidentLevelService.getIncidentLevels());
         model.addAttribute("devices", this.deviceService.getDevices(null));

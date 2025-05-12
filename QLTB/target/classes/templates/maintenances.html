@@ -7,23 +7,33 @@
 
 <body>
     <div th:replace="base :: header"></div>
-    <div class="container">
-        <a th:href="@{/maintenance}" class="btn btn-success">
-            Thêm lịch bảo trì
-        </a>
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item" th:each="p : ${maintenances}" >
-                <div class="nav-link">
-                    <span th:text="${p.deviceId.name + ' - ' + p.frequencyId.frequency + ' - ' + p.date + ' - ' + p.typeId.type}"></span>
-                    <a th:href="@{'/maintenance/' + ${p.id}}"
-                       class="btn btn-sm btn-outline-secondary ms-2">
-                        Sửa
-                    </a>
-                </div>
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="fw-bold">Lịch bảo trì</h2>
+            <a th:href="@{/maintenance}" class="btn btn-success">
+                + Thêm lịch bảo trì
+            </a>
+        </div>
 
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-start"
+                th:each="p : ${maintenances}">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold" th:text="${p.deviceId.name}"></div>
+                    <div>
+                        <span th:text="${'Tần suất: ' + p.frequencyId.frequency}"></span><br>
+                        <span th:text="${'Ngày bảo trì: ' + p.date}"></span><br>
+                        <span th:text="${'Loại bảo trì: ' + p.typeId.type}"></span>
+                    </div>
+                </div>
+                <a th:href="@{'/maintenance/' + ${p.id}}"
+                   class="btn btn-sm btn-outline-primary align-self-center">
+                    Sửa
+                </a>
             </li>
         </ul>
     </div>
+
     <div th:replace="base :: footer"></div>
 </body>
 </html>

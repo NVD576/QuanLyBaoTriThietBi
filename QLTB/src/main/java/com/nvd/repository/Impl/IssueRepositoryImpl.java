@@ -58,10 +58,10 @@ public class IssueRepositoryImpl implements IssueRepository {
                 System.out.println("Updating incidentLevels with ID: " + p.getId());
                 s.merge(p);
             }
+            s.refresh(p);
         } catch (HibernateException ex) {
             ex.printStackTrace();
         }
-        s.refresh(p);
         return p;
     }
 

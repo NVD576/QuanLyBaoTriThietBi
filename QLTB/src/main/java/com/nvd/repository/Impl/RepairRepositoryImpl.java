@@ -57,10 +57,10 @@ public class RepairRepositoryImpl implements RepairRepository {
                 System.out.println("Updating Repair with ID: " + p.getId());
                 s.merge(p);
             }
+            s.refresh(p);
         } catch (HibernateException ex) {
             ex.printStackTrace();
         }
-        s.refresh(p);
         return p;}
 
 }
