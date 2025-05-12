@@ -21,13 +21,26 @@
                             <a class="nav-link" href="/QLTB/">Trang chủ</a>
                         </li>
                         <li class="nav-item" th:each="p : ${categories}" >
-                            <a class="nav-link" th:href="@{'/?typeId=' + ${p.id}}" th:text="${p.name}"></a>
+                            <a class="nav-link" th:href="@{'/?cateId=' + ${p.id}}" th:text="${p.name}"></a>
                         </li>
                     </ul>
-                    <form class="d-flex align-items-center" th:action="@{/}" method="get">
-                        <input class="form-control me-2" type="text" name="kw" placeholder="Nhập tên thiết bị..." th:value="${kw}">
+                    
+                    <form class="d-flex align-items-center gap-3" th:action="@{/}" method="get">
+                        <!-- Từ khóa -->
+                        <input class="form-control" type="text" name="kw" placeholder="Nhập tên thiết bị..." th:value="${kw}">
+
+                        <!-- Cơ sở thiết bị -->
+                        <select class="form-select w-auto" name="baseId">
+                            <option value="">Chọn cơ sở</option>
+                            <option th:each="b : ${bases}"
+                                    th:value="${b.id}"
+                                    th:selected="${baseId == b.id}"
+                                    th:text="${b.name}"></option>
+                        </select>
+
                         <button class="btn btn-primary" type="submit">Tìm</button>
                     </form>
+
 
                 </div>
             </div>

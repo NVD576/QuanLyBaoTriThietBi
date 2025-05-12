@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý sự cố</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+    <div class="container">
+        <div class="col-md-6">
+            <form method="get" th:action="@{/base/devices}">
+                <div class="d-flex align-items-center gap-3">
+                    <label for="base" class="form-label mb-0"><strong>Cơ sở thiết bị:</strong></label>
+
+                    <select class="form-select w-auto" id="base" name="baseId">
+                        <option value="" disabled selected>Chọn cơ sở</option>
+                        <option th:each="t : ${bases}" 
+                                th:value="${t.id}" 
+                                th:text="${t.name}">
+                        </option>
+                    </select>
+
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Danh sách thiết bị nếu có -->
+        <div th:if="${devices != null}" class="card mt-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Danh sách thiết bị tại cơ sở: <span th:text="${base.name}"></span></h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="d : ${devices}" th:text="${d.name}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Thông báo nếu chưa chọn cơ sở -->
+        <div th:if="${base == null}" class="alert alert-info mt-4">
+            <strong>Thông báo:</strong> Vui lòng chọn một cơ sở để lọc thiết bị.
+        </div>
+
+
+    </div>
+
+    <div th:replace="base :: footer"></div>
+</body>
+</html>

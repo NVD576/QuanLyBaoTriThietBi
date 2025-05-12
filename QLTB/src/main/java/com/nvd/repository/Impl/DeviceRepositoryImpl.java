@@ -4,6 +4,7 @@
  */
 package com.nvd.repository.Impl;
 
+import com.nvd.pojo.Base;
 import com.nvd.pojo.Device;
 import com.nvd.pojo.Status;
 import jakarta.persistence.Query;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
 import com.nvd.repository.StatusRepository;
+import jakarta.persistence.criteria.Join;
 import java.util.Date;
 
 /**
@@ -57,10 +59,18 @@ public class DeviceRepositoryImpl implements DeviceRepository {
                 predicates.add(b.like(root.get("name"), String.format("%%%s%%", kw)));
             }
 
-            String typeId = params.get("typeId");
+            String typeId = params.get("cateId");
             if (typeId != null && !typeId.isEmpty()) {
                 // Nếu device_type là ManyToOne
                 predicates.add(b.equal(root.get("categoryId").get("id"), Integer.parseInt(typeId)));
+            }
+
+            // Lọc theo baseId (Base đối tượng)
+            String baseId = params.get("baseId");
+            if (baseId != null && !baseId.isEmpty()) {
+                // Lọc theo baseId, Base là đối tượng, nên chúng ta cần join với đối tượng Base
+                Join<Device, Base> baseJoin = root.join("baseId"); // baseId là tên thuộc tính trong entity Device
+                predicates.add(b.equal(baseJoin.get("id"), Integer.parseInt(baseId)));
             }
 
             q.where(predicates.toArray(Predicate[]::new));
@@ -91,10 +101,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     }
 
     @Override
-    public int countDeviceByType(int typeId) {
+    public int countDeviceByType(int cateId) {
         Session s = this.factory.getObject().getCurrentSession();
-        Query q = s.createQuery("SELECT COUNT(*) FROM Device e WHERE e.categoryId.id = :typeId");
-        q.setParameter("typeId", typeId);
+        Query q = s.createQuery("SELECT COUNT(*) FROM Device e WHERE e.categoryId.id = :cateId");
+        q.setParameter("cateId", cateId);
         return Integer.parseInt(q.getSingleResult().toString());
     }
 

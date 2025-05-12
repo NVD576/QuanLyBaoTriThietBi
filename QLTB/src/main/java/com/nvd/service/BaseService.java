@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface BaseService {
     List<Base> getBases();
+    Base getBaseById(int id);
 }

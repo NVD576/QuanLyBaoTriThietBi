@@ -6,6 +6,7 @@ package com.nvd.service.Impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.nvd.pojo.Base;
 import com.nvd.pojo.Device;
 import com.nvd.service.DeviceService;
 import java.util.List;
@@ -43,8 +44,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public int countDeviceByType(int typeId) {
-        return this.deviceRepo.countDeviceByType(typeId);
+    public int countDeviceByType(int cateId) {
+        return this.deviceRepo.countDeviceByType(cateId);
     }
 
     @Override
@@ -70,5 +71,4 @@ public class DeviceServiceImpl implements DeviceService {
         }
         return this.deviceRepo.addOrUpdateDevice(p);
     }
-
 }
