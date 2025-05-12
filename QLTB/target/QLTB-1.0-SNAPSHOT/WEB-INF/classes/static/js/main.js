@@ -8,7 +8,6 @@ function deleteDevice(endpoint, id) {
                 location.reload();
             } else 
                 alert("Có lỗi xảy ra!");
-            console.log(res.status);
         });
     }
 }

@@ -137,6 +137,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     public void deleteDevice(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         Device p = this.getDeviceById(id);
-        s.remove(p);
+        if (p != null) {
+            s.remove(p);
+        } else {
+            throw new IllegalArgumentException("Device không tồn tại với id = " + id);
+        }
     }
 }

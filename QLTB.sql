@@ -120,7 +120,7 @@ CREATE TABLE `device` (
   CONSTRAINT `device_ibfk_1` FOREIGN KEY (`base_id`) REFERENCES `base` (`id`),
   CONSTRAINT `device_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
   CONSTRAINT `device_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE `device` (
 
 LOCK TABLES `device` WRITE;
 /*!40000 ALTER TABLE `device` DISABLE KEYS */;
-INSERT INTO `device` VALUES (1,'Máy lạnh Daikin 1HP','2022-05-01','Daikin','maylanh_daikin.png',1,1,1),(2,'Tủ lạnh Panasonic 200L','2023-02-10','Panasonic','tulanh_panasonic.png',2,1,1),(3,'Máy giặt LG Inverter','2021-07-18','LG','maygiat_lg.png',3,4,2),(4,'Máy in HP LaserJet Pro M404','2022-09-05','HP','mayin_hp.png',4,2,1);
+INSERT INTO `device` VALUES (1,'Máy lạnh Daikin 1HP 3','2022-05-01','Daikin','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',1,1,1),(2,'Tủ lạnh Panasonic 200L','2023-02-10','Panasonic','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',2,1,1),(3,'Máy giặt LG Inverter','2021-07-18','LG','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',3,4,2),(4,'Máy in HP LaserJet Pro M404','2022-09-05','HP','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',4,2,1),(5,'LEGO','2025-05-10','HP','https://res.cloudinary.com/dtbpkn17m/image/upload/v1746873607/haqjo49mp5nxqbnk3dpl.jpg',1,1,1),(7,'Máy tính','2025-05-11','HP','',1,1,1);
 /*!40000 ALTER TABLE `device` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +200,7 @@ CREATE TABLE `issue` (
   KEY `device_id` (`device_id`),
   CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `incident_level` (`id`),
   CONSTRAINT `issue_ibfk_2` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +209,7 @@ CREATE TABLE `issue` (
 
 LOCK TABLES `issue` WRITE;
 /*!40000 ALTER TABLE `issue` DISABLE KEYS */;
-INSERT INTO `issue` VALUES (1,'Không khởi động được','2024-12-01',3,3,0),(2,'Kêu to khi hoạt động','2025-01-20',2,1,1),(3,'In bị nhòe mực','2025-03-10',1,2,0),(4,'Mất kết nối mạng','2025-04-05',2,4,0);
+INSERT INTO `issue` VALUES (1,'Không khởi động được','2025-05-11',2,3,0),(2,'Kêu to khi hoạt động','2025-01-20',2,1,1),(3,'In bị nhòe mực','2025-03-10',1,2,0),(4,'Mất kết nối mạng','2025-04-05',2,4,0),(5,'Bị hư','2025-05-10',1,5,0);
 /*!40000 ALTER TABLE `issue` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,7 +233,7 @@ CREATE TABLE `maintenance` (
   CONSTRAINT `maintenance_ibfk_1` FOREIGN KEY (`frequency_id`) REFERENCES `frequency` (`id`),
   CONSTRAINT `maintenance_ibfk_2` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`),
   CONSTRAINT `maintenance_ibfk_3` FOREIGN KEY (`type_id`) REFERENCES `maintenance_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,7 +242,7 @@ CREATE TABLE `maintenance` (
 
 LOCK TABLES `maintenance` WRITE;
 /*!40000 ALTER TABLE `maintenance` DISABLE KEYS */;
-INSERT INTO `maintenance` VALUES (1,'2025-01-01',1,1,1),(2,'2025-03-01',2,2,2),(3,'2025-04-15',3,3,1),(4,'2025-05-01',1,4,2);
+INSERT INTO `maintenance` VALUES (1,'2025-01-01',1,1,1),(2,'2025-03-01',2,2,2),(3,'2025-04-15',3,3,1),(4,'2025-05-01',1,4,2),(5,'2025-05-10',1,5,1),(6,'2025-06-10',1,7,1);
 /*!40000 ALTER TABLE `maintenance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -291,7 +291,7 @@ CREATE TABLE `repair` (
   CONSTRAINT `repair_ibfk_1` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`),
   CONSTRAINT `repair_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `repair_type` (`id`),
   CONSTRAINT `repair_ibfk_3` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -300,7 +300,7 @@ CREATE TABLE `repair` (
 
 LOCK TABLES `repair` WRITE;
 /*!40000 ALTER TABLE `repair` DISABLE KEYS */;
-INSERT INTO `repair` VALUES (1,'2025-01-10',500000.00,3,1,2),(2,'2025-02-05',200000.00,2,3,4),(3,'2025-03-20',150000.00,1,2,3),(4,'2025-04-25',100000.00,4,4,4);
+INSERT INTO `repair` VALUES (1,'2025-01-10',500000.00,3,1,2),(2,'2025-02-05',200000.00,2,2,4),(3,'2025-03-20',150000.00,1,2,3),(4,'2025-04-25',100000.00,4,1,4),(7,'2025-05-11',4235235.00,1,1,3);
 /*!40000 ALTER TABLE `repair` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -324,7 +324,7 @@ CREATE TABLE `repair_type` (
 
 LOCK TABLES `repair_type` WRITE;
 /*!40000 ALTER TABLE `repair_type` DISABLE KEYS */;
-INSERT INTO `repair_type` VALUES (1,'Sửa phần cứng'),(2,'Sửa phần mềm'),(3,'Thay thế linh kiện'),(4,'Cập nhật firmware');
+INSERT INTO `repair_type` VALUES (1,'Sửa chữa bảo trì'),(2,'Sửa chữa sự cố');
 /*!40000 ALTER TABLE `repair_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -365,4 +365,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-09 19:40:15
+-- Dump completed on 2025-05-11 23:48:52

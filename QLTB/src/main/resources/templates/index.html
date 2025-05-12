@@ -56,8 +56,7 @@
                     </a>
 
                     <!-- Xóa -->
-                    <a th:href="@{'/device/delete/' + ${p.id}}"
-                       class="btn btn-sm btn-outline-danger"
+                    <a class="btn btn-sm btn-outline-danger"
                        th:onclick="'deleteDevice(\''+@{/api/devices/}+'\','+${p.id}+')'">
                         Xóa
                     </a>
