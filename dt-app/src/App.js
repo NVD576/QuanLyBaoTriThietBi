@@ -8,6 +8,7 @@ import RepairHistory from "./components/RepairHistory";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { Container } from "react-bootstrap";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MyDispatchContext, MyUserContext } from "./configs/MyContexts";
 import MyUserReducer from "./reducers/MyUserReducer";
@@ -35,12 +36,6 @@ const containerStyle = {
   minHeight: "100vh",
 };
 
-const contentWrapperStyle = (sidebarOpen) => ({
-  display: "flex",
-  flex: 1,
-  marginLeft: sidebarOpen ? "200px" : "0",
-  transition: "margin-left 0.3s ease",
-});
 
 const mainContentStyle = {
   flex: 1,
@@ -59,7 +54,7 @@ const headerWrapperStyle = (sidebarOpen) => ({
 
 const App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -83,13 +78,9 @@ const App = () => {
           <div style={containerStyle}>
             <Header />
 
-            <div style={contentWrapperStyle(sidebarOpen)}>
-              {user && <Sidebar sidebarOpen={sidebarOpen} />}
-
-              {/* Bọc main và footer vào 1 div có flexDirection: "column", flex: 1 */}
-              <div
-                style={{ display: "flex", flexDirection: "column", flex: 1 }}
-              >
+            <div >
+              { <Sidebar sidebarOpen={sidebarOpen} />}
+              <div style={{ display: "flex", flexDirection: "column", flex: 1 }}  >
                 {user && (
                   <div style={headerWrapperStyle(sidebarOpen)}>
                     <button
