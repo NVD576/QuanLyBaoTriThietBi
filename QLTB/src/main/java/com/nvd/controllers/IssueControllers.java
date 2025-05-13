@@ -5,7 +5,6 @@
 package com.nvd.controllers;
 
 import com.nvd.pojo.Issue;
-import com.nvd.pojo.Maintenance;
 import com.nvd.pojo.Repair;
 import com.nvd.service.AccountService;
 import com.nvd.service.DeviceService;
@@ -14,7 +13,6 @@ import com.nvd.service.IssueService;
 import com.nvd.service.RepairService;
 import com.nvd.service.RepairTypeService;
 import java.math.BigDecimal;
-import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,17 +68,9 @@ public class IssueControllers {
         Issue issue = issueService.getIssueById(id);
         if (issue != null && !issue.getIsResolved()) {
             issue.setIsResolved(true);
-            issueService.addOrUpdateIssue(issue);  // sử dụng lại hàm đã có
-
-            // 2. Tạo bản ghi Repair tương ứng
+            issueService.addOrUpdateIssue(issue);
             Repair repair = new Repair();
-            repair.setDate(new Date()); // hoặc new Date() nếu dùng java.util.Date
-            repair.setCost(cost);
-            repair.setDeviceId(issue.getDeviceId());
-            // Bạn cần xác định typeId tương ứng. Nếu mặc định có thể hardcode hoặc lấy theo logic.
-            repair.setTypeId(repairTypeService.getTypeById(2)); // Giả sử có method này
-            repair.setAccountId(accountService.getAccountById(accountId));
-            repairService.addOrUpdateRepair(repair); // Lưu bản ghi sửa chữa
+            repairService.addNewMaintenancyOrIssue(repair, cost, issue.getDeviceId(), this.repairTypeService.getTypeById(2), accountId);
         }
         return "redirect:/issues";
     }
