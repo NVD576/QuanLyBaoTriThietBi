@@ -33,4 +33,13 @@ public class AccountRepositoryImpl implements AccountRepository {
         return q.getResultList();
     }
 
+    @Override
+    public Account getAccountByUsername(String username) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Query q = s.createNamedQuery("Account.findByUsername", Account.class);
+        q.setParameter("username", username);
+
+        return (Account) q.getSingleResult();
+    }
+
 }

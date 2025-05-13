@@ -6,12 +6,14 @@ package com.nvd.service;
 
 import com.nvd.pojo.Account;
 import java.util.List;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author ADMIN
  */
-public interface AccountService {
+public interface AccountService extends UserDetailsService{
     List<Account> getAccount();
+    Account getAccountByUsername(String username);
 }

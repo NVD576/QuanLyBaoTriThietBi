@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface AccountRepository {
     List<Account> getAccount();
+    Account getAccountByUsername(String username);
 }

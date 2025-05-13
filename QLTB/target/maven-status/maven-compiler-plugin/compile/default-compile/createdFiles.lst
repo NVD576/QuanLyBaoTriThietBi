@@ -9,6 +9,7 @@ com\nvd\repository\Impl\MaintenanceRepositoryImpl.class
 com\nvd\service\IssueService.class
 com\nvd\repository\AccountRepository.class
 com\nvd\service\MaintenanceService.class
+com\nvd\controllers\AccountControllers.class
 com\nvd\formatters\StatusFormatter.class
 com\nvd\service\Impl\RepairServiceImpl.class
 com\nvd\repository\StatusRepository.class
@@ -24,6 +25,7 @@ com\nvd\service\Impl\MaintenanceTypeServiceImpl.class
 com\nvd\service\Impl\StatusServiceImpl.class
 com\nvd\repository\Impl\StatusRepositoryImpl.class
 com\nvd\formatters\AccountFormatter.class
+com\nvd\configs\SecurityWebApplicationInitializer.class
 com\nvd\configs\WebAppContextConfigs.class
 com\nvd\repository\Impl\RepairRepositoryImpl.class
 com\nvd\repository\MaintenanceRepository.class
@@ -73,4 +75,5 @@ com\nvd\service\AccountService.class
 com\nvd\controllers\IssueControllers.class
 com\nvd\service\Impl\BaseServiceImpl.class
 com\nvd\repository\Impl\RepairTypeRepositoryImpl.class
+com\nvd\configs\SpringSecurityConfigs.class
 com\nvd\service\Impl\CategoryServiveImpl.class
