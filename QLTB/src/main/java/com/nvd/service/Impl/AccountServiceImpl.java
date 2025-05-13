@@ -89,4 +89,9 @@ public class AccountServiceImpl implements AccountService {
         return this.accountRepo.addAccount(u);
     }
 
+    @Override
+    public Account getAccountById(int id) {
+        return this.accountRepo.getAccountById(id);
+    }
+
 }

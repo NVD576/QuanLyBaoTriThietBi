@@ -72,8 +72,18 @@
                                   method="post"
                                   style="display: none;"
                                   class="mt-2 w-100">
-                                <div class="input-group">
+                                <div class="input-group mb-2">
                                     <input type="number" name="cost" class="form-control" placeholder="Nhập chi phí" required>
+                                </div>
+
+                                <div class="input-group mb-2">
+                                    <select name="accountId" class="form-select" required>
+                                        <option value="" disabled selected>-- Chọn tài khoản xử lý --</option>
+                                        <option th:each="a : ${accounts}" th:value="${a.id}" th:text="${a.name}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group">
                                     <button type="submit" class="btn btn-outline-success btn-sm">
                                         <i class="bi bi-send-check me-1"></i> Gửi
                                     </button>

@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface RepairTypeService {
     List<RepairType> getRepairTypes();
+    RepairType getTypeById(int id);
 }

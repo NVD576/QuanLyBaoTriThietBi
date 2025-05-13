@@ -60,4 +60,10 @@ public class AccountRepositoryImpl implements AccountRepository {
         return u;
     }
 
+    @Override
+    public Account getAccountById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(Account.class, id);
+    }
+
 }

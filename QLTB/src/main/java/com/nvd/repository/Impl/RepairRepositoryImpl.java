@@ -61,6 +61,7 @@ public class RepairRepositoryImpl implements RepairRepository {
         } catch (HibernateException ex) {
             ex.printStackTrace();
         }
-        return p;}
+        return p;
+    }
 
 }

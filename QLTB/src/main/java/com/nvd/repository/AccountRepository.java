@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface AccountRepository {
     List<Account> getAccount();
+    Account getAccountById(int id);
     Account getAccountByUsername(String username);
     boolean authenticate(String username, String password);
     Account addAccount(Account u);

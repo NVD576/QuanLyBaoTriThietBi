@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface AccountService extends UserDetailsService{
     List<Account> getAccount();
+    Account getAccountById(int id);
     Account getAccountByUsername(String username);
     boolean authenticate(String username, String password);
     Account addAccount(Map<String, String> params, MultipartFile avatar);

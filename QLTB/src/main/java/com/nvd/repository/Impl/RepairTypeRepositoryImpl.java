@@ -32,4 +32,10 @@ public class RepairTypeRepositoryImpl implements RepairTypeRepository {
         Query q = s.createQuery("FROM RepairType ORDER BY id ASC", RepairType.class);
         return q.getResultList();
     }
+
+    @Override
+    public RepairType getTypeById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(RepairType.class, id);
+    }
 }
