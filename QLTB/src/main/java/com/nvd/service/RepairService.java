@@ -4,7 +4,10 @@
  */
 package com.nvd.service;
 
+import com.nvd.pojo.Device;
 import com.nvd.pojo.Repair;
+import com.nvd.pojo.RepairType;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -15,4 +18,5 @@ public interface RepairService {
     List<Repair> getRepairs();
     Repair getRepairById(int id);
     Repair addOrUpdateRepair(Repair p);
+    Repair addNewMaintenancyOrIssue(Repair p, BigDecimal cost, Device deviceID, RepairType repairTypeId ,int accountId);
 }

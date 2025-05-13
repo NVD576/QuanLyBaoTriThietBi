@@ -4,9 +4,12 @@
  */
 package com.nvd.service.Impl;
 
+import com.nvd.pojo.Device;
 import com.nvd.pojo.Repair;
+import com.nvd.pojo.RepairType;
 import com.nvd.repository.RepairRepository;
 import com.nvd.service.RepairService;
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,11 @@ public class RepairServiceImpl implements RepairService {
     @Override
     public Repair addOrUpdateRepair(Repair p) {
         return this.repairRepo.addOrUpdateRepair(p);
+    }
+
+    @Override
+    public Repair addNewMaintenancyOrIssue(Repair p, BigDecimal cost, Device deviceID, RepairType repairTypeId, int accountId) {
+        return this.repairRepo.addNewMaintenancyOrIssue(p, cost, deviceID, repairTypeId, accountId);
     }
     
 }

@@ -6,10 +6,15 @@ package com.nvd.controllers;
 
 import com.nvd.pojo.Device;
 import com.nvd.pojo.Maintenance;
+import com.nvd.pojo.Repair;
+import com.nvd.service.AccountService;
 import com.nvd.service.DeviceService;
 import com.nvd.service.FrequencyService;
 import com.nvd.service.MaintenanceService;
 import com.nvd.service.MaintenanceTypeService;
+import com.nvd.service.RepairService;
+import com.nvd.service.RepairTypeService;
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -35,10 +41,14 @@ public class MaintenanceControllers {
 
     @Autowired
     private MaintenanceTypeService maintenanceTypeService;
-
+    @Autowired
+    private RepairTypeService repairTypeService;
     @Autowired
     private FrequencyService frequencyService;
-
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private RepairService repairService;
     @Autowired
     private DeviceService deviceService;
 
@@ -46,6 +56,7 @@ public class MaintenanceControllers {
     public String show(Model model) {
         // Truyền dữ liệu dropdown
         model.addAttribute("maintenances", this.maintenanceService.getMaintenances());
+        model.addAttribute("accounts", accountService.getAccount());
         return "maintenances";
     }
 
@@ -87,6 +98,17 @@ public class MaintenanceControllers {
         model.addAttribute("frequencies", frequencyService.getFrequency());
         model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
         return "maintenance-add";
+    }
+
+    @PostMapping("/maintenance/confirm/{id}")
+    public String confirmMaintenance(@PathVariable("id") int id,
+            @RequestParam("cost") BigDecimal cost,
+            @RequestParam("accountId") int accountId) {
+        Maintenance maintenance = this.maintenanceService.getMaintenanceById(id);
+        Repair repair = new Repair();
+        repairService.addNewMaintenancyOrIssue(repair, cost, maintenance.getDeviceId(), this.repairTypeService.getTypeById(1), accountId);
+
+        return "redirect:/maintenances";
     }
 
 }
