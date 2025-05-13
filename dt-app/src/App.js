@@ -1,5 +1,5 @@
-import React, { useReducer, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect, useReducer, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import DeviceManagement from "./components/DeviceManagement";
 import MaintenanceSchedule from "./components/MaintenanceSchedule";
@@ -11,6 +11,8 @@ import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MyDispatchContext, MyUserContext } from "./configs/MyContexts";
 import MyUserReducer from "./reducers/MyUserReducer";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 const toggleButtonStyle = {
   position: "fixed",
@@ -26,10 +28,11 @@ const toggleButtonStyle = {
   transition: "left 0.3s ease",
 };
 
+
 const containerStyle = {
   display: "flex",
-  minHeight: "100vh",
   flexDirection: "column",
+  minHeight: "100vh",
 };
 
 const contentWrapperStyle = (sidebarOpen) => ({
@@ -57,7 +60,20 @@ const headerWrapperStyle = (sidebarOpen) => ({
 const App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const protectedPaths = [
+      "/",
+      "/maintenance",
+      "/incidents",
+      "/repair-history",
+    ];
+    const currentPath = window.location.pathname;
+    if (!user && protectedPaths.includes(currentPath)) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
@@ -65,37 +81,60 @@ const App = () => {
       <MyUserContext.Provider value={user}>
         <MyDispatchContext.Provider value={dispatch}>
           <div style={containerStyle}>
-            <div style={headerWrapperStyle(sidebarOpen)}>
-              <Header />
-              <button
-                onClick={toggleSidebar}
-                style={{
-                  ...toggleButtonStyle,
-                  left: sidebarOpen ? "200px" : "10px",
-                  top: "60px",
-                }}
-                aria-label="Toggle sidebar"
-              >
-                {sidebarOpen ? "‹" : "›"}
-              </button>
-            </div>
-            <div style={contentWrapperStyle(sidebarOpen)}>
-              <Sidebar sidebarOpen={sidebarOpen}  />
+            <Header />
 
-              <main style={mainContentStyle}>
-                <Container>
-                  <Routes>
-                    <Route path="/" element={<DeviceManagement />} />
-                    <Route
-                      path="/maintenance"
-                      element={<MaintenanceSchedule />}
-                    />
-                    <Route path="/incidents" element={<IncidentManagement />} />
-                    <Route path="/repair-history" element={<RepairHistory />} />
-                  </Routes>
-                </Container>
+            <div style={contentWrapperStyle(sidebarOpen)}>
+              {user && <Sidebar sidebarOpen={sidebarOpen} />}
+
+              {/* Bọc main và footer vào 1 div có flexDirection: "column", flex: 1 */}
+              <div
+                style={{ display: "flex", flexDirection: "column", flex: 1 }}
+              >
+                {user && (
+                  <div style={headerWrapperStyle(sidebarOpen)}>
+                    <button
+                      onClick={toggleSidebar}
+                      style={{
+                        ...toggleButtonStyle,
+                        left: sidebarOpen ? "200px" : "10px",
+                        top: "60px",
+                      }}
+                      aria-label="Toggle sidebar"
+                    >
+                      {sidebarOpen ? "‹" : "›"}
+                    </button>
+                  </div>
+                )}
+
+                <main style={mainContentStyle}>
+                  <Container>
+                    <Routes>
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      {user && (
+                        <>
+                          <Route path="/" element={<DeviceManagement />} />
+                          <Route
+                            path="/maintenance"
+                            element={<MaintenanceSchedule />}
+                          />
+                          <Route
+                            path="/incidents"
+                            element={<IncidentManagement />}
+                          />
+                          <Route
+                            path="/repair-history"
+                            element={<RepairHistory />}
+                          />
+                        </>
+                      )}
+                    </Routes>
+                  </Container>
+                </main>
+
+                {/* Footer luôn ở cuối vì là phần dưới của flex column */}
                 <Footer />
-              </main>
+              </div>
             </div>
           </div>
         </MyDispatchContext.Provider>
