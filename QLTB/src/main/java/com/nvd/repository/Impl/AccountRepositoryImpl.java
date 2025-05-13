@@ -12,6 +12,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
-
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
     @Override
     public List<Account> getAccount() {
         Session s = this.factory.getObject().getCurrentSession();
@@ -40,6 +42,13 @@ public class AccountRepositoryImpl implements AccountRepository {
         q.setParameter("username", username);
 
         return (Account) q.getSingleResult();
+    }
+
+    @Override
+    public boolean authenticate(String username, String password) {
+        Account u = this.getAccountByUsername(username);
+
+        return this.passwordEncoder.matches(password, u.getPassword());
     }
 
 }

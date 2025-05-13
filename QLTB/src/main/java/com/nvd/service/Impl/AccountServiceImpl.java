@@ -16,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,7 +28,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository accountRepo;
-
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
     @Override
     public List<Account> getAccount() {
         return this.accountRepo.getAccount();
@@ -48,6 +50,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccountByUsername(String username) {
         return this.accountRepo.getAccountByUsername(username);
+    }
+
+    @Override
+    public boolean authenticate(String username, String password) {
+        return this.accountRepo.authenticate(username, password);
     }
 
 }

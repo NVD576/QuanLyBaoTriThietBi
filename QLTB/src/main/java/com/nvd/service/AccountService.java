@@ -16,4 +16,5 @@ import org.springframework.stereotype.Service;
 public interface AccountService extends UserDetailsService{
     List<Account> getAccount();
     Account getAccountByUsername(String username);
+    boolean authenticate(String username, String password);
 }
