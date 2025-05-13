@@ -4,6 +4,8 @@
  */
 package com.nvd.configs;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +34,8 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
     "com.nvd.controllers",
-    "com.nvd.repositories",
-    "com.nvd.services"
+    "com.nvd.repository",
+    "com.nvd.service"
 })
 public class SpringSecurityConfigs {
 //
@@ -72,7 +74,16 @@ public class SpringSecurityConfigs {
     public StandardServletMultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
-
+    @Bean
+    public Cloudinary cloudinary() {
+        Cloudinary cloudinary
+                = new Cloudinary(ObjectUtils.asMap(
+                        "cloud_name", "dqpoa9ukn",
+                        "api_key", "145116136998749",
+                        "api_secret", "t_AiLjj0XF2c2fjBFZJdzLULq1Y",
+                        "secure", true));
+        return cloudinary;
+    }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 

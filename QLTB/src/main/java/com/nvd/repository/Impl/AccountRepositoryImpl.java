@@ -28,6 +28,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     private LocalSessionFactoryBean factory;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public List<Account> getAccount() {
         Session s = this.factory.getObject().getCurrentSession();
@@ -49,6 +50,14 @@ public class AccountRepositoryImpl implements AccountRepository {
         Account u = this.getAccountByUsername(username);
 
         return this.passwordEncoder.matches(password, u.getPassword());
+    }
+
+    @Override
+    public Account addAccount(Account u) {
+        Session s = this.factory.getObject().getCurrentSession();
+        s.persist(u);
+
+        return u;
     }
 
 }

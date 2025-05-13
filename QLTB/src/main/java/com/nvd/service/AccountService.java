@@ -6,8 +6,9 @@ package com.nvd.service;
 
 import com.nvd.pojo.Account;
 import java.util.List;
+import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -17,4 +18,5 @@ public interface AccountService extends UserDetailsService{
     List<Account> getAccount();
     Account getAccountByUsername(String username);
     boolean authenticate(String username, String password);
+    Account addAccount(Map<String, String> params, MultipartFile avatar);
 }

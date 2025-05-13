@@ -6,7 +6,6 @@ package com.nvd.service.Impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.nvd.pojo.Base;
 import com.nvd.pojo.Device;
 import com.nvd.service.DeviceService;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.logging.Logger;
  * @author ADMIN
  */
 @Service
-
 public class DeviceServiceImpl implements DeviceService {
 
     @Autowired

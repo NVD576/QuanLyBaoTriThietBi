@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package com.nvd.service;
-
-import com.nvd.pojo.Base;
 import com.nvd.pojo.Device;
 import java.util.List;
 import java.util.Map;

@@ -4,13 +4,19 @@
  */
 package com.nvd.service.Impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.nvd.pojo.Account;
 import com.nvd.repository.AccountRepository;
 import com.nvd.repository.CategoryRepository;
 import com.nvd.service.AccountService;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -30,6 +37,10 @@ public class AccountServiceImpl implements AccountService {
     private AccountRepository accountRepo;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private Cloudinary cloudinary;
+
     @Override
     public List<Account> getAccount() {
         return this.accountRepo.getAccount();
@@ -55,6 +66,27 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean authenticate(String username, String password) {
         return this.accountRepo.authenticate(username, password);
+    }
+
+    @Override
+    public Account addAccount(Map<String, String> params, MultipartFile avatar) {
+        Account u = new Account();
+        u.setName(params.get("name"));
+        u.setEmail(params.get("email"));
+        u.setUsername(params.get("username"));
+        u.setPassword(this.passwordEncoder.encode(params.get("password")));
+        u.setRole("user");
+
+        if (!avatar.isEmpty()) {
+            try {
+                Map res = cloudinary.uploader().upload(avatar.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                u.setAvatar(res.get("secure_url").toString());
+            } catch (IOException ex) {
+                Logger.getLogger(DeviceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return this.accountRepo.addAccount(u);
     }
 
 }
