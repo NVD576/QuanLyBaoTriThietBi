@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         u.setEmail(params.get("email"));
         u.setUsername(params.get("username"));
         u.setPassword(this.passwordEncoder.encode(params.get("password")));
-        u.setRole("user");
+        u.setRole("ROLE_USER");
 
         if (!avatar.isEmpty()) {
             try {

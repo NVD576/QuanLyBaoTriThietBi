@@ -39,8 +39,8 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 })
 public class SpringSecurityConfigs {
 //
-//    @Autowired
-//    private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -54,7 +54,7 @@ public class SpringSecurityConfigs {
                 .csrf(c -> c.disable()).authorizeHttpRequests(requests
                 -> requests.requestMatchers("/", "/home").authenticated()
                         .requestMatchers("/api/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/devices").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.GET, "/devices").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,
                                 "/devices/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
