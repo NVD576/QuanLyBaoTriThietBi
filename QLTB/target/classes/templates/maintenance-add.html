@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý thiết bị</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+    <div class="container">
+        <form th:action="@{/maintenance/add}" th:object="${maintenance}" method="post">
+
+            <!-- Nếu có danh sách devices (tự do chọn thiết bị) -->
+            <div class="form-group" th:if="${devices != null}">
+                <label for="deviceId">Tên thiết bị:</label>
+                <select class="form-control" id="deviceId" th:field="*{deviceId.id}">
+                    <option th:each="d : ${devices}" th:value="${d.id}" th:text="${d.name}">Thiết bị</option>
+                </select>
+            </div>
+
+            <!-- Nếu chỉ có 1 thiết bị cụ thể -->
+            <div class="form-group" th:unless="${devices != null}">
+                <label for="deviceId">Tên thiết bị:</label>
+                <input type="text" class="form-control" th:value="${device.name}" readonly />
+                <!-- hidden để binding -->
+                <input type="hidden" th:field="*{deviceId.id}" />
+            </div>
+
+            <div class="form-group">
+                <label for="frequencyId">Tần suất:</label>
+                <select class="form-control" id="frequencyId" th:field="*{frequencyId.id}">
+                    <option th:each="f : ${frequencies}" th:value="${f.id}" th:text="${f.frequency}">Tần suất</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Ngày:</label>
+                <input type="date" class="form-control" id="date" th:field="*{date}" required  />
+            </div>
+
+            <div class="form-group">
+                <label for="typeId">Loại:</label>
+                <select class="form-control" id="typeId" th:field="*{typeId.id}">
+                    <option th:each="t : ${types}" th:value="${t.id}" th:text="${t.type}">Loại</option>
+                </select>
+            </div>
+
+            <div class="col-12 d-flex justify-content-between align-items-center mt-4">
+                <input type="hidden" class="form-control" th:field="*{id}"  />
+                <a href="/QLTB/maintenances" class="btn btn-secondary">← Quay lại</a>
+                <button class="btn btn-success mt-1" type="submit">
+                    <span th:if="${maintenance.id == null}">Thêm sản phẩm</span>
+                    <span th:unless="${maintenance.id == null}">Cập nhật</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+    <div th:replace="base :: footer"></div>
+</body>
+</html>
+
+<!--<script> //Để khóa date
+    document.addEventListener("DOMContentLoaded", function () {
+        const typeSelect = document.getElementById("typeId");
+        const dateInput = document.getElementById("date");
+
+        function toggleDateField() {
+            const selectedText = typeSelect.options[typeSelect.selectedIndex].text;
+            if (selectedText === "Định kỳ") {
+                dateInput.disabled = true;
+                dateInput.value = ""; // Xóa ngày nếu cần
+            } else {
+                dateInput.disabled = false;
+            }
+        }
+
+        // Gọi khi trang vừa load
+        toggleDateField();
+
+        // Gọi khi người dùng thay đổi loại
+        typeSelect.addEventListener("change", toggleDateField);
+    });
+</script>-->

@@ -153,13 +153,9 @@ const Register = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: (info.length + 2) * 0.1 }}
         >
-          <Button
-            variant="outline-danger"
-            className="w-100 py-2 mt-3"
-            onClick={loginWithGoogle}
-          >
-            Đăng ký bằng Google
-          </Button>
+            <Button onClick={loginWithGoogle} variant="outline-danger" className="w-100 py-2 mt-2">
+              <i className="bi bi-google"></i> Đăng nhập bằng Google
+            </Button>
         </motion.div>
 
         <motion.div
