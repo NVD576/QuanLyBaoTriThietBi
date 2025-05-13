@@ -1,0 +1,46 @@
+/* Login.css */
+.input-field:focus {
+  border-color: #6a11cb;
+  box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25);
+}
+
+.card-login {
+  animation: fadeInUp 0.8s ease-in-out;
+  border: none;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-success {
+  background-color: #2575fc;
+  border: none;
+  transition: background 0.3s ease-in-out;
+}
+
+.btn-success:hover {
+  background-color: #1a5ae0;
+}
+
+.icon-input {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.input-group .form-control {
+  padding-left: 2.5rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
