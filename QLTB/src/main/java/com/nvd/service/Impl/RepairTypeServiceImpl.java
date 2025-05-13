@@ -26,4 +26,9 @@ public class RepairTypeServiceImpl implements RepairTypeService {
         return this.repairTypeRepo.getRepairTypes();
     }
 
+    @Override
+    public RepairType getTypeById(int id) {
+        return this.repairTypeRepo.getTypeById(id);
+    }
+
 }

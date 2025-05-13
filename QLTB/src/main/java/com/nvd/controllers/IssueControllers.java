@@ -6,9 +6,15 @@ package com.nvd.controllers;
 
 import com.nvd.pojo.Issue;
 import com.nvd.pojo.Maintenance;
+import com.nvd.pojo.Repair;
+import com.nvd.service.AccountService;
 import com.nvd.service.DeviceService;
 import com.nvd.service.IncidentLevelService;
 import com.nvd.service.IssueService;
+import com.nvd.service.RepairService;
+import com.nvd.service.RepairTypeService;
+import java.math.BigDecimal;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -29,15 +36,21 @@ public class IssueControllers {
 
     @Autowired
     private IssueService issueService;
-
     @Autowired
     private DeviceService deviceService;
     @Autowired
     private IncidentLevelService incidentLevelService;
+    @Autowired
+    private RepairService repairService;
+    @Autowired
+    private RepairTypeService repairTypeService;
+    @Autowired
+    private AccountService accountService;
 
     @GetMapping("/issues")
     public String show(Model model) {
         model.addAttribute("issues", this.issueService.getIssues());
+        model.addAttribute("accounts", accountService.getAccount());
         return "issues";
     }
 
@@ -51,11 +64,23 @@ public class IssueControllers {
     }
 
     @PostMapping("/issue/resolve/{id}")
-    public String resolveIssue(@PathVariable("id") int id) {
+    public String resolveIssue(@PathVariable("id") int id,
+             @RequestParam("cost") BigDecimal cost,
+             @RequestParam("accountId") int accountId) {
         Issue issue = issueService.getIssueById(id);
         if (issue != null && !issue.getIsResolved()) {
             issue.setIsResolved(true);
             issueService.addOrUpdateIssue(issue);  // sử dụng lại hàm đã có
+
+            // 2. Tạo bản ghi Repair tương ứng
+            Repair repair = new Repair();
+            repair.setDate(new Date()); // hoặc new Date() nếu dùng java.util.Date
+            repair.setCost(cost);
+            repair.setDeviceId(issue.getDeviceId());
+            // Bạn cần xác định typeId tương ứng. Nếu mặc định có thể hardcode hoặc lấy theo logic.
+            repair.setTypeId(repairTypeService.getTypeById(2)); // Giả sử có method này
+            repair.setAccountId(accountService.getAccountById(accountId));
+            repairService.addOrUpdateRepair(repair); // Lưu bản ghi sửa chữa
         }
         return "redirect:/issues";
     }
