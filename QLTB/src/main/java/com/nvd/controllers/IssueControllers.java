@@ -61,10 +61,21 @@ public class IssueControllers {
         return "issue-add";
     }
 
-    @PostMapping("/issue/resolve/{id}")
+    @GetMapping("/issue")
+    public String showIssueForm(@RequestParam(value = "id", required = false) Integer id, Model model) {
+        Issue issue = (id != null) ? issueService.getIssueById(id) : new Issue();
+
+        model.addAttribute("issue", issue);
+        model.addAttribute("levels", incidentLevelService.getIncidentLevels());
+        model.addAttribute("devices", deviceService.getDevices(null));
+
+        return "issue-add";
+    }
+
+    @PostMapping("/issue/{id}/isResolved=true/repair/add")
     public String resolveIssue(@PathVariable("id") int id,
-             @RequestParam("cost") BigDecimal cost,
-             @RequestParam("accountId") int accountId) {
+            @RequestParam("cost") BigDecimal cost,
+            @RequestParam("accountId") int accountId) {
         Issue issue = issueService.getIssueById(id);
         if (issue != null && !issue.getIsResolved()) {
             issue.setIsResolved(true);
@@ -73,21 +84,5 @@ public class IssueControllers {
             repairService.addNewMaintenancyOrIssue(repair, cost, issue.getDeviceId(), this.repairTypeService.getTypeById(2), accountId);
         }
         return "redirect:/issues";
-    }
-
-    @GetMapping("/issue")
-    public String insert(Model model) {
-        model.addAttribute("issue", new Issue());
-        model.addAttribute("levels", this.incidentLevelService.getIncidentLevels());
-        model.addAttribute("devices", this.deviceService.getDevices(null));
-        return "issue-add";
-    }
-
-    @GetMapping("/issue/{id}")
-    public String update(@PathVariable("id") int id, Model model) {
-        model.addAttribute("issue", this.issueService.getIssueById(id));
-        model.addAttribute("levels", this.incidentLevelService.getIncidentLevels());
-        model.addAttribute("devices", this.deviceService.getDevices(null));
-        return "issue-add";
     }
 }
