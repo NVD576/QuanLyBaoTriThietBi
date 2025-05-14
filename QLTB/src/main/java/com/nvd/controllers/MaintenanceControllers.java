@@ -68,7 +68,7 @@ public class MaintenanceControllers {
         return "maintenance-add";
     }
 
-    @GetMapping({"/maintenance-add", "/maintenance/{id}"})
+    @GetMapping("/maintenance")
     public String showMaintenanceForm(Model model,
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "deviceId", required = false) Integer deviceId) {
