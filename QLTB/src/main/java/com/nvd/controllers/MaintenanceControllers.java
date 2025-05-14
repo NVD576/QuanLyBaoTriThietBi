@@ -54,7 +54,6 @@ public class MaintenanceControllers {
 
     @GetMapping("/maintenances")
     public String show(Model model) {
-        // Truyền dữ liệu dropdown
         model.addAttribute("maintenances", this.maintenanceService.getMaintenances());
         model.addAttribute("accounts", accountService.getAccount());
         return "maintenances";
@@ -69,25 +68,19 @@ public class MaintenanceControllers {
         return "maintenance-add";
     }
 
-    @GetMapping("/maintenance")
-    public String update(Model model) {
-        model.addAttribute("maintenance", new Maintenance());
-        model.addAttribute("types", this.maintenanceTypeService.getMaintenanceTypes());
-        model.addAttribute("frequencies", this.frequencyService.getFrequency());
-        model.addAttribute("devices", this.deviceService.getDevices(null));
-        return "maintenance-add";
-    }
-
-    @GetMapping("/maintenance/Device/{id}")
-    public String update(@PathVariable("id") int id, Model model) {
+    @GetMapping("/maintenance-add")
+    public String update(@RequestParam(value = "deviceId", required = false) Integer id, Model model) {
         Maintenance m = new Maintenance();
-        Device device = deviceService.getDeviceById(id);
-        m.setDeviceId(device);  // Gán thiết bị cụ thể vào đối tượng maintenance
-
+        if (id != null) {
+            Device device = deviceService.getDeviceById(id);
+            m.setDeviceId(device);  // Gán thiết bị cụ thể vào đối tượng maintenance
+            model.addAttribute("device", device);
+        } else {
+            model.addAttribute("devices", deviceService.getDevices(null));
+        }
         model.addAttribute("maintenance", m);
-        model.addAttribute("device", device);
-        model.addAttribute("frequencies", frequencyService.getFrequency());
         model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
+        model.addAttribute("frequencies", frequencyService.getFrequency());
         return "maintenance-add";
     }
 
@@ -100,7 +93,7 @@ public class MaintenanceControllers {
         return "maintenance-add";
     }
 
-    @PostMapping("/maintenance/confirm/{id}")
+    @PostMapping("/maintenance/{id}/repair/add")
     public String confirmMaintenance(@PathVariable("id") int id,
             @RequestParam("cost") BigDecimal cost,
             @RequestParam("accountId") int accountId) {

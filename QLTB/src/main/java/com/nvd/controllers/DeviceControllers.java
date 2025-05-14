@@ -74,7 +74,33 @@ public class DeviceControllers {
     public String showDetail (@PathVariable("id") int id, Model model) {
         model.addAttribute("device", this.deviceService.getDeviceById(id));
         
-        model.addAttribute("maintenances", this.maintenanceService.getByDeviceId(id));
+        model.addAttribute("maintenances", this.deviceService.getMaintenancesByDeviceId(id));
+        model.addAttribute("issues", this.deviceService.getIssuesByDeviceId(id));
+        model.addAttribute("repairs", this.deviceService.getRepairsByDeviceId(id));
+        return "device-details";
+    }
+    
+    @GetMapping("/device/{deviceId}/maintenaces")
+    public String getMaintenacesByDeviceId (@PathVariable("deviceId") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+        
+        model.addAttribute("maintenances", this.deviceService.getMaintenancesByDeviceId(id));
+        return "device-details";
+    }
+    
+    @GetMapping("/device/{deviceId}/issues")
+    public String getIssuesByDeviceId (@PathVariable("deviceId") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+        
+        model.addAttribute("issues", this.deviceService.getIssuesByDeviceId(id));
+        return "device-details";
+    }
+    
+    @GetMapping("/device/{deviceId}/repairs")
+    public String getRepairsByDeviceId (@PathVariable("deviceId") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+        
+        model.addAttribute("repairs", this.deviceService.getRepairsByDeviceId(id));
         return "device-details";
     }
 }

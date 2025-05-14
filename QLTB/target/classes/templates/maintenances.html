@@ -10,7 +10,7 @@
     <div class="container my-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="fw-bold">Lịch bảo trì</h2>
-            <a th:href="@{/maintenance}" class="btn btn-success">
+            <a th:href="@{/maintenance-add}" class="btn btn-success">
                 + Thêm lịch bảo trì
             </a>
         </div>
@@ -46,7 +46,7 @@
 
                         <!-- Form nhập chi phí & tài khoản -->
                         <form th:id="'cost-form-' + ${p.id}"
-                              th:action="@{'/maintenance/confirm/' + ${p.id}}"
+                              th:action="@{'/maintenance/' + ${p.id} + '/repair/add'}"
                               method="post"
                               style="display: none;"
                               class="mt-2">

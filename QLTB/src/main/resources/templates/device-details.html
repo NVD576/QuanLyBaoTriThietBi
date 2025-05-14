@@ -11,7 +11,7 @@
         <!-- Nút thêm lịch bảo trì -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0">Danh sách lịch bảo trì</h4>
-            <a th:href="@{'/maintenance/Device/' + ${id}(deviceId=${device.id})}" class="btn btn-success">
+            <a th:href="@{'/maintenance-add?deviceId=' + ${device.id}}" class="btn btn-success">
                 <i class="bi bi-plus-circle me-1">Thêm lịch bảo trì</i> 
             </a>
         </div>
