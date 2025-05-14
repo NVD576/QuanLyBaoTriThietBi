@@ -54,7 +54,7 @@ public class ApiBaseControllers {
         return null; //new ResponseEntity<>(this.baseService.getMaintenancesByDeviceId(id), HttpStatus.OK);
     }
     
-    @PostMapping("/device/add/")
+    @PostMapping("/base/add/")
     public ResponseEntity<Base> create(@RequestBody Base p) {
         return null; //new ResponseEntity<>(this.baseService.addOrUpdateDevice(p), HttpStatus.CREATED);
     }
