@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 /**
  *
  * @author ADMIN
@@ -43,34 +45,33 @@ public class ApiDeviceControllers {
         this.deviceService.deleteDevice(id);
     }
 
-    @GetMapping("/device/")
+    @GetMapping("/devices/")
     public ResponseEntity<List<Device>> list(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.deviceService.getDevices(params), HttpStatus.OK);
     }
     
     @GetMapping("/device/{id}")
-    public ResponseEntity<Device> getDeviceById(@PathVariable(value = "productId") int id) {
+    public ResponseEntity<Device> getDeviceById(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(this.deviceService.getDeviceById(id), HttpStatus.OK);
     }
     
-    @GetMapping("/device/{id}/maintenances/")
-    public ResponseEntity<List<Maintenance>> getMaintenances(@PathVariable(value = "productId") int id) {
-        return null; //new ResponseEntity<>(this.deviceService.getDevices(id), HttpStatus.OK)
+    @GetMapping("/device/{deviceId}/maintenances/")
+    public ResponseEntity<List<Maintenance>> getMaintenances(@PathVariable(value = "deviceId") int id) {
+        return new ResponseEntity<>(this.deviceService.getMaintenancesByDeviceId(id), HttpStatus.OK);
     }
     
-    @GetMapping("/device/{id}/issues/")
-    public ResponseEntity<List<Issue>> getIssues(@PathVariable(value = "productId") int id) {
-        return null;
+    @GetMapping("/device/{deviceId}/issues/")
+    public ResponseEntity<List<Issue>> getIssues(@PathVariable(value = "deviceId") int id) {
+        return new ResponseEntity<>(this.deviceService.getIssuesByDeviceId(id), HttpStatus.OK);
     }
     
-    @GetMapping("/device/{id}/repairs/")
-    public ResponseEntity<List<Repair>> getRepairs(@PathVariable(value = "productId") int id) {
-        return null;
+    @GetMapping("/device/{deviceId}/repairs/")
+    public ResponseEntity<List<Repair>> getRepairs(@PathVariable(value = "deviceId") int id) {
+        return new ResponseEntity<>(this.deviceService.getRepairsByDeviceId(id), HttpStatus.OK);
     }
     
-    @PostMapping("/device/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody Device p) {
-        this.deviceService.addOrUpdateDevice(p);
+    @PostMapping("/device/add/")
+    public ResponseEntity<Device> create(@RequestBody Device p) {
+        return new ResponseEntity<>(this.deviceService.addOrUpdateDevice(p), HttpStatus.CREATED);
     }
 }

@@ -67,9 +67,9 @@ public class Device implements Serializable {
     @Size(max = 255)
     @Column(name = "image")
     private String image;
-    @OneToMany(mappedBy = "deviceId")
+    @OneToMany(mappedBy = "deviceId", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Repair> repairSet;
-    @OneToMany(mappedBy = "deviceId")
+    @OneToMany(mappedBy = "deviceId", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Issue> issueSet;
     @JoinColumn(name = "base_id", referencedColumnName = "id")
     @ManyToOne

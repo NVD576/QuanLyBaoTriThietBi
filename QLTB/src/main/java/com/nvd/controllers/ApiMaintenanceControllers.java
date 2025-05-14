@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+
+
 /**
  *
  * @author admin
@@ -34,31 +36,25 @@ public class ApiMaintenanceControllers {
     @Autowired
     private MaintenanceService maintenanceService;
     
-    @DeleteMapping("/maintenances/{deviceId}")
+    @DeleteMapping("/maintenance/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void destroy(@PathVariable(value = "deviceId") int id) {
-        //this.maintenanceService.deleteDevice(id);
+    public void destroy(@PathVariable(value = "id") int id) {
+        
     }
 
     @GetMapping("/maintenances/")
-    public ResponseEntity<List<Maintenance>> list(@RequestParam Map<String, String> params) {
+    public ResponseEntity<List<Maintenance>> getMaintenances(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.maintenanceService.getMaintenances(), HttpStatus.OK);
     }
     
-    @GetMapping("/maintenances/{id}")
-    public ResponseEntity<Maintenance> getDeviceById(@PathVariable(value = "productId") int id) {
+    @GetMapping("/maintenance/{id}")
+    public ResponseEntity<Maintenance> getMaintenanceById(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(this.maintenanceService.getMaintenanceById(id), HttpStatus.OK);
     }
     
-    @GetMapping("/maintenances/{id}/frequency/")
-    public ResponseEntity<List<Maintenance>> getMaintenances(@PathVariable(value = "productId") int id) {
-        return null; //new ResponseEntity<>(this.deviceService.getDevices(id), HttpStatus.OK)
-    }
-    
-    @PostMapping("/maintenances/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody Maintenance p) {
-        this.maintenanceService.addOrUpdateMaintenance(p);
+    @PostMapping("/maintenances/add")
+    public ResponseEntity<Maintenance> create(@RequestBody Maintenance p) {
+        return new ResponseEntity<>(this.maintenanceService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
     }
 
 }

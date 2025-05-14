@@ -6,6 +6,9 @@ package com.nvd.repository.Impl;
 
 import com.nvd.pojo.Base;
 import com.nvd.pojo.Device;
+import com.nvd.pojo.Issue;
+import com.nvd.pojo.Maintenance;
+import com.nvd.pojo.Repair;
 import com.nvd.pojo.Status;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.DeviceRepository;
 import com.nvd.repository.StatusRepository;
 import jakarta.persistence.criteria.Join;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -152,5 +156,59 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         } else {
             throw new IllegalArgumentException("Device không tồn tại với id = " + id);
         }
+    }
+    
+    @Override
+    public List<Maintenance> getMaintenancesByDeviceId(int deviceId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Maintenance> q = b.createQuery(Maintenance.class);
+            Root root = q.from(Maintenance.class);
+            q.select(root);
+            q.where(b.equal(root.get("deviceId").as(Integer.class), deviceId));
+
+            Query query = s.createQuery(q);
+            return query.getResultList();
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Issue> getIssuesByDeviceId(int deviceId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Issue> q = b.createQuery(Issue.class);
+            Root root = q.from(Issue.class);
+            q.select(root);
+            q.where(b.equal(root.get("deviceId").as(Integer.class), deviceId));
+
+            Query query = s.createQuery(q);
+            return query.getResultList();
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Repair> getRepairsByDeviceId(int deviceId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Repair> q = b.createQuery(Repair.class);
+            Root root = q.from(Repair.class);
+            q.select(root);
+            q.where(b.equal(root.get("deviceId").as(Integer.class), deviceId));
+
+            Query query = s.createQuery(q);
+            return query.getResultList();
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 }

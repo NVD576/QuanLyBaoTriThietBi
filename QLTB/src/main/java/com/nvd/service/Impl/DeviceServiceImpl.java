@@ -7,6 +7,9 @@ package com.nvd.service.Impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.nvd.pojo.Device;
+import com.nvd.pojo.Issue;
+import com.nvd.pojo.Maintenance;
+import com.nvd.pojo.Repair;
 import com.nvd.service.DeviceService;
 import java.util.List;
 import java.util.Map;
@@ -68,5 +71,20 @@ public class DeviceServiceImpl implements DeviceService {
             }
         }
         return this.deviceRepo.addOrUpdateDevice(p);
+    }
+    
+    @Override
+    public List<Maintenance> getMaintenancesByDeviceId(int deviceId) {
+        return this.deviceRepo.getMaintenancesByDeviceId(deviceId);
+    }
+
+    @Override
+    public List<Issue> getIssuesByDeviceId(int deviceId) {
+        return this.deviceRepo.getIssuesByDeviceId(deviceId);
+    }
+
+    @Override
+    public List<Repair> getRepairsByDeviceId(int deviceId) {
+        return this.deviceRepo.getRepairsByDeviceId(deviceId);
     }
 }

@@ -6,6 +6,9 @@ package com.nvd.repository;
 
 import com.nvd.pojo.Base;
 import com.nvd.pojo.Device;
+import com.nvd.pojo.Issue;
+import com.nvd.pojo.Maintenance;
+import com.nvd.pojo.Repair;
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +23,7 @@ public interface DeviceRepository {
     Device getDeviceById(int id);
     Device addOrUpdateDevice(Device p);
     void deleteDevice(int id);
+    List<Maintenance> getMaintenancesByDeviceId(int deviceId);
+    List<Issue> getIssuesByDeviceId(int deviceId);
+    List<Repair> getRepairsByDeviceId(int deviceId);
 }
