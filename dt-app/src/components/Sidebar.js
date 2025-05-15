@@ -59,12 +59,12 @@ const Sidebar = ({ sidebarOpen }) => {
       </h2>
 
       <Link 
-        to="/" 
-        style={navLinkStyle('/')} 
+        to="/devices" 
+        style={navLinkStyle('/devices')} 
         onClick={() => setCurrentTitle('Quản Lý Thiết Bị')}
         onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f1f1f1'}
         onMouseLeave={e => {
-          if (location.pathname !== '/') e.currentTarget.style.backgroundColor = 'transparent';
+          if (location.pathname !== '/devices') e.currentTarget.style.backgroundColor = 'transparent';
         }}
       >
         <FaTools style={iconStyle} />

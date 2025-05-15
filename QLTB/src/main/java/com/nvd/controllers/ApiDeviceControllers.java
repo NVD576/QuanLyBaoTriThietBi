@@ -45,7 +45,7 @@ public class ApiDeviceControllers {
         this.deviceService.deleteDevice(id);
     }
 
-    @GetMapping("/devices/")
+    @GetMapping("/devices")
     public ResponseEntity<List<Device>> list(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.deviceService.getDevices(params), HttpStatus.OK);
     }
@@ -55,22 +55,22 @@ public class ApiDeviceControllers {
         return new ResponseEntity<>(this.deviceService.getDeviceById(id), HttpStatus.OK);
     }
     
-    @GetMapping("/device/{deviceId}/maintenances/")
+    @GetMapping("/device/{deviceId}/maintenances")
     public ResponseEntity<List<Maintenance>> getMaintenances(@PathVariable(value = "deviceId") int id) {
         return new ResponseEntity<>(this.deviceService.getMaintenancesByDeviceId(id), HttpStatus.OK);
     }
     
-    @GetMapping("/device/{deviceId}/issues/")
+    @GetMapping("/device/{deviceId}/issues")
     public ResponseEntity<List<Issue>> getIssues(@PathVariable(value = "deviceId") int id) {
         return new ResponseEntity<>(this.deviceService.getIssuesByDeviceId(id), HttpStatus.OK);
     }
     
-    @GetMapping("/device/{deviceId}/repairs/")
+    @GetMapping("/device/{deviceId}/repairs")
     public ResponseEntity<List<Repair>> getRepairs(@PathVariable(value = "deviceId") int id) {
         return new ResponseEntity<>(this.deviceService.getRepairsByDeviceId(id), HttpStatus.OK);
     }
     
-    @PostMapping("/device/add/")
+    @PostMapping("/device/add")
     public ResponseEntity<Device> create(@RequestBody Device p) {
         return new ResponseEntity<>(this.deviceService.addOrUpdateDevice(p), HttpStatus.CREATED);
     }

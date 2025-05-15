@@ -42,7 +42,7 @@ public class ApiMaintenanceControllers {
         
     }
 
-    @GetMapping("/maintenances/")
+    @GetMapping("/maintenances")
     public ResponseEntity<List<Maintenance>> getMaintenances(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.maintenanceService.getMaintenances(), HttpStatus.OK);
     }

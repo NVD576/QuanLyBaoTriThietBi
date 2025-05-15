@@ -4,6 +4,8 @@
  */
 package com.nvd.configs;
 
+import com.nvd.filters.JwtFilter;
+import jakarta.servlet.Filter;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletRegistration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -12,7 +14,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
  *
  * @author ADMIN
  */
-public class DispatcherServletInit  extends AbstractAnnotationConfigDispatcherServletInitializer{
+public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -32,8 +34,8 @@ public class DispatcherServletInit  extends AbstractAnnotationConfigDispatcherSe
 
     @Override
     protected String[] getServletMappings() {
-        return new String[] {"/"};
-        
+        return new String[]{"/"};
+
     }
 
     @Override
@@ -45,6 +47,10 @@ public class DispatcherServletInit  extends AbstractAnnotationConfigDispatcherSe
 
         registration.setMultipartConfig(new MultipartConfigElement(location, maxFileSize, maxRequestSize, fileSizeThreshold));
     }
-     
-    
+
+    @Override
+    protected Filter[] getServletFilters() {
+        return new Filter[]{new JwtFilter()}; // Filter sẽ áp dụng cho mọi request
+    }
+
 }

@@ -4,6 +4,7 @@
  */
 package com.nvd.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,7 @@ public class Category implements Serializable {
     @Column(name = "name")
     private String name;
     @OneToMany(mappedBy = "categoryId")
+    @JsonIgnore
     private Set<Device> deviceSet;
 
     public Category() {

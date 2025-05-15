@@ -4,6 +4,7 @@
  */
 package com.nvd.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,7 @@ public class MaintenanceType implements Serializable {
     @Column(name = "type")
     private String type;
     @OneToMany(mappedBy = "typeId")
+    @JsonIgnore
     private Set<Maintenance> maintenanceSet;
 
     public MaintenanceType() {

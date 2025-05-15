@@ -4,6 +4,7 @@
  */
 package com.nvd.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,8 +51,10 @@ public class Base implements Serializable {
     @Column(name = "address")
     private String address;
     @OneToMany(mappedBy = "baseId")
+    @JsonIgnore
     private Set<Device> deviceSet;
     @OneToMany(mappedBy = "baseId")
+    @JsonIgnore
     private Set<Account> accountSet;
 
     public Base() {

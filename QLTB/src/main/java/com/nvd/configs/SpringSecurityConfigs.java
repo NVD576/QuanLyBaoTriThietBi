@@ -6,6 +6,7 @@ package com.nvd.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.nvd.filters.JwtFilter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -39,6 +41,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 })
 public class SpringSecurityConfigs {
 //
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -54,7 +57,7 @@ public class SpringSecurityConfigs {
                 .csrf(c -> c.disable()).authorizeHttpRequests(requests
                 -> requests.requestMatchers("/", "/home").authenticated()
                         .requestMatchers("/api/**").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/devices").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/devices").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,
                                 "/devices/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
@@ -62,18 +65,23 @@ public class SpringSecurityConfigs {
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true").permitAll())
-                .logout(logout -> logout.logoutSuccessUrl("/login").permitAll());//.addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
+                .logout(logout -> logout.logoutSuccessUrl("/login").permitAll())
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+
     @Bean
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
         return new HandlerMappingIntrospector();
     }
+
     @Bean
     @Order(0)
     public StandardServletMultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
+
     @Bean
     public Cloudinary cloudinary() {
         Cloudinary cloudinary
@@ -84,6 +92,7 @@ public class SpringSecurityConfigs {
                         "secure", true));
         return cloudinary;
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 

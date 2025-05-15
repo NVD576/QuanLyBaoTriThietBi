@@ -52,21 +52,40 @@ const Login = () => {
         payload: u.data,
       });
 
-      nav("/");
-    } catch (err) {
-      setError("Tên đăng nhập hoặc mật khẩu không chính xác!");
-    } finally {
+      nav("/devices");
+    } catch (ex) {
+        console.error('Login error:', ex);
+
+        if (ex.response?.status === 401) {
+          setError('Sai tên đăng nhập hoặc mật khẩu');
+        } else if (ex.message) {
+          setError(ex.message);
+        } else {
+          setError('Lỗi hệ thống hoặc kết nối. Vui lòng thử lại sau.');
+        }
+       } finally {
       setLoading(false);
     }
   };
-  const loginWithGoogle = async () => {
+const loginWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
-      nav("/"); // Điều hướng về trang chính sau khi đăng nhập Google thành công
+        const result = await signInWithPopup(auth, googleProvider);
+        const idToken = await result.user.getIdToken();
+
+        const res = await Apis.post(endpoints["login"], { idToken });
+        cookie.save("token", res.data.token, { path: "/" });
+
+        const u = await authApis().get(endpoints["profile"]);
+        dispatch({
+            type: "login",
+            payload: u.data,
+        });
+
+        nav("/");
     } catch (err) {
-      setError("Đăng nhập Google thất bại!");
+        setError("Đăng nhập Google thất bại!");
     }
-  };
+};
   return (
     <Container
       className="d-flex justify-content-center align-items-center"

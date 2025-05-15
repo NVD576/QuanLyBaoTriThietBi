@@ -39,7 +39,7 @@ public class ApiBaseControllers {
     public void destroy(@PathVariable(value = "id") int id) {
         
     }
-    @GetMapping("/base/")
+    @GetMapping("/base")
     public ResponseEntity<List<Base>> getBases(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.baseService.getBases(), HttpStatus.OK);
     }
@@ -49,12 +49,12 @@ public class ApiBaseControllers {
         return new ResponseEntity<>(this.baseService.getBaseById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/base/{baseId}/devices/")
+    @GetMapping("/base/{baseId}/devices")
     public ResponseEntity<List<Device>> getDevices(@PathVariable(value = "deviceId") int id) {
         return null; //new ResponseEntity<>(this.baseService.getMaintenancesByDeviceId(id), HttpStatus.OK);
     }
     
-    @PostMapping("/base/add/")
+    @PostMapping("/base/add")
     public ResponseEntity<Base> create(@RequestBody Base p) {
         return null; //new ResponseEntity<>(this.baseService.addOrUpdateDevice(p), HttpStatus.CREATED);
     }

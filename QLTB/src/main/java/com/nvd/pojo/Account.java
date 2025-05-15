@@ -4,6 +4,7 @@
  */
 package com.nvd.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -71,9 +72,11 @@ public class Account implements Serializable {
     @Column(name = "avatar")
     private String avatar;
     @OneToMany(mappedBy = "accountId")
+    @JsonIgnore
     private Set<Repair> repairSet;
     @JoinColumn(name = "base_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnore
     private Base baseId;
 
     public Account() {
@@ -145,6 +148,7 @@ public class Account implements Serializable {
         this.avatar = avatar;
     }
 
+    
     @XmlTransient
     public Set<Repair> getRepairSet() {
         return repairSet;
@@ -186,5 +190,5 @@ public class Account implements Serializable {
     public String toString() {
         return "com.nvd.pojo.Account[ id=" + id + " ]";
     }
-    
+
 }

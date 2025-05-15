@@ -60,7 +60,8 @@ const App = () => {
   useEffect(() => {
     const protectedPaths = [
       "/",
-      "/maintenance",
+      "/devices",
+      "/maintenances",
       "/incidents",
       "/repair-history",
     ];
@@ -104,7 +105,7 @@ const App = () => {
                       <Route path="/register" element={<Register />} />
                       {user && (
                         <>
-                          <Route path="/" element={<DeviceManagement />} />
+                          <Route path="/devices" element={<DeviceManagement />} />
                           <Route
                             path="/maintenance"
                             element={<MaintenanceSchedule />}

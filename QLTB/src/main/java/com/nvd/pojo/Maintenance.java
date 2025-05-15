@@ -4,6 +4,8 @@
  */
 package com.nvd.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,12 +49,15 @@ public class Maintenance implements Serializable {
     private Date date;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnoreProperties({"maintenanceSet"})
     private Device deviceId;
     @JoinColumn(name = "frequency_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnoreProperties({"maintenanceSet"})
     private Frequency frequencyId;
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnoreProperties({"maintenanceSet"})
     private MaintenanceType typeId;
 
     public Maintenance() {

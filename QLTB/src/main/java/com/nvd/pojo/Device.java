@@ -4,6 +4,8 @@
  */
 package com.nvd.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -68,19 +70,30 @@ public class Device implements Serializable {
     @Column(name = "image")
     private String image;
     @OneToMany(mappedBy = "deviceId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Repair> repairSet;
+
     @OneToMany(mappedBy = "deviceId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Issue> issueSet;
+
+    @ManyToOne
     @JoinColumn(name = "base_id", referencedColumnName = "id")
-    @ManyToOne
+    @JsonIgnoreProperties({"deviceSet"}) // hoặc thuộc tính bạn muốn bỏ qua của Base
     private Base baseId;
+
+    @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @ManyToOne
+    @JsonIgnoreProperties({"deviceSet"})
     private Category categoryId;
-    @JoinColumn(name = "status_id", referencedColumnName = "id")
+
     @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"deviceSet"}) // hoặc các thuộc tính bạn muốn bỏ qua của Status
     private Status statusId;
+
     @OneToMany(mappedBy = "deviceId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Maintenance> maintenanceSet;
 
     public Device() {
@@ -95,7 +108,6 @@ public class Device implements Serializable {
         this.name = name;
     }
 
-    
     public Integer getId() {
         return id;
     }
@@ -212,10 +224,9 @@ public class Device implements Serializable {
         return "com.nvd.pojo.Device[ id=" + id + " ]";
     }
 
-
     @Transient
     private MultipartFile file;
-    
+
     /**
      * @return the file
      */
