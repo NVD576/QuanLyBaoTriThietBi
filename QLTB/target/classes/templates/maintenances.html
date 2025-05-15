@@ -30,7 +30,7 @@
 
                 <div class="d-flex flex-column gap-2 align-items-end">
                     <!-- Nút sửa -->
-                    <a th:href="@{'/maintenance/' + ${p.id}}"
+                    <a th:href="@{'/maintenance?id=' + ${p.id}}"
                        class="btn btn-sm btn-outline-primary">
                         <i class="bi bi-pencil-square me-1"></i> Sửa
                     </a>
@@ -46,7 +46,7 @@
 
                         <!-- Form nhập chi phí & tài khoản -->
                         <form th:id="'cost-form-' + ${p.id}"
-                              th:action="@{'/maintenance/confirm/' + ${p.id}}"
+                              th:action="@{'/maintenance/' + ${p.id} + '/repair/add'}"
                               method="post"
                               style="display: none;"
                               class="mt-2">

@@ -54,7 +54,6 @@ public class MaintenanceControllers {
 
     @GetMapping("/maintenances")
     public String show(Model model) {
-        // Truyền dữ liệu dropdown
         model.addAttribute("maintenances", this.maintenanceService.getMaintenances());
         model.addAttribute("accounts", accountService.getAccount());
         return "maintenances";
@@ -70,37 +69,33 @@ public class MaintenanceControllers {
     }
 
     @GetMapping("/maintenance")
-    public String update(Model model) {
-        model.addAttribute("maintenance", new Maintenance());
-        model.addAttribute("types", this.maintenanceTypeService.getMaintenanceTypes());
-        model.addAttribute("frequencies", this.frequencyService.getFrequency());
-        model.addAttribute("devices", this.deviceService.getDevices(null));
-        return "maintenance-add";
-    }
+    public String showMaintenanceForm(Model model,
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "deviceId", required = false) Integer deviceId) {
 
-    @GetMapping("/maintenance/Device/{id}")
-    public String update(@PathVariable("id") int id, Model model) {
-        Maintenance m = new Maintenance();
-        Device device = deviceService.getDeviceById(id);
-        m.setDeviceId(device);  // Gán thiết bị cụ thể vào đối tượng maintenance
+        Maintenance maintenance;
+        if (id != null) { // Trường hợp chỉnh sửa
+            maintenance = maintenanceService.getMaintenanceById(id);
+            model.addAttribute("devices", deviceService.getDevices(null)); // Cho phép chọn lại device nếu cần
+        } else { // Trường hợp thêm mới
+            maintenance = new Maintenance();
+            if (deviceId != null) {
+                Device device = deviceService.getDeviceById(deviceId);
+                maintenance.setDeviceId(device);
+                model.addAttribute("device", device); // Nếu muốn hiển thị riêng thiết bị được chọn
+            } else {
+                model.addAttribute("devices", deviceService.getDevices(null)); // Cho phép chọn thiết bị
+            }
+        }
 
-        model.addAttribute("maintenance", m);
-        model.addAttribute("device", device);
-        model.addAttribute("frequencies", frequencyService.getFrequency());
+        model.addAttribute("maintenance", maintenance);
         model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
-        return "maintenance-add";
-    }
-
-    @GetMapping("/maintenance/{id}")
-    public String edit(@PathVariable("id") int id, Model model) {
-        model.addAttribute("maintenance", this.maintenanceService.getMaintenanceById(id));
-        model.addAttribute("devices", this.deviceService.getDevices(null));
         model.addAttribute("frequencies", frequencyService.getFrequency());
-        model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
+
         return "maintenance-add";
     }
 
-    @PostMapping("/maintenance/confirm/{id}")
+    @PostMapping("/maintenance/{id}/repair/add")
     public String confirmMaintenance(@PathVariable("id") int id,
             @RequestParam("cost") BigDecimal cost,
             @RequestParam("accountId") int accountId) {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -52,20 +53,15 @@ public class RepairControllers {
     }
 
     @GetMapping("/repair")
-    public String insert(Model model) {
-        model.addAttribute("repair", new Repair());
-        model.addAttribute("repairTypes", this.repairTypeService.getRepairTypes());
-        model.addAttribute("devices", this.deviceService.getDevices(null));
-        model.addAttribute("accounts", this.accountService.getAccount());
+    public String showRepairForm(@RequestParam(value = "id", required = false) Integer id, Model model) {
+        Repair repair = (id != null) ? repairService.getRepairById(id) : new Repair();
+
+        model.addAttribute("repair", repair);
+        model.addAttribute("repairTypes", repairTypeService.getRepairTypes());
+        model.addAttribute("devices", deviceService.getDevices(null));
+        model.addAttribute("accounts", accountService.getAccount());
+
         return "repair-add";
     }
 
-    @GetMapping("/repair/{id}")
-    public String update(@PathVariable("id") int id, Model model) {
-        model.addAttribute("repair", this.repairService.getRepairById(id));
-         model.addAttribute("repairTypes", this.repairTypeService.getRepairTypes());
-        model.addAttribute("devices", this.deviceService.getDevices(null));
-        model.addAttribute("accounts", this.accountService.getAccount());
-        return "repair-add";
-    }
 }

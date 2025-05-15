@@ -28,7 +28,7 @@
                         <span th:text="${'Người thực hiện: ' + p.accountId.name}"></span>
                     </div>
                 </div>
-                <a th:href="@{'/repair/' + ${p.id}}"
+                <a th:href="@{'/repair?id=' + ${p.id}}"
                    class="btn btn-sm btn-outline-primary align-self-center">
                     Sửa
                 </a>

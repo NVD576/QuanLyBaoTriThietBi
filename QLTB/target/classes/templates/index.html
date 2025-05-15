@@ -12,7 +12,7 @@
             <!-- Sidebar chỉ hiện trên màn hình md trở lên -->
             <div class="col-md-3 col-lg-2 d-none d-md-block bg-light border-end vh-100 sticky-top pt-3">
                 <div class="d-flex flex-column px-3 gap-3">
-                    <a th:href="@{/devices}" class="btn btn-outline-success text-start">Thêm Thiết Bị</a>
+                    <a th:href="@{/device}" class="btn btn-outline-success text-start">Thêm Thiết Bị</a>
                     <a th:href="@{/maintenances}" class="btn btn-outline-success text-start">Quản lý lịch bảo trì</a>
                     <a th:href="@{/issues}" class="btn btn-outline-success text-start">Quản lý sự cố</a>
                     <a th:href="@{/repairs}" class="btn btn-outline-success text-start">Lịch sử sửa chữa</a>
@@ -47,7 +47,7 @@
                             </a>
 
                             <!-- Sửa -->
-                            <a th:href="@{'/device/' + ${p.id}}"
+                            <a th:href="@{'/device?id=' + ${p.id}}"
                                class="btn btn-sm btn-outline-secondary">
                                 Sửa
                             </a>

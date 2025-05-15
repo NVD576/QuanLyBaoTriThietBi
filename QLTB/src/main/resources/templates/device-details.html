@@ -2,40 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Trang quản lý thiết bị</title>
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">
     <th:block th:replace="base :: styles"> </th:block>
 </head>
 
 <body>
     <div th:replace="base :: header"></div>
-    <div class="container mt-4">
-        <!-- Nút thêm lịch bảo trì -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0">Danh sách lịch bảo trì</h4>
-            <a th:href="@{'/maintenance/Device/' + ${id}(deviceId=${device.id})}" class="btn btn-success">
-                <i class="bi bi-plus-circle me-1">Thêm lịch bảo trì</i> 
-            </a>
+    <div class="container mt-5">
+
+        <!-- THÔNG TIN THIẾT BỊ -->
+        <div class="mb-4">
+            <h3 th:text="'Chi tiết thiết bị: ' + ${device.name}">Tên thiết bị</h3>
+            <p><strong>Loại:</strong> <span th:text="${device.categoryId.name}"></span></p>
+            <p><strong>Trạng thái:</strong> <span th:text="${device.statusId.name}"></span></p>
+            <p><strong>Cơ sở:</strong> <span th:text="${device.baseId.name}"></span></p>
         </div>
 
-        <!-- Danh sách bảo trì -->
-        <div class="list-group">
-            <div class="list-group-item list-group-item-action"
-                 th:each="p : ${maintenances}">
-                <div class="d-flex w-100 justify-content-between">
-                    <h6 class="mb-1" th:text="${p.deviceId.name}">Tên thiết bị</h6>
-                    <small th:text="${p.date}">Ngày</small>
+        <!-- BẢO TRÌ -->
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Lịch bảo trì</h4>
+                <a th:href="@{'/maintenance?deviceId=' + ${device.id}}" class="btn btn-success">
+                    <i class="bi bi-plus-circle me-1"></i> Thêm lịch bảo trì
+                </a>
+            </div>
+            <div class="list-group" style="max-height: 150px; overflow-y: auto;">
+                <div class="list-group-item" th:each="m : ${maintenances}">
+                    <p><strong>Ngày:</strong> <span th:text="${#dates.format(m.date, 'dd/MM/yyyy')}"></span></p>
+                    <p><strong>Loại bảo trì:</strong> <span th:text="${m.typeId.type}"></span></p>
+                    <p><strong>Tần suất:</strong> <span th:text="${m.frequencyId.frequency}"></span></p>
                 </div>
-                <p class="mb-1">
-                    <span th:text="'Tần suất: ' + ${p.frequencyId.frequency}">Tần suất</span> |
-                    <span th:text="'Loại: ' + ${p.typeId.type}">Loại bảo trì</span>
-                </p>
+                <div class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(maintenances)}">
+                    Chưa có lịch bảo trì
+                </div>
             </div>
         </div>
-        <!-- Nếu không có dữ liệu -->
-        <div class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(maintenances)}">
-            Chưa có lịch bảo trì
-        </div>
-    </div>
 
+        <!-- SỰ CỐ -->
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Sự cố</h4>
+                <a th:href="@{'/issue?deviceId=' + ${device.id}}" class="btn btn-danger">
+                    <i class="bi bi-exclamation-circle me-1"></i> Báo sự cố
+                </a>
+            </div>
+            <div class="list-group" style="max-height: 200px; overflow-y: auto;">
+                <div class="list-group-item" th:each="i : ${issues}">
+                    <p><strong>Ngày:</strong> <span th:text="${#dates.format(i.date, 'dd/MM/yyyy')}"></span></p>
+                    <p><strong>Mức độ:</strong> <span th:text="${i.levelId.level}"></span></p>
+                    <p><strong>Mô tả:</strong> <span th:text="${i.des}"></span></p>
+                    <p><strong>Trạng thái:</strong>
+                        <span class="badge" th:classappend="${i.isResolved} ? 'bg-success' : 'bg-warning'" 
+                              th:text="${i.isResolved} ? 'Đã xử lý' : 'Chưa xử lý'">
+                        </span>
+                    </p>
+                </div>
+                <div class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(issues)}">
+                    Không có sự cố nào
+                </div>
+            </div>
+        </div>
+
+        <!-- SỬA CHỮA -->
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Sửa chữa</h4>
+                <a th:href="@{'/repair?deviceId=' + ${device.id}}" class="btn btn-warning">
+                    <i class="bi bi-tools me-1"></i> Ghi nhận sửa chữa
+                </a>
+            </div>
+            <div class="list-group" style="max-height: 200px; overflow-y: auto;">
+                <div class="list-group-item" th:each="r : ${repairs}">
+                    <p><strong>Ngày:</strong> <span th:text="${#dates.format(r.date, 'dd/MM/yyyy')}"></span></p>
+                    <p><strong>Loại sửa chữa:</strong> <span th:text="${r.typeId.type}"></span></p>
+                    <p><strong>Chi phí:</strong> <span th:text="${#numbers.formatDecimal(r.cost, 0, 'COMMA', 2, 'POINT')} + ' VNĐ'"></span></p>
+                    <p><strong>Người thực hiện:</strong> <span th:text="${r.accountId.name}"></span></p>
+                </div>
+                <div class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(repairs)}">
+                    Không có thông tin sửa chữa
+                </div>
+            </div>
+        </div>
+
+    </div>
     <div th:replace="base :: footer"></div>
 </body>
 </html>

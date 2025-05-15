@@ -52,7 +52,7 @@
 
                     <div class="d-flex flex-column align-items-start gap-2">
                         <!-- Nút sửa thông tin -->
-                        <a th:href="@{'/issue/' + ${p.id}}"
+                        <a th:href="@{'/issue?id='+ ${p.id}}"
                            class="btn btn-outline-primary btn-sm">
                             <i class="bi bi-pencil-square me-1"></i> Sửa thông tin
                         </a>
@@ -68,7 +68,7 @@
 
                             <!-- Form ẩn để nhập cost + Gửi + Cancel -->
                             <form th:id="'cost-form-' + ${p.id}"
-                                  th:action="@{'/issue/resolve/' + ${p.id}}"
+                                  th:action="@{'/issue/' + ${p.id} + '/isResolved=true/repair/add'}"
                                   method="post"
                                   style="display: none;"
                                   class="mt-2 w-100">

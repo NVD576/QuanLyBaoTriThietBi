@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -37,22 +38,25 @@ public class DeviceControllers {
     private BaseService baseService;
     @Autowired
     private MaintenanceService maintenanceService;
-    
-    
-    @GetMapping("/devices")
-    public String list(Model model) {
-        model.addAttribute("device", new Device());
-        model.addAttribute("types", this.categoryService.getCates());
-        model.addAttribute("statuses", this.statusService.getStatus());
-        model.addAttribute("bases", this.baseService.getBases());
+
+    @GetMapping("/device")
+    public String showDeviceForm(@RequestParam(value = "id", required = false) Integer id, Model model) {
+        if (id != null) {
+            model.addAttribute("device", deviceService.getDeviceById(id));
+        } else {
+            model.addAttribute("device", new Device());
+        }
+        model.addAttribute("types", categoryService.getCates());
+        model.addAttribute("statuses", statusService.getStatus());
+        model.addAttribute("bases", baseService.getBases());
         return "devices-edit";
     }
-
+    
     @PostMapping("/device/add")
     public String add(@ModelAttribute(value = "device") Device p, BindingResult result,
-                      Model model) {
+            Model model) {
         Device template = this.deviceService.addOrUpdateDevice(p);
-        if(template != null) {
+        if (template != null) {
             Maintenance m = new Maintenance();
             this.maintenanceService.addNewDevice(m, p);
             return "redirect:/";
@@ -60,21 +64,38 @@ public class DeviceControllers {
         return "devices-edit";
     }
 
-    @GetMapping("/device/{id}")
-    public String update (@PathVariable("id") int id, Model model) {
-        model.addAttribute("device", this.deviceService.getDeviceById(id));
-        // Truyền dữ liệu dropdown
-        model.addAttribute("bases", this.baseService.getBases());
-        model.addAttribute("types", this.categoryService.getCates());
-        model.addAttribute("statuses", this.statusService.getStatus());
-        return "devices-edit";
-    }
-    
     @GetMapping("/device-detail/{id}")
-    public String showDetail (@PathVariable("id") int id, Model model) {
+    public String showDetail(@PathVariable("id") int id, Model model) {
         model.addAttribute("device", this.deviceService.getDeviceById(id));
-        
-        model.addAttribute("maintenances", this.maintenanceService.getByDeviceId(id));
+
+        model.addAttribute("maintenances", this.deviceService.getMaintenancesByDeviceId(id));
+        model.addAttribute("issues", this.deviceService.getIssuesByDeviceId(id));
+        model.addAttribute("repairs", this.deviceService.getRepairsByDeviceId(id));
+        return "device-details";
+    }
+
+//=================================================================
+    @GetMapping("/device/{deviceId}/maintenaces")
+    public String getMaintenacesByDeviceId(@PathVariable("deviceId") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+
+        model.addAttribute("maintenances", this.deviceService.getMaintenancesByDeviceId(id));
+        return "device-details";
+    }
+
+    @GetMapping("/device/{deviceId}/issues")
+    public String getIssuesByDeviceId(@PathVariable("deviceId") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+
+        model.addAttribute("issues", this.deviceService.getIssuesByDeviceId(id));
+        return "device-details";
+    }
+
+    @GetMapping("/device/{deviceId}/repairs")
+    public String getRepairsByDeviceId(@PathVariable("deviceId") int id, Model model) {
+        model.addAttribute("device", this.deviceService.getDeviceById(id));
+
+        model.addAttribute("repairs", this.deviceService.getRepairsByDeviceId(id));
         return "device-details";
     }
 }
