@@ -8,12 +8,13 @@ import RepairHistory from "./components/RepairHistory";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { Container } from "react-bootstrap";
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { MyDispatchContext, MyUserContext } from "./configs/MyContexts";
 import MyUserReducer from "./reducers/MyUserReducer";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Device from "./components/Device";
 
 const toggleButtonStyle = {
   position: "fixed",
@@ -29,13 +30,11 @@ const toggleButtonStyle = {
   transition: "left 0.3s ease",
 };
 
-
 const containerStyle = {
   display: "flex",
   flexDirection: "column",
   minHeight: "100vh",
 };
-
 
 const mainContentStyle = {
   flex: 1,
@@ -79,9 +78,11 @@ const App = () => {
           <div style={containerStyle}>
             <Header />
 
-            <div >
-              { <Sidebar sidebarOpen={sidebarOpen} />}
-              <div style={{ display: "flex", flexDirection: "column", flex: 1 }}  >
+            <div>
+              {<Sidebar sidebarOpen={sidebarOpen} />}
+              <div
+                style={{ display: "flex", flexDirection: "column", flex: 1 }}
+              >
                 {user && (
                   <div style={headerWrapperStyle(sidebarOpen)}>
                     <button
@@ -106,6 +107,7 @@ const App = () => {
                       {user && (
                         <>
                           <Route path="/devices" element={<DeviceManagement />} />
+                          <Route path="/device/:id" element={<Device/>} />
                           <Route path="/maintenance" element={<MaintenanceSchedule />} />
                           <Route  path="/incidents" element={<IncidentManagement />} />
                           <Route path="/repair-history" element={<RepairHistory />} />

@@ -41,7 +41,7 @@ public class ApiIssueControllerss {
         
     }
 
-    @GetMapping("/issues/")
+    @GetMapping("/issues")
     public ResponseEntity<List<Issue>> getIssues() {
         return new ResponseEntity<>(this.issueService.getIssues(), HttpStatus.OK);
     }

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import  { authApis, endpoints } from "../configs/Apis";
+import { authApis, endpoints } from "../configs/Apis";
 import cookie from "react-cookies";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 const DeviceManagement = () => {
   const [devices, setDevices] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -23,23 +24,24 @@ const DeviceManagement = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!cookie.load("token")
   );
-
+  const [showForm, setShowForm] = useState(false);
+  const nav = useNavigate();
   const loadDevices = async () => {
     try {
       let url = `${endpoints.devices}`;
-      
+
       let kw = q.get("kw");
       let cateId = q.get("cateId");
       let baseId = q.get("baseId");
 
       if (kw) {
-        url = `${url}?cateId=${kw}`;
+        url = `${url}?kw=${kw}`;
       }
       if (cateId) {
         url = `${url}?cateId=${cateId}`;
       }
       if (baseId) {
-        url = `${url}?cateId=${baseId}`;
+        url = `${url}?baseId=${baseId}`;
       }
       let res = await authApis().get(url);
 
@@ -69,7 +71,6 @@ const DeviceManagement = () => {
     try {
       const res = await authApis().get(endpoints.bases);
       setBases(res.data);
-      console.log(res.data);
     } catch (err) {
       console.error("Lỗi khi tải cơ sở:", err);
     }
@@ -82,7 +83,7 @@ const DeviceManagement = () => {
       loadStatuses();
       loadBases();
     }
-  }, [isAuthenticated,q]);
+  }, [isAuthenticated, q]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -110,15 +111,15 @@ const DeviceManagement = () => {
   };
 
   const handleSubmit = async () => {
-  if (!newDevice.name) {
-    alert("Vui lòng nhập tên thiết bị!");
-    return;
-  }
-  if (!newDevice.baseId || !newDevice.categoryId || !newDevice.statusId) {
-    alert("Vui lòng chọn đầy đủ cơ sở, loại thiết bị và trạng thái!");
-    return;
-  }
-  const formData = new FormData();
+    if (!newDevice.name) {
+      alert("Vui lòng nhập tên thiết bị!");
+      return;
+    }
+    if (!newDevice.baseId || !newDevice.categoryId || !newDevice.statusId) {
+      alert("Vui lòng chọn đầy đủ cơ sở, loại thiết bị và trạng thái!");
+      return;
+    }
+    const formData = new FormData();
     formData.append("name", newDevice.name);
     formData.append("manufacturer", newDevice.manufacturer);
     formData.append("date", newDevice.date); // yyyy-MM-dd
@@ -132,8 +133,8 @@ const DeviceManagement = () => {
     try {
       await authApis().post(endpoints["device-add"], formData, {
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
       alert("Thiết bị đã được thêm!");
       loadDevices();
@@ -144,9 +145,9 @@ const DeviceManagement = () => {
     }
   };
 
-
   const startEditing = (device) => {
     setEditingDevice(device);
+    setShowForm(true);
     // Chuyển đổi timestamp sang yyyy-MM-dd
     const formattedDate = device.date
       ? new Date(Number(device.date)).toISOString().split("T")[0]
@@ -182,55 +183,121 @@ const DeviceManagement = () => {
   return (
     <div style={styles.container}>
       <h2>Quản Lý Thiết Bị</h2>
-      <div>
-        <input type="text" name="name" placeholder="Tên thiết bị"
-          value={newDevice.name} onChange={handleChange} style={styles.input} />
-        <input type="text" name="manufacturer" placeholder="Nhà sản xuất"
-          value={newDevice.manufacturer} onChange={handleChange} style={styles.input} />
-        <input type="date"  name="date" value={newDevice.date}
-          onChange={handleChange} style={styles.input} />
-        <input type="file" name="image" onChange={handleChange} style={styles.input} />
-        {imagePreview && (
-          <img src={imagePreview} alt="Preview" style={styles.image} />
-        )}
-
-        <select name="baseId" value={newDevice.baseId} onChange={handleChange} style={styles.input} >
-          <option value="">-- Chọn cơ sở --</option>
-          {bases.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <select name="categoryId" value={newDevice.categoryId} onChange={handleChange} style={styles.input} >
-          <option value="">-- Chọn loại thiết bị --</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-
-        <select name="statusId" value={newDevice.statusId} onChange={handleChange} style={styles.input} >
-          <option value="">-- Chọn trạng thái --</option>
-          {statuses.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button onClick={handleSubmit} style={{ ...styles.button, flex: 1 }}>
-            {editingDevice ? "Cập nhật" : "Thêm"} thiết bị
-          </button>
-          {editingDevice && (
-            <button onClick={resetForm} style={{ ...styles.button, backgroundColor: "#9e9e9e", flex: 1 }} >
-              Xóa trắng
-            </button>
+      <button
+        onClick={() => {
+          resetForm(); // reset lại form khi ấn nút thêm
+          setShowForm(!showForm); // hiển thị form
+        }}
+        style={{
+          padding: "6px 12px",
+          fontSize: "14px",
+          borderRadius: "4px",
+          backgroundColor: "#1976d2",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        {editingDevice ? "Cập nhật thiết bị" : "Thêm thiết bị"}
+      </button>
+      {showForm && (
+        <div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Tên thiết bị"
+            value={newDevice.name}
+            onChange={handleChange}
+            style={styles.input}
+          />
+          <input
+            type="text"
+            name="manufacturer"
+            placeholder="Nhà sản xuất"
+            value={newDevice.manufacturer}
+            onChange={handleChange}
+            style={styles.input}
+          />
+          <input
+            type="date"
+            name="date"
+            value={newDevice.date}
+            onChange={handleChange}
+            style={styles.input}
+          />
+          <input
+            type="file"
+            name="image"
+            onChange={handleChange}
+            style={styles.input}
+          />
+          {imagePreview && (
+            <img src={imagePreview} alt="Preview" style={styles.image} />
           )}
+
+          <select
+            name="baseId"
+            value={newDevice.baseId}
+            onChange={handleChange}
+            style={styles.input}
+          >
+            <option value="">-- Chọn cơ sở --</option>
+            {bases.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          <select
+            name="categoryId"
+            value={newDevice.categoryId}
+            onChange={handleChange}
+            style={styles.input}
+          >
+            <option value="">-- Chọn loại thiết bị --</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            name="statusId"
+            value={newDevice.statusId}
+            onChange={handleChange}
+            style={styles.input}
+          >
+            <option value="">-- Chọn trạng thái --</option>
+            {statuses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              onClick={handleSubmit}
+              style={{ ...styles.button, flex: 1 }}
+            >
+              {editingDevice ? "Cập nhật" : "Thêm"} thiết bị
+            </button>
+            {editingDevice && (
+              <button
+                onClick={resetForm}
+                style={{
+                  ...styles.button,
+                  backgroundColor: "#9e9e9e",
+                  flex: 1,
+                }}
+              >
+                Xóa trắng
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <hr />
       <h3>Danh sách thiết bị</h3>
@@ -253,7 +320,9 @@ const DeviceManagement = () => {
               <td style={styles.cell}>{d.name}</td>
               <td style={styles.cell}>{d.manufacturer}</td>
               <td style={styles.cell}>
-                {d.date ? new Date(Number(d.date)).toLocaleDateString("vi-VN") : ""}
+                {d.date
+                  ? new Date(Number(d.date)).toLocaleDateString("vi-VN")
+                  : ""}
               </td>
               <td style={styles.cell}>
                 {d.image ? (
@@ -266,10 +335,22 @@ const DeviceManagement = () => {
               <td style={styles.cell}>{d.categoryId?.name || ""}</td>
               <td style={styles.cell}>{d.statusId?.name || ""}</td>
               <td style={styles.cell}>
-                <button onClick={() => startEditing(d)} style={{ ...styles.button, backgroundColor: "#4caf50" }} >
+                <button
+                  onClick={() => nav(`/device/${d.id}`)}
+                  style={{ ...styles.button, backgroundColor: "#252534" }}
+                >
+                  Xem
+                </button>
+                <button
+                  onClick={() => startEditing(d)}
+                  style={{ ...styles.button, backgroundColor: "#4caf50" }}
+                >
                   Sửa
                 </button>
-                <button onClick={() => deleteDevice(d.id)} style={{ ...styles.button, backgroundColor: "#f44336" }} >
+                <button
+                  onClick={() => deleteDevice(d.id)}
+                  style={{ ...styles.button, backgroundColor: "#f44336" }}
+                >
                   Xóa
                 </button>
               </td>
