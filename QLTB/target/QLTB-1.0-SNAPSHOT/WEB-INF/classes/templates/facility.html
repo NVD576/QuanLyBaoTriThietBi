@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý sự cố</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+
+    <div class="container my-4">
+        <h2 class="fw-bold mb-3">Danh sách cơ sở</h2>
+
+        <!-- Form thêm / sửa -->
+        <form th:action="@{/base-add}" method="post" class="mb-4 d-flex align-items-end gap-2">
+            <input type="hidden" name="id" id="baseId" th:value="0" />
+
+            <div class="mb-0 flex-grow-2">
+                <label for="baseName" class="form-label">Tên cơ sở</label>
+                <input type="text" class="form-control" id="baseName" name="name" required placeholder="Nhập tên cơ sở" />
+            </div>
+
+            <div class="mb-0 flex-grow-1">
+                <label for="baseAddress" class="form-label">Địa chỉ</label>
+                <input type="text" class="form-control" id="baseAddress" name="address" required placeholder="Nhập địa chỉ" />
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-0">Lưu</button>
+        </form>
+
+        <!-- Danh sách cơ sở -->
+        <ul class="list-group">
+            <li class="list-group-item" th:each="b : ${bases}">
+                <div class="d-flex align-items-start justify-content-between">
+                    <!-- Thông tin cơ sở -->
+                    <div class="flex-grow-1">
+                        <div class="fw-bold fs-5" th:text="${b.name}">Tên cơ sở</div>
+                        <div class="text-muted mb-1" th:text="${'Địa chỉ: ' + b.address}"></div>
+                        <div class="text-muted small">
+                            <span th:text="${'Số thiết bị: ' + #lists.size(b.deviceSet)}"></span> |
+                            <span th:text="${'Số tài khoản: ' + #lists.size(b.accountSet)}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Nút sửa -->
+                    <button type="button"
+                            class="btn btn-outline-primary btn-sm btnEditBase"
+                            th:attr="data-id=${b.id}, data-name=${b.name}, data-address=${b.address}">
+                        <i class="bi bi-pencil-square me-1"></i> Sửa thông tin
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+    <div th:replace="base :: footer"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy form inputs
+            const inputId = document.getElementById('baseId');
+            const inputName = document.getElementById('baseName');
+            const inputAddress = document.getElementById('baseAddress');
+
+            // Bắt sự kiện click các nút sửa
+            document.querySelectorAll('.btnEditBase').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    // Lấy dữ liệu từ attributes
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const address = this.getAttribute('data-address');
+
+                    // Điền dữ liệu vào form
+                    inputId.value = id;
+                    inputName.value = name;
+                    inputAddress.value = address;
+
+                    // Optionally: cuộn lên form
+                    inputName.focus();
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
+
