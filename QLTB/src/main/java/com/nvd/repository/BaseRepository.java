@@ -5,6 +5,7 @@
 package com.nvd.repository;
 
 import com.nvd.pojo.Base;
+import com.nvd.pojo.Device;
 import java.util.List;
 
 /**
@@ -16,4 +17,6 @@ public interface BaseRepository {
     List<Base> getBases();
 
     Base getBaseById(int id);
+    List<Device> getDevicesByBaseId(int baseId);
+    
 }

@@ -13,6 +13,7 @@ D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\ApiIss
 D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\ApiMaintenanceControllers.java
 D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\ApiRepairControllers.java
 D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\ApiStatusControllers.java
+D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\BaseControllers.java
 D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\DeviceControllers.java
 D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\IndexController.java
 D:\Netbean\git\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\IssueControllers.java

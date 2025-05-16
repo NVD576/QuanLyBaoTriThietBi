@@ -18,6 +18,7 @@ com\nvd\controllers\ApiIssueControllerss.class
 com\nvd\pojo\Base.class
 com\nvd\repository\CategoryRepository.class
 com\nvd\repository\Impl\DeviceRepositoryImpl.class
+com\nvd\controllers\BaseControllers.class
 com\nvd\configs\ThymeleafConfig.class
 com\nvd\repository\Impl\FrequencyRepositoryImpl.class
 com\nvd\controllers\ApiMaintenanceControllers.class

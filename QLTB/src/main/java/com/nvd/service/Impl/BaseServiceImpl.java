@@ -5,6 +5,7 @@
 package com.nvd.service.Impl;
 
 import com.nvd.pojo.Base;
+import com.nvd.pojo.Device;
 import com.nvd.repository.BaseRepository;
 import com.nvd.service.BaseService;
 import java.util.List;
@@ -27,6 +28,11 @@ public class BaseServiceImpl implements BaseService{
     @Override
     public Base getBaseById(int id) {
         return this.baseRepo.getBaseById(id);
+    }
+
+    @Override
+    public List<Device> getDevicesByBaseId(int baseId) {
+        return this.baseRepo.getDevicesByBaseId(baseId);
     }
     
 }
