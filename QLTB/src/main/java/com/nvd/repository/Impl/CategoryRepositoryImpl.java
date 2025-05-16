@@ -5,6 +5,7 @@
 package com.nvd.repository.Impl;
 
 import com.nvd.pojo.Category;
+import com.nvd.pojo.Device;
 import jakarta.persistence.Query;
 import java.util.List;
 import org.hibernate.Session;
@@ -13,6 +14,11 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.nvd.repository.CategoryRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import java.util.Collections;
+import org.hibernate.HibernateException;
 
 /**
  *
@@ -29,6 +35,24 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         Session s = this.factory.getObject().getCurrentSession();
         Query q = s.createQuery("FROM Category ORDER BY id ASC", Category.class);
         return q.getResultList();
+    }
+
+    @Override
+    public List<Device> getDevicesByCateId(int categoryId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Device> q = b.createQuery(Device.class);
+            Root root = q.from(Device.class);
+            q.select(root);
+            q.where(b.equal(root.get("categoryId").as(Integer.class), categoryId));
+
+            Query query = s.createQuery(q);
+            return query.getResultList();
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return Collections.emptyList();
     }
     
 }

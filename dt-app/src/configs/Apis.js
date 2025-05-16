@@ -13,7 +13,6 @@ export const endpoints = {
   bases: "/base",
   maintenances: "/maintenances",
   incidents: "/incidents",
-
   frequencies: "/frequencies/",
   types: "/maintenanceTypes/",
 };

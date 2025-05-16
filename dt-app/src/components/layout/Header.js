@@ -37,10 +37,10 @@ const Header = () => {
 				<Navbar.Toggle aria-controls="navbarScroll" />
 				<Navbar.Collapse id="navbarScroll">
 					<Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-						<Link to="/" className="nav-link">Trang chủ</Link>
+						<Link to="/devices" className="nav-link">Trang chủ</Link>
 						<NavDropdown title="Danh mục" id="navbarScrollingDropdown">
 							{categories.map(c => {
-								let url = `/?categoryId=${c.id}`;
+								let url = `/devices?cateId=${c.id}`;
 								return  <Link className="dropdown-item" key={c.id} to={url}>{c.name}</Link>;
 							})}
 						</NavDropdown>

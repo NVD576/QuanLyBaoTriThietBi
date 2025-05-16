@@ -5,6 +5,7 @@
 package com.nvd.repository;
 
 import com.nvd.pojo.Category;
+import com.nvd.pojo.Device;
 import java.util.List;
 
 /**
@@ -13,4 +14,5 @@ import java.util.List;
  */
 public interface CategoryRepository {
     List<Category> getCates();
+    List<Device> getDevicesByCateId(int categoryId);
 }

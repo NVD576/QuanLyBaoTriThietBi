@@ -1,6 +1,7 @@
 package com.nvd.controllers;
 
 import com.nvd.pojo.Category;
+import com.nvd.pojo.Device;
 import com.nvd.pojo.Status;
 import com.nvd.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,10 @@ public class ApiCategoryControllers {
         
     }
 
-//    @GetMapping("/categories/{id}")
-//    public ResponseEntity<Status> getstatusesById(@PathVariable(value = "id") int id) {
-//        return new ResponseEntity<>(this.categoryService.getCates(id), HttpStatus.OK);
-//    }
+    @GetMapping("/category/{categoryId}/devices")
+    public ResponseEntity<List<Device>> getstatusesById(@PathVariable(value = "categoryId") int id) {
+        return new ResponseEntity<>(this.categoryService.getDevicesByCateId(id), HttpStatus.OK);
+    }
 
 
     

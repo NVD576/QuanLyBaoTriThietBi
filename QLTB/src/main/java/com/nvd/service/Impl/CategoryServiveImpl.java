@@ -5,6 +5,7 @@
 package com.nvd.service.Impl;
 
 import com.nvd.pojo.Category;
+import com.nvd.pojo.Device;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,10 @@ public class CategoryServiveImpl implements  CategoryService{
     @Override
     public List<Category> getCates() {
         return this.cateRepo.getCates();
+    }
+
+    @Override
+    public List<Device> getDevicesByCateId(int categoryId) {
+        return this.cateRepo.getDevicesByCateId(categoryId);
     }
 }

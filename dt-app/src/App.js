@@ -111,7 +111,7 @@ const App = () => {
                             element={<MaintenanceSchedule />}
                           />
                           <Route
-                            path="/incidents"
+							      path="/incidents"
                             element={<IncidentManagement />}
                           />
                           <Route

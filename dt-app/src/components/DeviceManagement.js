@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Apis, { authApis, endpoints } from "../configs/Apis";
+import  { authApis, endpoints } from "../configs/Apis";
 import cookie from "react-cookies";
 import axios from "axios";
-
+import { useSearchParams } from "react-router-dom";
 const DeviceManagement = () => {
   const [devices, setDevices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [bases, setBases] = useState([]);
+  const [q] = useSearchParams();
   const [newDevice, setNewDevice] = useState({
     name: "",
     manufacturer: "",
@@ -23,6 +24,23 @@ const DeviceManagement = () => {
     !!cookie.load("token")
   );
 
+
+   const fetchDevices = async () => {
+    try {
+      let url = `${endpoints.devices}`;
+      let cateId = q.get("cateId");
+      if (cateId) {
+        url = `${url}?cateId=${cateId}`;
+      }
+      let res = await authApis().get(url);
+
+      setDevices(res.data);
+    } catch (err) {
+      alert("Lỗi khi tải thiết bị");
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchDevices();
@@ -30,17 +48,9 @@ const DeviceManagement = () => {
       fetchStatuses();
       fetchBases();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated,q]);
 
-  const fetchDevices = async () => {
-    try {
-      const res = await Apis.get(endpoints.devices);
-      setDevices(res.data);
-    } catch (err) {
-      alert("Lỗi khi tải thiết bị");
-      console.error(err);
-    }
-  };
+ 
 
   const fetchCategories = async () => {
     try {
@@ -196,7 +206,6 @@ const DeviceManagement = () => {
           <img src={imagePreview} alt="Preview" style={styles.image} />
         )}
 
-
         <select
           name="baseId"
           value={newDevice.baseId}
@@ -237,8 +246,6 @@ const DeviceManagement = () => {
             </option>
           ))}
         </select>
-
-
 
         <div style={{ display: "flex", gap: "10px" }}>
           <button onClick={handleSubmit} style={{ ...styles.button, flex: 1 }}>
