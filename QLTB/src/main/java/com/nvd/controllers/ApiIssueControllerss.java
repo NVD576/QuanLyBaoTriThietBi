@@ -4,7 +4,9 @@
  */
 package com.nvd.controllers;
 
+import com.nvd.pojo.IncidentLevel;
 import com.nvd.pojo.Issue;
+import com.nvd.service.IncidentLevelService;
 import com.nvd.service.IssueService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiIssueControllerss {
     @Autowired
     private IssueService issueService;
+    @Autowired
+    private IncidentLevelService incidentLevelService;
     
     @DeleteMapping("/issue/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -51,4 +55,11 @@ public class ApiIssueControllerss {
     public ResponseEntity<Issue> create(@RequestBody Issue p) {
         return null; // new ResponseEntity<>(this.issueService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
     }
+    
+    @GetMapping("/incident-levels/")
+    public ResponseEntity<List<IncidentLevel>> getIncidentLevels() {
+        return new ResponseEntity<>(this.incidentLevelService.getIncidentLevels(), HttpStatus.OK);
+    }
+    
+    
 }

@@ -31,4 +31,22 @@ function cancelCostForm(button) {
     }
 }
 
+document.getElementById("accountForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch("/account", {
+        method: "POST",
+        body: formData
+    }).then(res => {
+        if (res.ok) {
+            alert("Lưu thành công!");
+            location.reload(); // hoặc cập nhật giao diện
+        } else {
+            alert("Có lỗi xảy ra!");
+        }
+    });
+});
+
+
 

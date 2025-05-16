@@ -17,4 +17,5 @@ public interface AccountRepository {
     Account getAccountByUsername(String username);
     boolean authenticate(String username, String password);
     Account addAccount(Account u);
+    Account addOrUpdateAccount(Account acc);
 }

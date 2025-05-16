@@ -95,4 +95,19 @@ public class AccountServiceImpl implements AccountService {
         return this.accountRepo.getAccountById(id);
     }
 
+    @Override
+    public Account addOrUpdateAccount(Account acc) {
+        acc.setPassword(this.passwordEncoder.encode(acc.getPassword()));
+        if (!acc.getFile().isEmpty()) {
+            try {
+                Map res = cloudinary.uploader().upload(acc.getFile().getBytes(),
+                        ObjectUtils.asMap("resource_type", "auto"));
+                acc.setAvatar(res.get("secure_url").toString());
+            } catch (IOException ex) {
+                Logger.getLogger(AccountServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return this.accountRepo.addOrUpdateAccount(acc);
+    }
+
 }
