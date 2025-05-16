@@ -81,7 +81,7 @@ const loginWithGoogle = async () => {
             payload: u.data,
         });
 
-        nav("/");
+        nav("/devices");
     } catch (err) {
         setError("Đăng nhập Google thất bại!");
     }

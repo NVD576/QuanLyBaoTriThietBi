@@ -1,17 +1,24 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+// src/configs/Firebase.js
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyDynCi5ieCeNbjxq90S5USgaA-_CoB4NIk",
+  authDomain: "login-53f05.firebaseapp.com",
+  projectId: "login-53f05",
+  // các config khác
 };
 
+// Khởi tạo app
 const app = initializeApp(firebaseConfig);
+
+// Khởi tạo Firestore (db) **phải ở dưới khởi tạo app**
+const db = getFirestore(app);
+
+// Khởi tạo auth và provider
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-export { auth, googleProvider, signInWithPopup };
+// Xuất các biến ra ngoài
+export { db, auth, googleProvider, signInWithPopup };

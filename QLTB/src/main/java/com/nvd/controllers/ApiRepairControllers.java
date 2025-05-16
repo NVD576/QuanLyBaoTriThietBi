@@ -5,7 +5,9 @@
 package com.nvd.controllers;
 
 import com.nvd.pojo.Repair;
+import com.nvd.pojo.RepairType;
 import com.nvd.service.RepairService;
+import com.nvd.service.RepairTypeService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,27 +30,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 @CrossOrigin
 public class ApiRepairControllers {
+
     @Autowired
     private RepairService repairService;
-    
+    @Autowired
+    private RepairTypeService repairTypeService;
+
     @DeleteMapping("/repair/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
-        
+
     }
 
-    @GetMapping("/repairs/")
+    @GetMapping("/repairs")
     public ResponseEntity<List<Repair>> getRepairs() {
         return new ResponseEntity<>(this.repairService.getRepairs(), HttpStatus.OK);
     }
-    
+
     @GetMapping("/repair/{id}")
     public ResponseEntity<Repair> getRepairById(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(this.repairService.getRepairById(id), HttpStatus.OK);
     }
-    
+
     @PostMapping("/repair/add")
     public ResponseEntity<Repair> createRepair(@RequestBody Repair p) {
         return null; // new ResponseEntity<>(this.repairService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/repairTypes")
+    public ResponseEntity<List<RepairType>> getRepairTyyes() {
+        return new ResponseEntity<>(this.repairTypeService.getRepairTypes(), HttpStatus.OK);
     }
 }

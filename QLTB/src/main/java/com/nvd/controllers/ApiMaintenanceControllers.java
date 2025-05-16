@@ -4,8 +4,12 @@
  */
 package com.nvd.controllers;
 
+import com.nvd.pojo.Frequency;
 import com.nvd.pojo.Maintenance;
+import com.nvd.pojo.MaintenanceType;
+import com.nvd.service.FrequencyService;
 import com.nvd.service.MaintenanceService;
+import com.nvd.service.MaintenanceTypeService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,39 +26,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 /**
  *
  * @author admin
  */
-
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
 public class ApiMaintenanceControllers {
+
     @Autowired
     private MaintenanceService maintenanceService;
-    
+    @Autowired 
+    private MaintenanceTypeService maintenanceTypeService;
+    @Autowired
+    private FrequencyService frequencyService;
+
     @DeleteMapping("/maintenance/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
-        
+
     }
 
     @GetMapping("/maintenances")
     public ResponseEntity<List<Maintenance>> getMaintenances(@RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.maintenanceService.getMaintenances(), HttpStatus.OK);
     }
-    
+
     @GetMapping("/maintenance/{id}")
     public ResponseEntity<Maintenance> getMaintenanceById(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(this.maintenanceService.getMaintenanceById(id), HttpStatus.OK);
     }
-    
+
     @PostMapping("/maintenances/add")
     public ResponseEntity<Maintenance> create(@RequestBody Maintenance p) {
         return new ResponseEntity<>(this.maintenanceService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
     }
 
+    @GetMapping("/maintenanceTypes")
+    public ResponseEntity<List<MaintenanceType>> getMaintenanceTypes() {
+        return new ResponseEntity<>(this.maintenanceTypeService.getMaintenanceTypes(), HttpStatus.OK);
+    }
+    @GetMapping("/frequencies")
+    public ResponseEntity<List<Frequency>>getFrequencies() {
+        return new ResponseEntity<>(this.frequencyService.getFrequency(), HttpStatus.OK);
+    }
 }

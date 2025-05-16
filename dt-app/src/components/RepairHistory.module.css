@@ -1,0 +1,167 @@
+/* RepairHistory.module.css */
+.container {
+  padding: 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+  color: #337ab7;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.sectionTitle {
+  color: #5cb85c;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #5cb85c;
+  padding-bottom: 5px;
+}
+
+.infoText {
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.table thead tr {
+  background-color: #f0f0f0;
+  color: #333;
+  font-weight: bold;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.reportContainer {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.reportTitle {
+  color: #d9534f;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #d9534f;
+  padding-bottom: 5px;
+}
+
+.filterContainer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filterLabel {
+  font-weight: bold;
+  color: #333;
+}
+
+.filterSelect {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  background-color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.addButton {
+  background-color: #5cb85c;
+}
+
+.addButton:hover {
+  background-color: #4cae4c;
+}
+
+.chartContainer {
+  margin-top: 40px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.formContainer {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.formTitle {
+  color: #007bff;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+.formGroup {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+.formLabel {
+  min-width: 120px;
+  font-weight: bold;
+  color: #333;
+}
+
+.formInput,
+.formSelect {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex-grow: 1;
+}
+
+.formButton {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  background-color: #28a745;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.formButton:hover {
+  background-color: #218838;
+}

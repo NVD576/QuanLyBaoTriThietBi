@@ -18,9 +18,10 @@ export const endpoints = {
   "issue": "/issue",
   "repairs": "/repairs",
   "repair": "/repair",
-  "frequencies": "/frequencies/",
-  "types": "/maintenanceTypes/",
-  "levels": "/levels/",
+  "repairTypes": "/repairTypes",
+  "frequencies": "/frequencies",
+  "types": "/maintenanceTypes",
+  "levels": "/levels",
 };
 
 export const authApis = () => {

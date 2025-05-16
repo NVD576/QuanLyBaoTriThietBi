@@ -45,16 +45,14 @@ const Header = () => {
 							})}
 						</NavDropdown>
 
-						{user === null ? (
-							<>
-								<Link to="/register" className="nav-link text-success">Đăng ký</Link>
-								<Link to="/login" className="nav-link text-danger">Đăng nhập</Link>
-							</>
-						) : (
-							<>
-								<Button className="btn btn-danger" onClick={() => dispatch({ "type": "logout" })}>Đăng xuất</Button>
-							</>
-						)}
+                    {user===null?<>
+                        <Link to="/register" className="nav-link text-success">Đăng ký</Link>
+                        <Link to="/login" className="nav-link text-danger">Đăng nhập</Link>
+                    </>:<>
+						<img src={user.avatar} alt="avatar" className="rounded-circle" width="30" height="30" />
+                        <Link to="/profile" className="nav-link text-success">Chào {user.username}!</Link>
+                        <Button variant="danger" onClick={() => dispatch({"type": "logout"})}>Đăng xuất</Button>
+                    </>}
 					</Nav>
 					<Form onSubmit={search} className="d-flex">
 						<Form.Control

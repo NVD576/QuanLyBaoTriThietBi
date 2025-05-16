@@ -15,6 +15,8 @@ import MyUserReducer from "./reducers/MyUserReducer";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Device from "./components/Device";
+import Profile from "./components/Profile";
+import Forum from "./components/Forum";
 
 const toggleButtonStyle = {
   position: "fixed",
@@ -63,6 +65,8 @@ const App = () => {
       "/maintenances",
       "/incidents",
       "/repair-history",
+      "/profile",
+      "/forum",
     ];
     const currentPath = window.location.pathname;
     if (!user && protectedPaths.includes(currentPath)) {
@@ -109,8 +113,10 @@ const App = () => {
                           <Route path="/devices" element={<DeviceManagement />} />
                           <Route path="/device/:id" element={<Device/>} />
                           <Route path="/maintenance" element={<MaintenanceSchedule />} />
-                          <Route  path="/incidents" element={<IncidentManagement />} />
+                          <Route path="/incidents" element={<IncidentManagement />} />
                           <Route path="/repair-history" element={<RepairHistory />} />
+                          <Route path="/profile" element={<Profile />} />
+                          <Route path="/forum" element={<Forum />} />
                         </>
                       )}
                     </Routes>

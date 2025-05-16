@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Table, Modal } from "react-bootstrap";
+import { Button, Form, Table, Modal, Alert } from "react-bootstrap";
 import Apis, { endpoints } from "../configs/Apis";
 
 const MaintenanceSchedule = () => {
@@ -16,6 +16,12 @@ const MaintenanceSchedule = () => {
     date: "",
   });
 
+  // Thêm state thông báo
+  const [notifications, setNotifications] = useState({
+    overdue: [],
+    upcoming: [],
+  });
+
   useEffect(() => {
     fetchSchedules();
     fetchDevices();
@@ -23,10 +29,32 @@ const MaintenanceSchedule = () => {
     fetchTypes();
   }, []);
 
+  // Kiểm tra lịch để tạo thông báo
+  const checkNotifications = (schedules) => {
+    const today = new Date();
+    const upcomingLimit = new Date();
+    upcomingLimit.setDate(today.getDate() + 7); // 7 ngày tới
+
+    const overdue = [];
+    const upcoming = [];
+
+    schedules.forEach((s) => {
+      const scheduleDate = new Date(s.date);
+      if (scheduleDate < today) {
+        overdue.push(s);
+      } else if (scheduleDate >= today && scheduleDate <= upcomingLimit) {
+        upcoming.push(s);
+      }
+    });
+
+    setNotifications({ overdue, upcoming });
+  };
+
   const fetchSchedules = async () => {
     try {
       const res = await Apis.get(endpoints["maintenances"]);
       setSchedules(res.data);
+      checkNotifications(res.data);
     } catch (err) {
       console.error("Lỗi khi tải lịch bảo trì:", err);
     }
@@ -60,18 +88,48 @@ const MaintenanceSchedule = () => {
     }
   };
 
-  const handleAdd = () => {
-    const nextId = schedules.length
-      ? Math.max(...schedules.map((s) => s.id)) + 1
-      : 1;
+  const handleAdd = async () => {
+    if (
+      !newSchedule.deviceId ||
+      !newSchedule.frequencyId ||
+      !newSchedule.typeId ||
+      !newSchedule.date
+    ) {
+      alert("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
 
-    setSchedules([...schedules, { id: nextId, ...newSchedule }]);
-    setShow(false);
-    setNewSchedule({ deviceId: "", frequencyId: "", typeId: "", date: "" });
+    try {
+      const res = await Apis.post(endpoints.maintenances, {
+        deviceId: newSchedule.deviceId,
+        frequencyId: newSchedule.frequencyId,
+        typeId: newSchedule.typeId,
+        date: newSchedule.date,
+      });
+
+      const updatedSchedules = [...schedules, res.data];
+      setSchedules(updatedSchedules);
+      checkNotifications(updatedSchedules);
+      setShow(false);
+      setNewSchedule({ deviceId: "", frequencyId: "", typeId: "", date: "" });
+    } catch (err) {
+      alert("Lỗi khi thêm lịch bảo trì!");
+      console.error(err);
+    }
   };
 
-  const handleDelete = (id) => {
-    setSchedules(schedules.filter((s) => s.id !== id));
+  const handleDelete = async (id) => {
+    if (!window.confirm("Bạn có chắc muốn xoá lịch bảo trì này?")) return;
+
+    try {
+      await Apis.delete(`${endpoints.maintenances}/${id}`);
+      const updatedSchedules = schedules.filter((s) => s.id !== id);
+      setSchedules(updatedSchedules);
+      checkNotifications(updatedSchedules);
+    } catch (err) {
+      alert("Lỗi khi xoá lịch bảo trì!");
+      console.error(err);
+    }
   };
 
   return (
@@ -81,6 +139,35 @@ const MaintenanceSchedule = () => {
       <p>
         <strong>Quản lý Lịch Bảo Trì:</strong> Tạo và quản lý lịch bảo trì định kỳ.
       </p>
+
+      {/* Phần thông báo */}
+      {notifications.overdue.length > 0 && (
+        <Alert variant="danger">
+          <strong>Cảnh báo!</strong> Có {notifications.overdue.length} lịch bảo trì đã quá hạn:
+          <ul>
+            {notifications.overdue.map((s) => (
+              <li key={s.id}>
+                Thiết bị: {s.deviceId?.name || s.deviceId}, ngày dự kiến:{" "}
+                {new Date(s.date).toLocaleDateString("vi-VN")}
+              </li>
+            ))}
+          </ul>
+        </Alert>
+      )}
+
+      {notifications.upcoming.length > 0 && (
+        <Alert variant="warning">
+          <strong>Nhắc nhở:</strong> Có {notifications.upcoming.length} lịch bảo trì sắp tới trong 7 ngày:
+          <ul>
+            {notifications.upcoming.map((s) => (
+              <li key={s.id}>
+                Thiết bị: {s.deviceId?.name || s.deviceId}, ngày dự kiến:{" "}
+                {new Date(s.date).toLocaleDateString("vi-VN")}
+              </li>
+            ))}
+          </ul>
+        </Alert>
+      )}
 
       <Button variant="success" className="my-3" onClick={() => setShow(true)}>
         + Thêm Lịch Bảo Trì

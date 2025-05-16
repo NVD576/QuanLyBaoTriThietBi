@@ -56,7 +56,7 @@ public class ApiIssueControllerss {
         return null; // new ResponseEntity<>(this.issueService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
     }
     
-    @GetMapping("/incident-levels/")
+    @GetMapping("/levels")
     public ResponseEntity<List<IncidentLevel>> getIncidentLevels() {
         return new ResponseEntity<>(this.incidentLevelService.getIncidentLevels(), HttpStatus.OK);
     }

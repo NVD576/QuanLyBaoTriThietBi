@@ -110,7 +110,7 @@ const Device = ({ device }) => {
               repair.map((item) => (
                 <div key={item.id} className="repair-item">
                   <p><i className="far fa-calendar-alt"></i> Ngày sửa: {new Date(item.date).toLocaleDateString()}</p>
-                  <p><i className="fas fa-hard-drive"></i> Thiết bị: {item.deviceId?.name}</p>
+                  <p><i className="fas fa-desktop"></i> Thiết bị: {item.deviceId?.name}</p>
                   <p><i className="fas fa-wrench"></i> Loại sửa chữa: {item.typeId?.type}</p>
                   <p><i className="fas fa-dollar-sign"></i> Chi phí: {item.cost?.toLocaleString()} VND</p>
                   <p><i className="fas fa-user"></i> Người thực hiện: {item.accountId?.name}</p>
