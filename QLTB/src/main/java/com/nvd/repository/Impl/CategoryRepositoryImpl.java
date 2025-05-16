@@ -54,5 +54,11 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         }
         return Collections.emptyList();
     }
+
+    @Override
+    public Category getCategotryById(int id) {
+        Session session = this.factory.getObject().getCurrentSession();
+        return session.get(Category.class, id);
+    }
     
 }

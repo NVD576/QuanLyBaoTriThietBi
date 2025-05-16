@@ -31,4 +31,9 @@ public class CategoryServiveImpl implements  CategoryService{
     public List<Device> getDevicesByCateId(int categoryId) {
         return this.cateRepo.getDevicesByCateId(categoryId);
     }
+
+    @Override
+    public Category getCategotryById(int id) {
+        return this.cateRepo.getCategotryById(id);
+    }
 }

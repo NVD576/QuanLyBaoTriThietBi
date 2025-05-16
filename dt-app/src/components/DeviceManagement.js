@@ -24,13 +24,22 @@ const DeviceManagement = () => {
     !!cookie.load("token")
   );
 
-
-   const fetchDevices = async () => {
+  const loadDevices = async () => {
     try {
       let url = `${endpoints.devices}`;
+      
+      let kw = q.get("kw");
       let cateId = q.get("cateId");
+      let baseId = q.get("baseId");
+
+      if (kw) {
+        url = `${url}?cateId=${kw}`;
+      }
       if (cateId) {
         url = `${url}?cateId=${cateId}`;
+      }
+      if (baseId) {
+        url = `${url}?cateId=${baseId}`;
       }
       let res = await authApis().get(url);
 
@@ -40,27 +49,15 @@ const DeviceManagement = () => {
       console.error(err);
     }
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchDevices();
-      fetchCategories();
-      fetchStatuses();
-      fetchBases();
-    }
-  }, [isAuthenticated,q]);
-
- 
-
-  const fetchCategories = async () => {
+  const loadCategories = async () => {
     try {
       const res = await authApis().get(endpoints.categories);
       setCategories(res.data);
     } catch (err) {
-      console.error("Lỗi khi tải danh mục:", err);
+      console.error("Lỗi khi tải loại thiết bị:", err);
     }
   };
-  const fetchStatuses = async () => {
+  const loadStatuses = async () => {
     try {
       const res = await authApis().get(endpoints.statuses);
       setStatuses(res.data);
@@ -68,7 +65,7 @@ const DeviceManagement = () => {
       console.error("Lỗi khi tải trạng thái:", err);
     }
   };
-  const fetchBases = async () => {
+  const loadBases = async () => {
     try {
       const res = await authApis().get(endpoints.bases);
       setBases(res.data);
@@ -77,6 +74,15 @@ const DeviceManagement = () => {
       console.error("Lỗi khi tải cơ sở:", err);
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadDevices();
+      loadCategories();
+      loadStatuses();
+      loadBases();
+    }
+  }, [isAuthenticated,q]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -104,36 +110,40 @@ const DeviceManagement = () => {
   };
 
   const handleSubmit = async () => {
-    if (!newDevice.name) {
-      alert("Vui lòng nhập tên thiết bị!");
-      return;
-    }
-
-    const formData = new FormData();
+  if (!newDevice.name) {
+    alert("Vui lòng nhập tên thiết bị!");
+    return;
+  }
+  if (!newDevice.baseId || !newDevice.categoryId || !newDevice.statusId) {
+    alert("Vui lòng chọn đầy đủ cơ sở, loại thiết bị và trạng thái!");
+    return;
+  }
+  const formData = new FormData();
     formData.append("name", newDevice.name);
     formData.append("manufacturer", newDevice.manufacturer);
-    formData.append("date", newDevice.date);
-    if (newDevice.image) formData.append("image", newDevice.image);
+    formData.append("date", newDevice.date); // yyyy-MM-dd
+    if (newDevice.image) {
+      formData.append("image", newDevice.image);
+    }
     formData.append("baseId", newDevice.baseId);
     formData.append("categoryId", newDevice.categoryId);
     formData.append("statusId", newDevice.statusId);
 
     try {
-      if (editingDevice) {
-        await authApis().put(
-          `${endpoints.devices}/${editingDevice.id}`,
-          formData
-        );
-      } else {
-        await authApis().post(endpoints.devices, formData);
-      }
-      fetchDevices();
+      await authApis().post(endpoints["device-add"], formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      alert("Thiết bị đã được thêm!");
+      loadDevices();
       resetForm();
     } catch (err) {
       console.error(err);
-      alert("Lỗi khi lưu thiết bị");
+      alert("Lỗi khi thêm thiết bị.");
     }
   };
+
 
   const startEditing = (device) => {
     setEditingDevice(device);
@@ -158,7 +168,7 @@ const DeviceManagement = () => {
     if (window.confirm("Bạn có chắc muốn xóa không?")) {
       try {
         await authApis().delete(`${endpoints.devices}/${id}`);
-        fetchDevices();
+        loadDevices();
       } catch (err) {
         console.error(err);
         alert("Lỗi khi xóa thiết bị");
@@ -173,6 +183,7 @@ const DeviceManagement = () => {
     <div style={styles.container}>
       <h2>Quản Lý Thiết Bị</h2>
       <div>
+<<<<<<< HEAD
         <input
           hidden
           type="text"
@@ -211,16 +222,20 @@ const DeviceManagement = () => {
           onChange={handleChange}
           style={styles.input}
         />
+=======
+        <input type="text" name="name" placeholder="Tên thiết bị"
+          value={newDevice.name} onChange={handleChange} style={styles.input} />
+        <input type="text" name="manufacturer" placeholder="Nhà sản xuất"
+          value={newDevice.manufacturer} onChange={handleChange} style={styles.input} />
+        <input type="date"  name="date" value={newDevice.date}
+          onChange={handleChange} style={styles.input} />
+        <input type="file" name="image" onChange={handleChange} style={styles.input} />
+>>>>>>> db6d3964ed60a5a1290561686015ee3d02059d84
         {imagePreview && (
           <img src={imagePreview} alt="Preview" style={styles.image} />
         )}
 
-        <select
-          name="baseId"
-          value={newDevice.baseId}
-          onChange={handleChange}
-          style={styles.input}
-        >
+        <select name="baseId" value={newDevice.baseId} onChange={handleChange} style={styles.input} >
           <option value="">-- Chọn cơ sở --</option>
           {bases.map((c) => (
             <option key={c.id} value={c.id}>
@@ -228,13 +243,8 @@ const DeviceManagement = () => {
             </option>
           ))}
         </select>
-        <select
-          name="categoryId"
-          value={newDevice.categoryId}
-          onChange={handleChange}
-          style={styles.input}
-        >
-          <option value="">-- Chọn danh mục --</option>
+        <select name="categoryId" value={newDevice.categoryId} onChange={handleChange} style={styles.input} >
+          <option value="">-- Chọn loại thiết bị --</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -242,12 +252,7 @@ const DeviceManagement = () => {
           ))}
         </select>
 
-        <select
-          name="statusId"
-          value={newDevice.statusId}
-          onChange={handleChange}
-          style={styles.input}
-        >
+        <select name="statusId" value={newDevice.statusId} onChange={handleChange} style={styles.input} >
           <option value="">-- Chọn trạng thái --</option>
           {statuses.map((c) => (
             <option key={c.id} value={c.id}>
@@ -261,10 +266,7 @@ const DeviceManagement = () => {
             {editingDevice ? "Cập nhật" : "Thêm"} thiết bị
           </button>
           {editingDevice && (
-            <button
-              onClick={resetForm}
-              style={{ ...styles.button, backgroundColor: "#9e9e9e", flex: 1 }}
-            >
+            <button onClick={resetForm} style={{ ...styles.button, backgroundColor: "#9e9e9e", flex: 1 }} >
               Xóa trắng
             </button>
           )}
@@ -292,9 +294,7 @@ const DeviceManagement = () => {
               <td style={styles.cell}>{d.name}</td>
               <td style={styles.cell}>{d.manufacturer}</td>
               <td style={styles.cell}>
-                {d.date
-                  ? new Date(Number(d.date)).toLocaleDateString("vi-VN")
-                  : ""}
+                {d.date ? new Date(Number(d.date)).toLocaleDateString("vi-VN") : ""}
               </td>
               <td style={styles.cell}>
                 {d.image ? (
@@ -307,16 +307,10 @@ const DeviceManagement = () => {
               <td style={styles.cell}>{d.categoryId?.name || ""}</td>
               <td style={styles.cell}>{d.statusId?.name || ""}</td>
               <td style={styles.cell}>
-                <button
-                  onClick={() => startEditing(d)}
-                  style={{ ...styles.button, backgroundColor: "#4caf50" }}
-                >
+                <button onClick={() => startEditing(d)} style={{ ...styles.button, backgroundColor: "#4caf50" }} >
                   Sửa
                 </button>
-                <button
-                  onClick={() => deleteDevice(d.id)}
-                  style={{ ...styles.button, backgroundColor: "#f44336" }}
-                >
+                <button onClick={() => deleteDevice(d.id)} style={{ ...styles.button, backgroundColor: "#f44336" }} >
                   Xóa
                 </button>
               </td>

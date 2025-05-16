@@ -105,6 +105,7 @@ const App = () => {
                       <Route path="/register" element={<Register />} />
                       {user && (
                         <>
+<<<<<<< HEAD
                           <Route
                             path="/devices"
                             element={<DeviceManagement />}
@@ -121,6 +122,12 @@ const App = () => {
                             path="/repair-history"
                             element={<RepairHistory />}
                           />
+=======
+                          <Route path="/devices" element={<DeviceManagement />} />
+                          <Route path="/maintenance" element={<MaintenanceSchedule />} />
+                          <Route  path="/incidents" element={<IncidentManagement />} />
+                          <Route path="/repair-history" element={<RepairHistory />} />
+>>>>>>> db6d3964ed60a5a1290561686015ee3d02059d84
                         </>
                       )}
                     </Routes>

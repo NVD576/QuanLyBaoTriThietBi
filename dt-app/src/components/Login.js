@@ -87,10 +87,8 @@ const loginWithGoogle = async () => {
     }
 };
   return (
-    <Container
-      className="d-flex justify-content-center align-items-center"
-      style={{
-        minHeight: "100vh",
+    <Container className="d-flex justify-content-center align-items-center"
+      style={{ minHeight: "100vh",
         background: "linear-gradient(to right, #6a11cb, #2575fc)",
       }}
     >
