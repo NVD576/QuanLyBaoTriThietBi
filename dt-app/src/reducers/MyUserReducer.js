@@ -7,9 +7,8 @@ const MyUserReducer = (current, action) => {
         case "logout":
             cookie.remove("token");
             return null;
-        default:
-            return current;
     }
+    return current;
 }
 
 export default MyUserReducer;

@@ -106,18 +106,9 @@ const App = () => {
                       {user && (
                         <>
                           <Route path="/devices" element={<DeviceManagement />} />
-                          <Route
-                            path="/maintenance"
-                            element={<MaintenanceSchedule />}
-                          />
-                          <Route
-							      path="/incidents"
-                            element={<IncidentManagement />}
-                          />
-                          <Route
-                            path="/repair-history"
-                            element={<RepairHistory />}
-                          />
+                          <Route path="/maintenance" element={<MaintenanceSchedule />} />
+                          <Route  path="/incidents" element={<IncidentManagement />} />
+                          <Route path="/repair-history" element={<RepairHistory />} />
                         </>
                       )}
                     </Routes>
