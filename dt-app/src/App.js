@@ -14,6 +14,7 @@ import { MyDispatchContext, MyUserContext } from "./configs/MyContexts";
 import MyUserReducer from "./reducers/MyUserReducer";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Device from "./components/Device";
 
 const toggleButtonStyle = {
   position: "fixed",
@@ -105,29 +106,11 @@ const App = () => {
                       <Route path="/register" element={<Register />} />
                       {user && (
                         <>
-<<<<<<< HEAD
-                          <Route
-                            path="/devices"
-                            element={<DeviceManagement />}
-                          />
-                          <Route
-                            path="/maintenance"
-                            element={<MaintenanceSchedule />}
-                          />
-                          <Route
-                            path="/incidents"
-                            element={<IncidentManagement />}
-                          />
-                          <Route
-                            path="/repair-history"
-                            element={<RepairHistory />}
-                          />
-=======
                           <Route path="/devices" element={<DeviceManagement />} />
+                          <Route path="/device/:id" element={<Device/>} />
                           <Route path="/maintenance" element={<MaintenanceSchedule />} />
                           <Route  path="/incidents" element={<IncidentManagement />} />
                           <Route path="/repair-history" element={<RepairHistory />} />
->>>>>>> db6d3964ed60a5a1290561686015ee3d02059d84
                         </>
                       )}
                     </Routes>

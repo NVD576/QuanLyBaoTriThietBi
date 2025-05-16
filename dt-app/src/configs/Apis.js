@@ -7,19 +7,23 @@ export const endpoints = {
   "categories": "/categories",
   "devices": "/devices",
   "device-add": "/device/add",
+  "device": "/device",
   "register": "/accounts",
   "login": "/login",
   "profile": "/secure/profile",
-  "statuses": "/statuses",
+  "statuses": "/statuses",  
   "bases": "/base",
   "maintenances": "/maintenances",
-  "incidents": "/incidents",
+  "issues": "/issues",
+  "issue": "/issue",
+  "repairs": "/repairs",
+  "repair": "/repair",
   "frequencies": "/frequencies/",
   "types": "/maintenanceTypes/",
+  "levels": "/levels/",
 };
 
 export const authApis = () => {
-  console.info(cookie.load("token"));
   const token = cookie.load("token");
   return axios.create({
     baseURL: BASE_URL,

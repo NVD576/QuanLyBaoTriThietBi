@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
+import Apis, { endpoints } from '../configs/Apis';
 
 const containerStyle = {
   maxWidth: '700px',
@@ -47,77 +48,128 @@ const thTdStyle = {
 
 const IncidentManagement = () => {
   const [incidents, setIncidents] = useState([]);
+  const [issues, setIssues] = useState([]);
+  const [levels, setLevels] = useState([]);
+  const [devices, setDevices] = useState([]);
   const [formData, setFormData] = useState({
-    device: '',
-    description: '',
-    severity: 'Thấp',
+    deviceId: '',
+    des: '',
+    levelId: '',
     date: '',
-    status: 'Chưa xử lý',
+    isResolved: 'false',
   });
 
-  // Xử lý thay đổi input
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
-
-  // Thêm sự cố mới
-  const handleAddIncident = () => {
-    if (!formData.device || !formData.description || !formData.date) {
-      alert('Vui lòng nhập thiết bị, mô tả và ngày xảy ra sự cố');
-      return;
+  useEffect(() => {
+    loadIssues();
+    loadLevels();
+    loadDevices();
+  }, []);
+  const loadIssues = async () => {
+    try {
+      const response = await Apis.get(endpoints.issues);
+      setIssues(response.data);
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi tải dữ liệu!');
     }
-    setIncidents([...incidents, formData]);
-    setFormData({
-      device: '',
-      description: '',
-      severity: 'Thấp',
-      date: '',
-      status: 'Chưa xử lý',
-    });
+  };
+  const loadLevels = async () => {
+    try {
+      const response = await Apis.get(endpoints.levels);
+      setLevels(response.data);
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi tải dữ liệu!');
+    }
+  };
+  const loadDevices = async () => {
+    try {
+      const response = await Apis.get(endpoints.devices);
+      setDevices(response.data);
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi khi tải dữ liệu!');
+    }
   };
 
-  // Cập nhật trạng thái sự cố
+const handleAddIncident = async () => {
+  try {
+    const response = await Apis.post(endpoints.issue, formData);
+    setIncidents([...incidents, response.data]);
+    setFormData({ deviceId: '', des: '', levelId: '', date: '', isResolved: 'false' });
+    alert('Ghi nhận sự cố thành công!');
+  } catch (err) {
+    console.error(err);
+    alert('Lỗi khi gửi dữ liệu!');
+  }
+};
+
+
   const updateStatus = (index, newStatus) => {
     const updated = [...incidents];
-    updated[index].status = newStatus;
+    updated[index].isResolved = newStatus;
     setIncidents(updated);
   };
 
   return (
     <div style={containerStyle}>
-      <h2 style={{color: '#1976d2'}}>Quản Lý Sự Cố</h2>
+      <h2 style={{ color: '#1976d2' }}>Quản Lý Sự Cố</h2>
 
       <div>
         <label>Thiết bị:</label>
-        <input
-          type="text"
-          name="device"
-          value={formData.device}
+        <select
+          name="deviceId"
+          value={formData.deviceId}
           onChange={handleChange}
-          style={inputStyle}
-          placeholder="Nhập tên hoặc mã thiết bị"
-        />
+          style={selectStyle}
+        >
+          <option value="">Chọn thiết bị</option>
+          {devices.map((d) => (
+            <option key={d.id} value={d.id}>
+              {d.name || `Thiết bị ${d.id}`}
+            </option>
+          ))}
+        </select>
 
         <label>Mô tả sự cố:</label>
         <textarea
-          name="description"
-          value={formData.description}
+          name="des"
+          value={formData.des}
           onChange={handleChange}
-          style={{...inputStyle, height: '80px'}}
+          style={{ ...inputStyle, height: '80px' }}
           placeholder="Nhập mô tả sự cố"
         />
 
         <label>Mức độ nghiêm trọng:</label>
-        <select name="severity" value={formData.severity} onChange={handleChange} style={selectStyle}>
-          <option>Thấp</option>
-          <option>Trung bình</option>
-          <option>Cao</option>
+        <select
+          name="levelId"
+          value={formData.levelId}
+          onChange={handleChange}
+          style={selectStyle}
+        >
+          <option value="">Chọn mức độ</option>
+          {levels.map((lvl) => (
+            <option key={lvl.id} value={lvl.id}>
+              {lvl.name || `Mức độ ${lvl.id}`}
+            </option>
+          ))}
         </select>
 
         <label>Thời gian xảy ra:</label>
-        <input type="date" name="date" value={formData.date} onChange={handleChange} style={inputStyle} />
+        <input
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-        <button onClick={handleAddIncident} style={buttonStyle}>Ghi nhận sự cố</button>
+        <button onClick={handleAddIncident} style={buttonStyle}>
+          Ghi nhận sự cố
+        </button>
       </div>
 
       {incidents.length === 0 ? (
@@ -126,30 +178,31 @@ const IncidentManagement = () => {
         <table style={tableStyle}>
           <thead>
             <tr>
-              <th style={thTdStyle}>Thiết bị</th>
+              <th style={thTdStyle}>Thiết bị ID</th>
               <th style={thTdStyle}>Mô tả</th>
-              <th style={thTdStyle}>Nghiêm trọng</th>
-              <th style={thTdStyle}>Thời gian</th>
+              <th style={thTdStyle}>Mức độ</th>
+              <th style={thTdStyle}>Ngày</th>
               <th style={thTdStyle}>Trạng thái</th>
-              <th style={thTdStyle}>Cập nhật trạng thái</th>
+              <th style={thTdStyle}>Cập nhật</th>
             </tr>
           </thead>
           <tbody>
             {incidents.map((incident, idx) => (
               <tr key={idx}>
-                <td style={thTdStyle}>{incident.device}</td>
-                <td style={thTdStyle}>{incident.description}</td>
-                <td style={thTdStyle}>{incident.severity}</td>
+                <td style={thTdStyle}>{incident.deviceId}</td>
+                <td style={thTdStyle}>{incident.des}</td>
+                <td style={thTdStyle}>{incident.levelId}</td>
                 <td style={thTdStyle}>{incident.date}</td>
-                <td style={thTdStyle}>{incident.status}</td>
                 <td style={thTdStyle}>
-                  <select 
-                    value={incident.status} 
+                  {incident.isResolved ? 'Đã xử lý' : 'Chưa xử lý'}
+                </td>
+                <td style={thTdStyle}>
+                  <select
+                    value={incident.isResolved ? 'true' : 'false'}
                     onChange={(e) => updateStatus(idx, e.target.value)}
                   >
-                    <option>Chưa xử lý</option>
-                    <option>Đang xử lý</option>
-                    <option>Đã xử lý</option>
+                    <option value="false">Chưa xử lý</option>
+                    <option value="true">Đã xử lý</option>
                   </select>
                 </td>
               </tr>
@@ -162,4 +215,3 @@ const IncidentManagement = () => {
 };
 
 export default IncidentManagement;
-

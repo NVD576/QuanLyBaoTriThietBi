@@ -4,6 +4,7 @@
  */
 package com.nvd.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,7 @@ public class IncidentLevel implements Serializable {
     @Column(name = "level")
     private String level;
     @OneToMany(mappedBy = "levelId")
+    @JsonIgnore
     private Set<Issue> issueSet;
 
     public IncidentLevel() {

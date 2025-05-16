@@ -5,6 +5,7 @@
 package com.nvd.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,12 +54,15 @@ public class Repair implements Serializable {
     private BigDecimal cost;
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnoreProperties({"repairSet"})
     private Account accountId;
     @JoinColumn(name = "device_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnoreProperties({"repairSet"})
     private Device deviceId;
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @ManyToOne
+    @JsonIgnoreProperties({"repairSet"})
     private RepairType typeId;
 
     public Repair() {

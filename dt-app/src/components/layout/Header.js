@@ -27,7 +27,7 @@ const Header = () => {
 
 	const search = (e) => {
 		e.preventDefault();
-		nav(`/?kw=${kw}`);
+		nav(`/devices?kw=${kw}`);
 	}
 
 	return (
