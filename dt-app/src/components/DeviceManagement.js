@@ -174,6 +174,15 @@ const DeviceManagement = () => {
       <h2>Quản Lý Thiết Bị</h2>
       <div>
         <input
+          hidden
+          type="text"
+          name="id"
+          placeholder="ID thiết bị"
+          value={newDevice.id}
+          onChange={handleChange}
+          style={styles.input}
+        />
+        <input
           type="text"
           name="name"
           placeholder="Tên thiết bị"
