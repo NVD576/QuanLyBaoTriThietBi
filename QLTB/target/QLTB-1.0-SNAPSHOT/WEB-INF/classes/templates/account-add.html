@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý sự cố</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+
+    <div class="container my-4">
+        <!-- FORM -->
+        <form th:action="@{/account-add}" th:object="${account}" method="post" enctype="multipart/form-data">
+
+            <!-- Avatar ở trên cùng, căn giữa và hình tròn -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img th:if="${account.avatar != null}" 
+                     th:src="${account.avatar}" 
+                     alt="Ảnh đại diện hiện tại" 
+                     style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc; display: block; margin: 0 auto 10px auto;" />
+
+                <input type="file" class="form-control" th:field="*{file}" id="avatar" 
+                       style="width: 120px; margin: 0 auto; padding: 3px 6px; font-size: 0.9rem;" />
+            </div>
+
+            <input type="hidden" th:field="*{id}" id="accountId" />
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên đăng nhập</label>
+                <input type="text" class="form-control" th:field="*{username}" id="username" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" class="form-control" th:field="*{password}" id="password"
+                       th:required="${account.id == null}" />
+            </div>
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Họ tên</label>
+                <input type="text" class="form-control" th:field="*{name}" id="name" />
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" th:field="*{email}"  id="email" />
+            </div>
+
+            <div class="mb-3">
+                <label for="role" class="form-label">Vai trò</label>
+                <select class="form-select" th:field="*{role}" id="role">
+                    <option value="ROLE_ADMIN">Admin</option>
+                    <option value="ROLE_USER">Người dùng</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="baseId" class="form-label">Cơ sở</label>
+                <select class="form-select" th:field="*{baseId.id}" id="baseId">
+                    <option th:each="b : ${bases}" th:value="${b.id}" th:text="${b.name}">Tên cơ sở</option>
+                </select>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Lưu</button>
+        </form>
+    </div>
+    <div th:replace="base :: footer"></div>
+</body>
+
+</html>
+

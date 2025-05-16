@@ -36,6 +36,13 @@ public class AccountControllers {
     }
 
     @GetMapping("/accounts")
+    public String list(Model model) {
+        model.addAttribute("accounts", accountService.getAccount());
+        model.addAttribute("bases", baseService.getBases());
+        return "accounts";
+    }
+
+    @GetMapping("/account")
     public String showAccountForm(@RequestParam(value = "id", required = false) Integer id, Model model) {
         if (id != null) {
             model.addAttribute("account", accountService.getAccountById(id));
@@ -44,7 +51,7 @@ public class AccountControllers {
         }
         model.addAttribute("accounts", accountService.getAccount());
         model.addAttribute("bases", baseService.getBases());
-        return "accounts";
+        return "account-add";
     }
 
     @PostMapping("/account-add")
