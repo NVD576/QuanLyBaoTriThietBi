@@ -41,7 +41,7 @@ const containerStyle = {
 const mainContentStyle = {
   flex: 1,
   padding: "5px",
-  marginTop: "10px", // Để tránh che khuất bởi header
+  marginTop: "70px", // Để tránh che khuất bởi header
 };
 
 const headerWrapperStyle = (sidebarOpen) => ({
@@ -81,15 +81,18 @@ const App = () => {
         <MyDispatchContext.Provider value={dispatch}>
           <DeviceProvider>
           <div style={containerStyle}>
-            <Header />
+           
 
             <div>
               {<Sidebar sidebarOpen={sidebarOpen} />}
               <div
                 style={{ display: "flex", flexDirection: "column", flex: 1 }}
               >
-                {user && (
+                
+                
                   <div style={headerWrapperStyle(sidebarOpen)}>
+                     <Header />
+                     {user && (
                     <button
                       onClick={toggleSidebar}
                       style={{
@@ -101,8 +104,9 @@ const App = () => {
                     >
                       {sidebarOpen ? "‹" : "›"}
                     </button>
+                    )}
                   </div>
-                )}
+                
 
                 <main style={mainContentStyle}>
                   <Container>

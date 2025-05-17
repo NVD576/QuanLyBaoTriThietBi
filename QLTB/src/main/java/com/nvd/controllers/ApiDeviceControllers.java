@@ -4,32 +4,18 @@
  */
 package com.nvd.controllers;
 
-import com.nvd.pojo.Base;
-import com.nvd.pojo.Category;
 import com.nvd.pojo.Device;
 import com.nvd.pojo.Issue;
 import com.nvd.pojo.Maintenance;
 import com.nvd.pojo.Repair;
-import com.nvd.pojo.Status;
 import com.nvd.service.BaseService;
 import com.nvd.service.CategoryService;
 import com.nvd.service.DeviceService;
 import com.nvd.service.MaintenanceService;
 import com.nvd.service.StatusService;
-import static jakarta.persistence.GenerationType.UUID;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.criteria.Path;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -102,6 +87,7 @@ public class ApiDeviceControllers {
             @RequestParam(value = "image", required = false) MultipartFile image) {
 
         try {
+            System.out.println("Received device: " + p);
             // Xử lý ảnh (nếu có)
 //            if (image != null && !image.isEmpty()) {
 //                String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
@@ -110,6 +96,12 @@ public class ApiDeviceControllers {
 //                device.setImage(fileName);
 //            }
             // Lấy các entity từ id:
+            if (p.getFile() != null && !p.getFile().isEmpty()) {
+                String filename = p.getFile().getOriginalFilename();
+                // xử lý lưu ảnh tại đây, ví dụ:
+                p.setImage(filename);
+                // Files.copy(...) hoặc sử dụng service lưu ảnh
+            }
             p.setBaseId(baseService.getBaseById(p.getBaseId().getId()));
             p.setCategoryId(categoryService.getCategotryById(p.getCategoryId().getId()));
             p.setStatusId(statusService.getStatusById(p.getStatusId().getId()));
@@ -121,7 +113,7 @@ public class ApiDeviceControllers {
             Maintenance m = new Maintenance();
             maintenanceService.addNewDevice(m, device);
 
-            return new ResponseEntity<>(device, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Thiết bị đã được thêm");
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Lỗi khi thêm thiết bị", HttpStatus.BAD_REQUEST);
