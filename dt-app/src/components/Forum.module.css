@@ -86,18 +86,18 @@
 /* Chi tiết bài viết + comment */
 .postDetailContainer {
   margin-top: 20px;
-  padding: 20px;
+  padding: 2px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  max-height: 600px;
+  max-height: 1000px;
   overflow-y: auto;
 }
 
 .postDetailTitle {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 5px;
   color: #0d47a1;
 }
 
@@ -108,10 +108,18 @@
   line-height: 1.5;
 }
 
+/* Ví dụ: tăng chiều cao và cho scroll khi nhiều bình luận */
 .commentsContainer {
-  border-top: 1px solid #ddd;
-  padding-top: 16px;
+  max-height: auto; /* Tăng chiều cao */
+  overflow-y: auto;  /* Cho phép cuộn khi quá dài */
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fafafa;
 }
+
+
+
 
 .commentsTitle {
   font-weight: 600;
@@ -123,7 +131,7 @@
   list-style: none;
   padding: 0;
   margin-bottom: 16px;
-  max-height: 220px;
+  max-height: 550px; /* Tăng chiều cao tối đa */
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 6px;
@@ -158,8 +166,9 @@
 .newCommentTextarea {
   width: 100%;
   border-radius: 8px;
+  max-height: 50px; /* Tăng chiều cao tối đa */
   border: 1px solid #bbb;
-  padding: 10px;
+  padding: 1px;
   font-size: 1rem;
   resize: vertical;
   margin-bottom: 12px;
@@ -282,4 +291,14 @@
 
 .modalCancelButton:hover {
   background-color: #bbb;
+}
+.commentAttachment img {
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+  margin-top: 8px;
+}
+
+.commentFileInput {
+  margin: 8px 0;
 }

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, {  useContext, useEffect, useState } from "react";
 import { Button, Form, Table, Modal, Alert } from "react-bootstrap";
 import Apis, { endpoints } from "../configs/Apis";
+import { DeviceContext, MyUserContext } from "../configs/MyContexts";
 
 const MaintenanceSchedule = () => {
   const [schedules, setSchedules] = useState([]);
-  const [devices, setDevices] = useState([]);
+  // const [devices, setDevices] = useState([]);
+  const { devices } = useContext(DeviceContext);
   const [frequencies, setFrequencies] = useState([]);
   const [types, setTypes] = useState([]);
 
@@ -15,6 +17,7 @@ const MaintenanceSchedule = () => {
     typeId: "",
     date: "",
   });
+  const user = useContext(MyUserContext);
 
   // Thêm state thông báo
   const [notifications, setNotifications] = useState({
@@ -24,7 +27,7 @@ const MaintenanceSchedule = () => {
 
   useEffect(() => {
     fetchSchedules();
-    fetchDevices();
+    // fetchDevices();
     fetchFrequencies();
     fetchTypes();
   }, []);
@@ -50,25 +53,36 @@ const MaintenanceSchedule = () => {
     setNotifications({ overdue, upcoming });
   };
 
-  const fetchSchedules = async () => {
-    try {
-      const res = await Apis.get(endpoints["maintenances"]);
-      setSchedules(res.data);
-      checkNotifications(res.data);
-    } catch (err) {
-      console.error("Lỗi khi tải lịch bảo trì:", err);
-    }
-  };
+const fetchSchedules = async () => {
+  try {
+    const res = await Apis.get(endpoints["maintenances"]);
 
-  const fetchDevices = async () => {
-    try {
-      const res = await Apis.get(endpoints.devices);
-      setDevices(res.data);
-    } catch (err) {
-      alert("Lỗi khi tải thiết bị");
-      console.error(err);
+    let filteredSchedules = res.data;
+
+    if (user.role !== "ROLE_ADMIN") {
+      // Nếu không phải admin thì lọc theo baseId của user
+      filteredSchedules = res.data.filter(
+        (schedule) => schedule.deviceId?.baseId.id === user.baseId.id
+      );
     }
-  };
+
+    setSchedules(filteredSchedules);
+    checkNotifications(filteredSchedules);
+  } catch (err) {
+    console.error("Lỗi khi tải lịch bảo trì:", err);
+  }
+};
+
+
+  // const fetchDevices = async () => {
+  //   try {
+  //     const res = await Apis.get(endpoints.devices);
+  //     setDevices(res.data);
+  //   } catch (err) {
+  //     alert("Lỗi khi tải thiết bị");
+  //     console.error(err);
+  //   }
+  // };
 
   const fetchFrequencies = async () => {
     try {

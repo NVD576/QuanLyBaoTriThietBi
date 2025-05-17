@@ -5,6 +5,7 @@
 package com.nvd.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -78,7 +79,7 @@ public class Account implements Serializable {
     private Set<Repair> repairSet;
     @JoinColumn(name = "base_id", referencedColumnName = "id")
     @ManyToOne
-    @JsonIgnore
+    @JsonIgnoreProperties({"accountSet"})
     private Base baseId;
 
     public Account() {

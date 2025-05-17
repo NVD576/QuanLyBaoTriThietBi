@@ -7,6 +7,7 @@ package com.nvd.repository;
 import com.nvd.pojo.Device;
 import com.nvd.pojo.Maintenance;
 import java.util.List;
+import java.util.Map;
 
 /**
  *

@@ -10,7 +10,7 @@ import Footer from "./components/layout/Footer";
 import { Container } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { MyDispatchContext, MyUserContext } from "./configs/MyContexts";
+import { DeviceProvider, MyDispatchContext, MyUserContext } from "./configs/MyContexts";
 import MyUserReducer from "./reducers/MyUserReducer";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -40,8 +40,8 @@ const containerStyle = {
 
 const mainContentStyle = {
   flex: 1,
-  padding: "20px",
-  marginTop: "70px", // Để tránh che khuất bởi header
+  padding: "5px",
+  marginTop: "10px", // Để tránh che khuất bởi header
 };
 
 const headerWrapperStyle = (sidebarOpen) => ({
@@ -79,6 +79,7 @@ const App = () => {
     <>
       <MyUserContext.Provider value={user}>
         <MyDispatchContext.Provider value={dispatch}>
+          <DeviceProvider>
           <div style={containerStyle}>
             <Header />
 
@@ -128,6 +129,8 @@ const App = () => {
               </div>
             </div>
           </div>
+          </DeviceProvider>
+
         </MyDispatchContext.Provider>
       </MyUserContext.Provider>
     </>

@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { authApis, endpoints } from "../configs/Apis";
 import cookie from "react-cookies";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./DeviceManagement.module.css"; // Import CSS Module
 import { Button } from "react-bootstrap";
+import { MyUserContext,DeviceContext  } from "../configs/MyContexts";
 
 const DeviceManagement = () => {
-  const [devices, setDevices] = useState([]);
+  // const [devices, setDevices] = useState([]);
+  const { devices, setDevices } = useContext(DeviceContext);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [bases, setBases] = useState([]);
@@ -30,32 +32,42 @@ const DeviceManagement = () => {
   const [showForm, setShowForm] = useState(false);
   const nav = useNavigate();
   const [page, setPage] = useState(1);
+  const user = useContext(MyUserContext);
+
   const loadDevices = async () => {
-    try {
-      let url = `${endpoints.devices}?page=${page}`;
-      let kw = q.get("kw");
-      let cateId = q.get("cateId");
-      let baseId = q.get("baseId");
+  try {
+    let url = `${endpoints.devices}?page=${page}`;
+    let kw = q.get("kw");
+    let cateId = q.get("cateId");
+    let baseId = q.get("baseId");
 
-      if (kw) url = `${url}&kw=${kw}`;
-      if (cateId) url = `${url}&cateId=${cateId}`;
-      if (baseId) url = `${url}&baseId=${baseId}`;
-
-      let res = await authApis().get(url);
-      if (res.data.length === 0) {
-        setPage(0);
-      } else {
-        if (page === 1) {
-          setDevices(res.data);
-        } else {
-          setDevices((prevDevices) => [...prevDevices, ...res.data]);
-        }
-      }
-    } catch (err) {
-      alert("Lỗi khi tải thiết bị");
-      console.error(err);
+    // Nếu không phải ROLE_ADMIN thì thêm baseId của user vào URL
+    if (user.role !== "ROLE_ADMIN") {
+      url += `&baseId=${user.baseId.id}`;
     }
-  };
+
+    // Nếu có thêm filter từ URL
+    if (kw) url += `&kw=${kw}`;
+    if (cateId) url += `&cateId=${cateId}`;
+    if (baseId) url += `&baseId=${baseId}`; // Dòng này sẽ ghi đè baseId nếu có trong query string
+
+    let res = await authApis().get(url);
+
+    if (res.data.length === 0) {
+      setPage(0);
+    } else {
+      if (page === 1) {
+        setDevices(res.data);
+      } else {
+        setDevices((prevDevices) => [...prevDevices, ...res.data]);
+      }
+    }
+  } catch (err) {
+    alert("Lỗi khi tải thiết bị");
+    console.error(err);
+  }
+};
+
   const loadMore = () => {
     if (page > 0) setPage((prevPage) => prevPage + 1);
   };

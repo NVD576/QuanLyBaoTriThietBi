@@ -13,6 +13,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import styles from "./RepairHistory.module.css"; // Import CSS Module
+import { useContext } from "react";
+import { DeviceContext, MyUserContext } from "../configs/MyContexts";
 
 const RepairHistory = () => {
   pdfMake.vfs = pdfFonts.vfs;
@@ -25,25 +27,41 @@ const RepairHistory = () => {
     typeId: "",
     cost: "",
   });
-  const [devices, setDevices] = useState([]);
+  // const [devices, setDevices] = useState([]);
+  const { devices } = useContext(DeviceContext);
   const [repairTypes, setRepairTypes] = useState([]);
   const [selectedDevices, setSelectedDevices] = useState([]);
 
   const [reportData, setReportData] = useState([]);
   const [costAnalysis, setCostAnalysis] = useState({});
-
+  const user = useContext(MyUserContext);
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const [repairsRes, devicesRes, repairTypesRes] = await Promise.all([
+        const [repairsRes, repairTypesRes] = await Promise.all([
           Apis.get(endpoints.repairs),
-          Apis.get(endpoints.devices),
+          // Apis.get(endpoints.devices),
           Apis.get(endpoints.repairTypes),
         ]);
-        setRepairs(repairsRes.data);
-        setDevices(devicesRes.data);
+        // Lọc dữ liệu sửa chữa theo baseId nếu không phải admin
+        const filteredRepairs =
+          user.role === "ROLE_ADMIN"
+            ? repairsRes.data
+            : repairsRes.data.filter(
+                (repair) => repair.deviceId?.baseId.id === user.baseId.id
+              );
+
+        // Lọc devices nếu không phải admin
+        // const filteredDevices =
+        //   user.role === "ROLE_ADMIN"
+        //     ? devicesRes.data
+        //     : devicesRes.data.filter(
+        //         (device) => device.baseId?.id === user.baseId?.id
+        //       );
+        setRepairs(filteredRepairs);
+        // setDevices(filteredDevices);
         setRepairTypes(repairTypesRes.data);
       } catch (err) {
         console.error(err);
@@ -54,7 +72,7 @@ const RepairHistory = () => {
     };
 
     loadData();
-  }, []);
+  }, [user.baseId.id, user.role]);
 
   useEffect(() => {
     const analyzeCost = () => {
@@ -191,7 +209,6 @@ const RepairHistory = () => {
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Lịch Sử Sửa Chữa</h2>
-
 
       <div className={styles.chartContainer}>
         <h3 className={styles.sectionTitle}>

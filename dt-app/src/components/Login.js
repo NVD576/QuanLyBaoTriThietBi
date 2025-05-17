@@ -70,10 +70,14 @@ const Login = () => {
 const loginWithGoogle = async () => {
     try {
         const result = await signInWithPopup(auth, googleProvider);
-        const idToken = await result.user.getIdToken();
+        // const idToken = await result.user.getIdToken();
+        const username = result.user.displayName;
+        const password = "123456";
 
-        const res = await Apis.post(endpoints["login"], { idToken });
-        cookie.save("token", res.data.token, { path: "/" });
+        console.log("Google login result:", result);
+
+        const res = await Apis.post(endpoints["login"], { username, password });
+        cookie.save("token", res.data.token);
 
         const u = await authApis().get(endpoints["profile"]);
         dispatch({

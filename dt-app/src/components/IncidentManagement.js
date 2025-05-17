@@ -1,38 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import Apis, { endpoints } from '../configs/Apis';
-import './IncidentManagement.css'; // Import file CSS
+import React, { useEffect, useState } from "react";
+import Apis, { endpoints } from "../configs/Apis";
+import "./IncidentManagement.css"; // Import file CSS
+import { useContext } from "react";
+import { DeviceContext, MyUserContext } from "../configs/MyContexts";
 
 const IncidentManagement = () => {
   const [issues, setIssues] = useState([]);
   const [levels, setLevels] = useState([]);
-  const [devices, setDevices] = useState([]);
+  // const [devices, setDevices] = useState([]);
+  const{devices} = useContext(DeviceContext);
   const [formData, setFormData] = useState({
-    deviceId: '',
-    des: '',
-    levelId: '',
-    date: '',
+    deviceId: "",
+    des: "",
+    levelId: "",
+    date: "",
     isResolved: false,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false); // State để kiểm soát hiển thị form
-
+  const user = useContext(MyUserContext);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const [issuesRes, levelsRes, devicesRes] = await Promise.all([
+        const [issuesRes, levelsRes] = await Promise.all([
           Apis.get(endpoints.issues),
           Apis.get(endpoints.levels),
-          Apis.get(endpoints.devices),
+          // Apis.get(endpoints.devices),
         ]);
-        setIssues(issuesRes.data);
+        console.log("Issues:", issuesRes.data);
+        console.log("user:", user.baseId);
+        const filteredIssues =
+          user.role === "ROLE_ADMIN"
+            ? issuesRes.data
+            : issuesRes.data.filter(
+                (issue) => issue.deviceId?.baseId.id === user.baseId.id
+              );
+        setIssues(filteredIssues);
         setLevels(levelsRes.data);
-        setDevices(devicesRes.data);
+        // setDevices(devicesRes.data);
       } catch (err) {
         console.error(err);
-        setError('Lỗi khi tải dữ liệu!');
+        setError("Lỗi khi tải dữ liệu!");
       } finally {
         setLoading(false);
       }
@@ -45,7 +56,7 @@ const IncidentManagement = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -53,12 +64,18 @@ const IncidentManagement = () => {
     try {
       const res = await Apis.post(endpoints.issue, formData);
       setIssues([...issues, res.data]);
-      setFormData({ deviceId: '', des: '', levelId: '', date: '', isResolved: false });
+      setFormData({
+        deviceId: "",
+        des: "",
+        levelId: "",
+        date: "",
+        isResolved: false,
+      });
       setShowAddForm(false); // Ẩn form sau khi thêm thành công
-      alert('Ghi nhận sự cố thành công!');
+      alert("Ghi nhận sự cố thành công!");
     } catch (err) {
       console.error(err);
-      alert('Lỗi khi gửi dữ liệu!');
+      alert("Lỗi khi gửi dữ liệu!");
     }
   };
 
@@ -73,11 +90,9 @@ const IncidentManagement = () => {
       setIssues(updatedIssues);
     } catch (err) {
       console.error(err);
-      alert('Lỗi khi cập nhật trạng thái!');
+      alert("Lỗi khi cập nhật trạng thái!");
     }
   };
-
-
 
   if (loading) {
     return <div className="loading-spinner">Đang tải dữ liệu...</div>;
@@ -175,7 +190,10 @@ const IncidentManagement = () => {
             <button onClick={handleAddIncident} className="btn btn-primary">
               Ghi nhận
             </button>
-            <button onClick={() => setShowAddForm(false)} className="btn btn-secondary">
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="btn btn-secondary"
+            >
               Hủy
             </button>
           </div>
@@ -200,17 +218,21 @@ const IncidentManagement = () => {
             <tbody>
               {issues.map((issue) => (
                 <tr key={issue.id}>
-                  <td>{issue.deviceId?.name || `Thiết bị ${issue.deviceId?.id}`}</td>
+                  <td>
+                    {issue.deviceId?.name || `Thiết bị ${issue.deviceId?.id}`}
+                  </td>
                   <td>{issue.des}</td>
                   <td>{issue.levelId.level}</td>
                   <td>{new Date(issue.date).toLocaleDateString("vi-VN")}</td>
-                  <td className={issue.isResolved ? 'resolved' : 'unresolved'}>
-                    {issue.isResolved ? 'Đã xử lý' : 'Chưa xử lý'}
+                  <td className={issue.isResolved ? "resolved" : "unresolved"}>
+                    {issue.isResolved ? "Đã xử lý" : "Chưa xử lý"}
                   </td>
                   <td>
                     <select
                       value={issue.isResolved}
-                      onChange={(e) => updateStatus(issue.id, e.target.value === 'true')}
+                      onChange={(e) =>
+                        updateStatus(issue.id, e.target.value === "true")
+                      }
                       className="status-select"
                     >
                       <option value={false}>Chưa xử lý</option>

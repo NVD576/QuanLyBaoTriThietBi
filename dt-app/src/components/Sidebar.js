@@ -131,14 +131,14 @@ const Sidebar = ({ sidebarOpen }) => {
       </Link>
 
       <Link
-        to="/forum "
-        style={navLinkStyle("/forum ")}
-        onClick={() => setCurrentTitle("Forum ")}
+        to="/forum"
+        style={navLinkStyle("/forum")}
+        onClick={() => setCurrentTitle("Forum")}
         onMouseEnter={(e) =>
           (e.currentTarget.style.backgroundColor = "#f1f1f1")
         }
         onMouseLeave={(e) => {
-          if (location.pathname !== "/forum ")
+          if (location.pathname !== "/forum")
             e.currentTarget.style.backgroundColor = "transparent";
         }}
       >

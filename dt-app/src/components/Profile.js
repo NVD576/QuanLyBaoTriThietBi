@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { authApis, endpoints } from "../configs/Apis";
-import { MyUserContext } from "../configs/MyContexts";
-import { useContext } from "react";
 
 const Profile = () => {
   const [profile, setProfile] = useState({
     username: "",
     name: "",
     email: "",
-    phone: "",
+    baseId: "",
     avatar: null,
   });
   const [avatarPreview, setAvatarPreview] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-   const user = useContext(MyUserContext);
-  console.log("User context:", user);
   // Load profile info từ API
   const loadProfile = async () => {
     try {
@@ -24,11 +20,11 @@ const Profile = () => {
         role: res.data.role || "",
         name: res.data.name || "",
         email: res.data.email || "",
+        baseId: res.data.baseId || "",
         avatar: null,
       });
       setAvatarPreview(res.data.avatar || "");
       setIsLoading(false);
-      console.log("Profile loaded:", res.data);
     } catch (error) {
       console.error("Lỗi khi tải profile:", error);
       setIsLoading(false);
@@ -98,7 +94,18 @@ const Profile = () => {
             style={styles.input}
           />
         </label>
+        <label>
+          Cơ sở quản lý:
+          <input
+            type="text"
+            name="baseId"
+            value={profile.baseId.name}
+            onChange={handleChange}
+            disabled
+            style={styles.input}
 
+          />
+        </label>
         <label>
           Email:
           <input
