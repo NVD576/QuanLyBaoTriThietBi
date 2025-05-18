@@ -138,7 +138,19 @@ const RepairHistory = () => {
         r.cost ? r.cost.toLocaleString("vi-VN") : "",
       ]),
     ];
+  // Tính tổng chi phí
+  const totalCost = filteredData.reduce(
+    (sum, r) => sum + parseFloat(r.cost || 0),
+    0
+  );
 
+  // Thêm dòng tổng chi phí vào cuối bảng
+  body.push([
+    { text: "Tổng chi phí", colSpan: 3, alignment: "right", bold: true },
+    {},
+    {},
+    { text: totalCost.toLocaleString("vi-VN"), bold: true },
+  ]);
     const docDefinition = {
       content: [
         { text: "BÁO CÁO LỊCH SỬ SỬA CHỮA", style: "header" },

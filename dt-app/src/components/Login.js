@@ -85,6 +85,7 @@ const loginWithGoogle = async () => {
             payload: u.data,
         });
 
+      localStorage.setItem("user", JSON.stringify(u.data));
         nav("/devices");
     } catch (err) {
         setError("Đăng nhập Google thất bại!");
