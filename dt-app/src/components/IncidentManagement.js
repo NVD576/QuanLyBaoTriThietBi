@@ -30,8 +30,6 @@ const IncidentManagement = () => {
           Apis.get(endpoints.levels),
           // Apis.get(endpoints.devices),
         ]);
-        console.log("Issues:", issuesRes.data);
-        console.log("user:", user.baseId);
         const filteredIssues =
           user.role === "ROLE_ADMIN"
             ? issuesRes.data

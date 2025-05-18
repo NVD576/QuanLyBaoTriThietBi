@@ -1,16 +1,24 @@
-import React, {  useContext, useEffect, useState } from "react";
-import { Button, Form, Table, Modal, Alert } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Form, Modal, Alert } from "react-bootstrap";
 import Apis, { endpoints } from "../configs/Apis";
 import { DeviceContext, MyUserContext } from "../configs/MyContexts";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
+const localizer = momentLocalizer(moment);
 
 const MaintenanceSchedule = () => {
   const [schedules, setSchedules] = useState([]);
-  // const [devices, setDevices] = useState([]);
   const { devices } = useContext(DeviceContext);
   const [frequencies, setFrequencies] = useState([]);
   const [types, setTypes] = useState([]);
-
   const [show, setShow] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  // Thêm state lưu ngày được chọn khi click vào lịch (slot)
+  const [selectedDate, setSelectedDate] = useState(null);
+
   const [newSchedule, setNewSchedule] = useState({
     deviceId: "",
     frequencyId: "",
@@ -19,7 +27,6 @@ const MaintenanceSchedule = () => {
   });
   const user = useContext(MyUserContext);
 
-  // Thêm state thông báo
   const [notifications, setNotifications] = useState({
     overdue: [],
     upcoming: [],
@@ -27,16 +34,14 @@ const MaintenanceSchedule = () => {
 
   useEffect(() => {
     fetchSchedules();
-    // fetchDevices();
     fetchFrequencies();
     fetchTypes();
   }, []);
 
-  // Kiểm tra lịch để tạo thông báo
   const checkNotifications = (schedules) => {
     const today = new Date();
     const upcomingLimit = new Date();
-    upcomingLimit.setDate(today.getDate() + 7); // 7 ngày tới
+    upcomingLimit.setDate(today.getDate() + 7);
 
     const overdue = [];
     const upcoming = [];
@@ -53,36 +58,23 @@ const MaintenanceSchedule = () => {
     setNotifications({ overdue, upcoming });
   };
 
-const fetchSchedules = async () => {
-  try {
-    const res = await Apis.get(endpoints["maintenances"]);
+  const fetchSchedules = async () => {
+    try {
+      const res = await Apis.get(endpoints.maintenances);
+      let filtered = res.data;
 
-    let filteredSchedules = res.data;
+      if (user.role !== "ROLE_ADMIN") {
+        filtered = filtered.filter(
+          (s) => s.deviceId?.baseId.id === user.baseId.id
+        );
+      }
 
-    if (user.role !== "ROLE_ADMIN") {
-      // Nếu không phải admin thì lọc theo baseId của user
-      filteredSchedules = res.data.filter(
-        (schedule) => schedule.deviceId?.baseId.id === user.baseId.id
-      );
+      setSchedules(filtered);
+      checkNotifications(filtered);
+    } catch (err) {
+      console.error("Lỗi khi tải lịch bảo trì:", err);
     }
-
-    setSchedules(filteredSchedules);
-    checkNotifications(filteredSchedules);
-  } catch (err) {
-    console.error("Lỗi khi tải lịch bảo trì:", err);
-  }
-};
-
-
-  // const fetchDevices = async () => {
-  //   try {
-  //     const res = await Apis.get(endpoints.devices);
-  //     setDevices(res.data);
-  //   } catch (err) {
-  //     alert("Lỗi khi tải thiết bị");
-  //     console.error(err);
-  //   }
-  // };
+  };
 
   const fetchFrequencies = async () => {
     try {
@@ -102,6 +94,7 @@ const fetchSchedules = async () => {
     }
   };
 
+  // Hàm thêm lịch bảo trì
   const handleAdd = async () => {
     if (
       !newSchedule.deviceId ||
@@ -114,18 +107,13 @@ const fetchSchedules = async () => {
     }
 
     try {
-      const res = await Apis.post(endpoints.maintenances, {
-        deviceId: newSchedule.deviceId,
-        frequencyId: newSchedule.frequencyId,
-        typeId: newSchedule.typeId,
-        date: newSchedule.date,
-      });
-
-      const updatedSchedules = [...schedules, res.data];
-      setSchedules(updatedSchedules);
-      checkNotifications(updatedSchedules);
+      const res = await Apis.post(endpoints.maintenances, newSchedule);
+      const updated = [...schedules, res.data];
+      setSchedules(updated);
+      checkNotifications(updated);
       setShow(false);
       setNewSchedule({ deviceId: "", frequencyId: "", typeId: "", date: "" });
+      setSelectedDate(null);
     } catch (err) {
       alert("Lỗi khi thêm lịch bảo trì!");
       console.error(err);
@@ -137,31 +125,49 @@ const fetchSchedules = async () => {
 
     try {
       await Apis.delete(`${endpoints.maintenances}/${id}`);
-      const updatedSchedules = schedules.filter((s) => s.id !== id);
-      setSchedules(updatedSchedules);
-      checkNotifications(updatedSchedules);
+      const updated = schedules.filter((s) => s.id !== id);
+      setSchedules(updated);
+      checkNotifications(updated);
     } catch (err) {
       alert("Lỗi khi xoá lịch bảo trì!");
       console.error(err);
     }
   };
 
+  const events = schedules.map((s) => ({
+    id: s.id,
+    title: `${s.deviceId?.name || "Thiết bị"} - ${s.typeId?.type || "Bảo trì"}`,
+    start: new Date(s.date),
+    end: new Date(s.date),
+    allDay: true,
+    schedule: s,
+  }));
+
+  // Khi click vào ô ngày trên lịch, hiện popup thêm lịch với ngày được chọn
+  const handleSelectSlot = (slotInfo) => {
+    const date = moment(slotInfo.start).format("YYYY-MM-DD");
+    setSelectedDate(date);
+    setNewSchedule({
+      deviceId: "",
+      frequencyId: "",
+      typeId: "",
+      date: date,
+    });
+    setShow(true);
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h2 style={{ color: "#1976d2" }}>Lịch Bảo Trì</h2>
 
-      <p>
-        <strong>Quản lý Lịch Bảo Trì:</strong> Tạo và quản lý lịch bảo trì định kỳ.
-      </p>
-
-      {/* Phần thông báo */}
       {notifications.overdue.length > 0 && (
         <Alert variant="danger">
-          <strong>Cảnh báo!</strong> Có {notifications.overdue.length} lịch bảo trì đã quá hạn:
-          <ul>
+          <strong>⚠️ Cảnh báo:</strong> Có {notifications.overdue.length} thiết
+          bị quá hạn bảo trì:
+          <ul className="mt-2">
             {notifications.overdue.map((s) => (
               <li key={s.id}>
-                Thiết bị: {s.deviceId?.name || s.deviceId}, ngày dự kiến:{" "}
+                <strong>{s.deviceId?.name}</strong> – ngày bảo trì:{" "}
                 {new Date(s.date).toLocaleDateString("vi-VN")}
               </li>
             ))}
@@ -171,11 +177,12 @@ const fetchSchedules = async () => {
 
       {notifications.upcoming.length > 0 && (
         <Alert variant="warning">
-          <strong>Nhắc nhở:</strong> Có {notifications.upcoming.length} lịch bảo trì sắp tới trong 7 ngày:
-          <ul>
+          <strong>⏰ Nhắc nhở:</strong> Có {notifications.upcoming.length} thiết
+          bị sắp đến hạn bảo trì:
+          <ul className="mt-2">
             {notifications.upcoming.map((s) => (
               <li key={s.id}>
-                Thiết bị: {s.deviceId?.name || s.deviceId}, ngày dự kiến:{" "}
+                <strong>{s.deviceId?.name}</strong> – ngày bảo trì:{" "}
                 {new Date(s.date).toLocaleDateString("vi-VN")}
               </li>
             ))}
@@ -183,45 +190,75 @@ const fetchSchedules = async () => {
         </Alert>
       )}
 
-      <Button variant="success" className="my-3" onClick={() => setShow(true)}>
+      <Button variant="success" className="mb-3" onClick={() => {
+        setSelectedDate(null);
+        setNewSchedule({ deviceId: "", frequencyId: "", typeId: "", date: "" });
+        setShow(true);
+      }}>
         + Thêm Lịch Bảo Trì
       </Button>
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Thiết Bị</th>
-            <th>Tần Suất</th>
-            <th>Loại Bảo Trì</th>
-            <th>Ngày Dự Kiến</th>
-            <th>Hành Động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {schedules.map((s, index) => (
-            <tr key={s.id}>
-              <td>{index + 1}</td>
-              <td>{s.deviceId?.name || s.deviceId}</td>
-              <td>{s.frequencyId?.frequency || s.frequencyId}</td>
-              <td>{s.typeId?.type || s.typeId}</td>
-              <td>{new Date(s.date).toLocaleDateString("vi-VN")}</td>
-              <td>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => handleDelete(s.id)}
-                >
-                  Xoá
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 600 }}
+        onSelectEvent={(event) => setSelectedEvent(event)}
+        selectable
+        onSelectSlot={handleSelectSlot}  // Bắt sự kiện click vào ô ngày
+      />
 
-      {/* Modal Thêm Lịch */}
-      <Modal style={{ marginTop: "50px" }} show={show} onHide={() => setShow(false)}>
+      {/* Modal chi tiết sự kiện */}
+      <Modal
+        style={{ marginTop: "70px" }}
+        show={selectedEvent !== null}
+        onHide={() => setSelectedEvent(null)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Chi Tiết Bảo Trì</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedEvent && (
+            <>
+              <p>
+                <strong>Thiết bị:</strong> {selectedEvent.schedule.deviceId?.name}
+              </p>
+              <p>
+                <strong>Loại bảo trì:</strong> {selectedEvent.schedule.typeId?.type}
+              </p>
+              <p>
+                <strong>Tần suất:</strong> {selectedEvent.schedule.frequencyId?.frequency}
+              </p>
+              <p>
+                <strong>Ngày dự kiến:</strong>{" "}
+                {new Date(selectedEvent.schedule.date).toLocaleDateString("vi-VN")}
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="danger"
+            onClick={() => {
+              handleDelete(selectedEvent.schedule.id);
+              setSelectedEvent(null);
+            }}
+          >
+            Xoá
+          </Button>
+          <Button variant="secondary" onClick={() => setSelectedEvent(null)}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Thêm lịch */}
+      <Modal
+        style={{ marginTop: "50px" }}
+        show={show}
+        onHide={() => setShow(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Thêm Lịch Bảo Trì</Modal.Title>
         </Modal.Header>
@@ -249,7 +286,10 @@ const fetchSchedules = async () => {
               <Form.Select
                 value={newSchedule.frequencyId}
                 onChange={(e) =>
-                  setNewSchedule({ ...newSchedule, frequencyId: e.target.value })
+                  setNewSchedule({
+                    ...newSchedule,
+                    frequencyId: e.target.value,
+                  })
                 }
               >
                 <option value="">-- Chọn tần suất --</option>

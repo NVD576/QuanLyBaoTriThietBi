@@ -53,15 +53,8 @@ const RepairHistory = () => {
                 (repair) => repair.deviceId?.baseId.id === user.baseId.id
               );
 
-        // Lọc devices nếu không phải admin
-        // const filteredDevices =
-        //   user.role === "ROLE_ADMIN"
-        //     ? devicesRes.data
-        //     : devicesRes.data.filter(
-        //         (device) => device.baseId?.id === user.baseId?.id
-        //       );
+
         setRepairs(filteredRepairs);
-        // setDevices(filteredDevices);
         setRepairTypes(repairTypesRes.data);
       } catch (err) {
         console.error(err);
