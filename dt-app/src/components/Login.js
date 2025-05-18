@@ -51,7 +51,7 @@ const Login = () => {
         type: "login",
         payload: u.data,
       });
-
+      localStorage.setItem("user", JSON.stringify(u.data));
       nav("/devices");
     } catch (ex) {
         console.error('Login error:', ex);

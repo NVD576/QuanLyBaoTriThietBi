@@ -51,7 +51,7 @@ const Header = () => {
                     </>:<>
 						<img src={user.avatar} alt="avatar" className="rounded-circle" width="30" height="30" />
                         <Link to="/profile" className="nav-link text-success">Chào {user.username}!</Link>
-                        <Button variant="danger" onClick={() => dispatch({"type": "logout"})}>Đăng xuất</Button>
+                        <Button variant="danger" onClick={() => {localStorage.removeItem("user");dispatch({"type": "logout"})}}>Đăng xuất</Button>
                     </>}
 					</Nav>
 					<Form onSubmit={search} className="d-flex">

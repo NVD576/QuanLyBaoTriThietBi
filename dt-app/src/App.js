@@ -10,7 +10,11 @@ import Footer from "./components/layout/Footer";
 import { Container } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { DeviceProvider, MyDispatchContext, MyUserContext } from "./configs/MyContexts";
+import {
+  DeviceProvider,
+  MyDispatchContext,
+  MyUserContext,
+} from "./configs/MyContexts";
 import MyUserReducer from "./reducers/MyUserReducer";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -57,10 +61,21 @@ const App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      dispatch({
+        type: "login",
+        payload: JSON.parse(savedUser),
+      });
+
+    }
+    setLoading(false); 
+  }, []);
 
   useEffect(() => {
     const protectedPaths = [
-      "/",
       "/devices",
       "/maintenances",
       "/incidents",
@@ -69,10 +84,10 @@ const App = () => {
       "/forum",
     ];
     const currentPath = window.location.pathname;
-    if (!user && protectedPaths.includes(currentPath)) {
+    if (!loading &&!user && protectedPaths.includes(currentPath)) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [user, navigate,loading]);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
@@ -80,61 +95,66 @@ const App = () => {
       <MyUserContext.Provider value={user}>
         <MyDispatchContext.Provider value={dispatch}>
           <DeviceProvider>
-          <div style={containerStyle}>
-           
-
-            <div>
-              {<Sidebar sidebarOpen={sidebarOpen} />}
-              <div
-                style={{ display: "flex", flexDirection: "column", flex: 1 }}
-              >
-                
-                
+            <div style={containerStyle}>
+              <div>
+                {<Sidebar sidebarOpen={sidebarOpen} />}
+                <div
+                  style={{ display: "flex", flexDirection: "column", flex: 1 }}
+                >
                   <div style={headerWrapperStyle(sidebarOpen)}>
-                     <Header />
-                     {user && (
-                    <button
-                      onClick={toggleSidebar}
-                      style={{
-                        ...toggleButtonStyle,
-                        left: sidebarOpen ? "200px" : "10px",
-                        top: "60px",
-                      }}
-                      aria-label="Toggle sidebar"
-                    >
-                      {sidebarOpen ? "‹" : "›"}
-                    </button>
+                    <Header />
+                    {user && (
+                      <button
+                        onClick={toggleSidebar}
+                        style={{
+                          ...toggleButtonStyle,
+                          left: sidebarOpen ? "200px" : "10px",
+                          top: "60px",
+                        }}
+                        aria-label="Toggle sidebar"
+                      >
+                        {sidebarOpen ? "‹" : "›"}
+                      </button>
                     )}
                   </div>
-                
 
-                <main style={mainContentStyle}>
-                  <Container>
-                    <Routes>
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
-                      {user && (
-                        <>
-                          <Route path="/devices" element={<DeviceManagement />} />
-                          <Route path="/device/:id" element={<Device/>} />
-                          <Route path="/maintenance" element={<MaintenanceSchedule />} />
-                          <Route path="/incidents" element={<IncidentManagement />} />
-                          <Route path="/repair-history" element={<RepairHistory />} />
-                          <Route path="/profile" element={<Profile />} />
-                          <Route path="/forum" element={<Forum />} />
-                        </>
-                      )}
-                    </Routes>
-                  </Container>
-                </main>
+                  <main style={mainContentStyle}>
+                    <Container>
+                      <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        {user && (
+                          <>
+                            <Route
+                              path="/devices"
+                              element={<DeviceManagement />}
+                            />
+                            <Route path="/device/:id" element={<Device />} />
+                            <Route
+                              path="/maintenance"
+                              element={<MaintenanceSchedule />}
+                            />
+                            <Route
+                              path="/incidents"
+                              element={<IncidentManagement />}
+                            />
+                            <Route
+                              path="/repair-history"
+                              element={<RepairHistory />}
+                            />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/forum" element={<Forum />} />
+                          </>
+                        )}
+                      </Routes>
+                    </Container>
+                  </main>
 
-                {/* Footer luôn ở cuối vì là phần dưới của flex column */}
-                <Footer />
+                  <Footer />
+                </div>
               </div>
             </div>
-          </div>
           </DeviceProvider>
-
         </MyDispatchContext.Provider>
       </MyUserContext.Provider>
     </>

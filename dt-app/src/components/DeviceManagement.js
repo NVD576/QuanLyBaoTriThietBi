@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { authApis, endpoints } from "../configs/Apis";
-import cookie from "react-cookies";
-import axios from "axios";
+import Apis, { authApis, endpoints } from "../configs/Apis";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./DeviceManagement.module.css"; // Import CSS Module
 import { Button } from "react-bootstrap";
-import { MyUserContext, DeviceContext } from "../configs/MyContexts";
-import { motion, AnimatePresence } from "framer-motion";
+import {  DeviceContext } from "../configs/MyContexts";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { Modal } from "react-bootstrap";
 
@@ -29,13 +26,14 @@ const DeviceManagement = () => {
   });
   const [editingDevice, setEditingDevice] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!cookie.load("token")
-  );
+
   const [showForm, setShowForm] = useState(false);
   const nav = useNavigate();
   const [page, setPage] = useState(1);
-  const user = useContext(MyUserContext);
+  const [user] = useState(() => {
+  const savedUser = localStorage.getItem("user");
+  return savedUser ? JSON.parse(savedUser) : null;
+}); 
   const [isLoading, setIsLoading] = useState(false);
   const loadDevices = async () => {
     try {
@@ -54,7 +52,7 @@ const DeviceManagement = () => {
       if (cateId) url += `&cateId=${cateId}`;
       if (baseId) url += `&baseId=${baseId}`; // Dòng này sẽ ghi đè baseId nếu có trong query string
 
-      let res = await authApis().get(url);
+      let res = await Apis.get(url);
 
       if (res.data.length === 0) {
         setPage(0);
@@ -102,16 +100,15 @@ const DeviceManagement = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated && page > 0) loadDevices();
-  }, [isAuthenticated, page, q]);
+    if (  page > 0) loadDevices();
+  }, [ page, q]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
+  useEffect(() => { 
       loadCategories();
       loadStatuses();
       loadBases();
-    }
-  }, [isAuthenticated]);
+    
+  }, []);
 
   useEffect(() => {
     setPage(1);
@@ -214,8 +211,6 @@ const DeviceManagement = () => {
     }
   };
 
-  if (!isAuthenticated)
-    return <Login setIsAuthenticated={setIsAuthenticated} />;
 
   return (
     <div className={styles.container}>
@@ -393,13 +388,13 @@ const DeviceManagement = () => {
                     "Thêm thiết bị"
                   )}
                 </button>
-                <button
+                {/* <button
                   type="button"
                   onClick={resetForm}
                   className={styles.formResetButton}
                 >
                   Xóa trắng
-                </button>
+                </button> */}
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
@@ -480,53 +475,5 @@ const DeviceManagement = () => {
   );
 };
 
-const Login = ({ setIsAuthenticated }) => {
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post(endpoints.login, credentials);
-      cookie.save("token", res.data, { path: "/" });
-      setIsAuthenticated(true);
-    } catch (err) {
-      alert("Sai tài khoản hoặc mật khẩu");
-    }
-  };
-
-  return (
-    <div className={styles.loginContainer}>
-      <h2 className={styles.loginHeading}>Đăng nhập</h2>
-      <form onSubmit={handleLogin} className={styles.loginForm}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Tên đăng nhập"
-          value={credentials.username}
-          onChange={handleChange}
-          className={styles.loginInput}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Mật khẩu"
-          value={credentials.password}
-          onChange={handleChange}
-          className={styles.loginInput}
-        />
-        <button type="submit" className={styles.loginButton}>
-          Đăng nhập
-        </button>
-      </form>
-    </div>
-  );
-};
 
 export default DeviceManagement;
