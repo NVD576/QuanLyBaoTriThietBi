@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   FaTools,
   FaCalendarCheck,
   FaExclamationTriangle,
   FaHistory,
   FaComments,
+  FaUser,
+  FaCog,
 } from "react-icons/fa";
 
 const Sidebar = ({ sidebarOpen }) => {
-  const [currentTitle, setCurrentTitle] = useState("Quản Lý Thiết Bị");
-  const location = useLocation(); // lấy đường dẫn hiện tại
+  const { t } = useTranslation();
+  const location = useLocation();
+  const [currentTitle, setCurrentTitle] = useState(t("DeviceManagement"));
 
   const sidebarStyle = {
     position: "fixed",
@@ -40,11 +44,36 @@ const Sidebar = ({ sidebarOpen }) => {
     marginBottom: "8px",
     cursor: "pointer",
     transition: "all 0.3s ease",
+    boxShadow: location.pathname === path ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
   });
 
   const iconStyle = {
     marginRight: "10px",
   };
+
+  const handleHover = (e) => {
+    e.currentTarget.style.backgroundColor = "#f1f1f1";
+    e.currentTarget.style.transform = "translateY(-2px)";
+    e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
+  };
+
+  const handleLeave = (e, path) => {
+    if (location.pathname !== path) {
+      e.currentTarget.style.backgroundColor = "transparent";
+    }
+    e.currentTarget.style.transform = "translateY(0)";
+    e.currentTarget.style.boxShadow = "none";
+  };
+
+  const links = [
+    { to: "/devices", icon: <FaTools />, title: t("DeviceManagement") },
+    { to: "/maintenance", icon: <FaCalendarCheck />, title: t("MaintenanceSchedule") },
+    { to: "/incidents", icon: <FaExclamationTriangle />, title: t("IncidentManagement") },
+    { to: "/repair-history", icon: <FaHistory />, title: t("RepairHistory") },
+    { to: "/forum", icon: <FaComments />, title: t("Forum") },
+    { to: "/profile", icon: <FaUser />, title: t("Profile") },
+    { to: "/settings", icon: <FaCog />, title: t("Settings") },
+  ];
 
   return (
     <div style={sidebarStyle}>
@@ -66,85 +95,19 @@ const Sidebar = ({ sidebarOpen }) => {
         {currentTitle}
       </h2>
 
-      <Link
-        to="/devices"
-        style={navLinkStyle("/devices")}
-        onClick={() => setCurrentTitle("Quản Lý Thiết Bị")}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "#f1f1f1")
-        }
-        onMouseLeave={(e) => {
-          if (location.pathname !== "/devices")
-            e.currentTarget.style.backgroundColor = "transparent";
-        }}
-      >
-        <FaTools style={iconStyle} />
-        Quản Lý Thiết Bị
-      </Link>
-
-      <Link
-        to="/maintenance"
-        style={navLinkStyle("/maintenance")}
-        onClick={() => setCurrentTitle("Lịch Bảo Trì")}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "#f1f1f1")
-        }
-        onMouseLeave={(e) => {
-          if (location.pathname !== "/maintenance")
-            e.currentTarget.style.backgroundColor = "transparent";
-        }}
-      >
-        <FaCalendarCheck style={iconStyle} />
-        Lịch Bảo Trì
-      </Link>
-
-      <Link
-        to="/incidents"
-        style={navLinkStyle("/incidents")}
-        onClick={() => setCurrentTitle("Quản Lý Sự Cố")}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "#f1f1f1")
-        }
-        onMouseLeave={(e) => {
-          if (location.pathname !== "/incidents")
-            e.currentTarget.style.backgroundColor = "transparent";
-        }}
-      >
-        <FaExclamationTriangle style={iconStyle} />
-        Quản Lý Sự Cố
-      </Link>
-
-      <Link
-        to="/repair-history"
-        style={navLinkStyle("/repair-history")}
-        onClick={() => setCurrentTitle("Lịch Sử Sửa Chữa")}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "#f1f1f1")
-        }
-        onMouseLeave={(e) => {
-          if (location.pathname !== "/repair-history")
-            e.currentTarget.style.backgroundColor = "transparent";
-        }}
-      >
-        <FaHistory style={iconStyle} />
-        Lịch Sử Sửa Chữa
-      </Link>
-
-      <Link
-        to="/forum"
-        style={navLinkStyle("/forum")}
-        onClick={() => setCurrentTitle("Forum")}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "#f1f1f1")
-        }
-        onMouseLeave={(e) => {
-          if (location.pathname !== "/forum")
-            e.currentTarget.style.backgroundColor = "transparent";
-        }}
-      >
-        <FaComments style={iconStyle} />
-        Forum 
-      </Link>
+      {links.map((link) => (
+        <Link
+          key={link.to}
+          to={link.to}
+          style={navLinkStyle(link.to)}
+          onClick={() => setCurrentTitle(link.title)}
+          onMouseEnter={handleHover}
+          onMouseLeave={(e) => handleLeave(e, link.to)}
+        >
+          <span style={iconStyle}>{link.icon}</span>
+          {link.title}
+        </Link>
+      ))}
     </div>
   );
 };

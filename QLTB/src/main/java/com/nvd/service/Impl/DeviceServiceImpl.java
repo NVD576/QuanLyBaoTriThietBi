@@ -53,15 +53,15 @@ public class DeviceServiceImpl implements DeviceService {
     public Device getDeviceById(int id) {
         return this.deviceRepo.getDeviceById(id);
     }
-    
+
     @Override
-    public void deleteDevice(int id){
+    public void deleteDevice(int id) {
         this.deviceRepo.deleteDevice(id);
     }
-    
+
     @Override
     public Device addOrUpdateDevice(Device p) {
-        if (!p.getFile().isEmpty()) {
+        if (p.getFile() != null && !p.getFile().isEmpty()) {
             try {
                 Map res = cloudinary.uploader().upload(p.getFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
@@ -72,7 +72,7 @@ public class DeviceServiceImpl implements DeviceService {
         }
         return this.deviceRepo.addOrUpdateDevice(p);
     }
-    
+
     @Override
     public List<Maintenance> getMaintenancesByDeviceId(int deviceId) {
         return this.deviceRepo.getMaintenancesByDeviceId(deviceId);

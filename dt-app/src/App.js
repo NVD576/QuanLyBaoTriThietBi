@@ -21,7 +21,9 @@ import Register from "./components/Register";
 import Device from "./components/Device";
 import Profile from "./components/Profile";
 import Forum from "./components/Forum";
-
+import Settings from "./components/Settings";
+import { AppProvider } from "./configs/AppContext";
+import "./configs/i18n";
 const toggleButtonStyle = {
   position: "fixed",
   top: "70px", // Đặt vị trí nút dưới header
@@ -36,11 +38,13 @@ const toggleButtonStyle = {
   transition: "left 0.3s ease",
 };
 
-const containerStyle = {
+const containerStyle = (sidebarOpen) => ({
   display: "flex",
   flexDirection: "column",
   minHeight: "100vh",
-};
+  marginLeft: sidebarOpen ? "200px" : "0",
+  transition: "margin-left 0.3s ease",
+});
 
 const mainContentStyle = {
   flex: 1,
@@ -69,9 +73,8 @@ const App = () => {
         type: "login",
         payload: JSON.parse(savedUser),
       });
-
     }
-    setLoading(false); 
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -84,79 +87,86 @@ const App = () => {
       "/forum",
     ];
     const currentPath = window.location.pathname;
-    if (!loading &&!user && protectedPaths.includes(currentPath)) {
+    if (!loading && !user && protectedPaths.includes(currentPath)) {
       navigate("/login");
     }
-  }, [user, navigate,loading]);
+  }, [user, navigate, loading]);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
     <>
-      <MyUserContext.Provider value={user}>
-        <MyDispatchContext.Provider value={dispatch}>
-          <DeviceProvider>
-            <div style={containerStyle}>
-              <div>
-                {<Sidebar sidebarOpen={sidebarOpen} />}
-                <div
-                  style={{ display: "flex", flexDirection: "column", flex: 1 }}
-                >
-                  <div style={headerWrapperStyle(sidebarOpen)}>
-                    <Header />
-                    {user && (
-                      <button
-                        onClick={toggleSidebar}
-                        style={{
-                          ...toggleButtonStyle,
-                          left: sidebarOpen ? "200px" : "10px",
-                          top: "60px",
-                        }}
-                        aria-label="Toggle sidebar"
-                      >
-                        {sidebarOpen ? "‹" : "›"}
-                      </button>
-                    )}
+      <AppProvider>
+        <MyUserContext.Provider value={user}>
+          <MyDispatchContext.Provider value={dispatch}>
+            <DeviceProvider>
+              <div style={containerStyle(sidebarOpen)}>
+                <div>
+                  {<Sidebar sidebarOpen={sidebarOpen} />}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flex: 1,
+                    }}
+                  >
+                    <div style={headerWrapperStyle(sidebarOpen)}>
+                      <Header />
+                      {user && (
+                        <button
+                          onClick={toggleSidebar}
+                          style={{
+                            ...toggleButtonStyle,
+                            left: sidebarOpen ? "200px" : "10px",
+                            top: "60px",
+                          }}
+                          aria-label="Toggle sidebar"
+                        >
+                          {sidebarOpen ? "‹" : "›"}
+                        </button>
+                      )}
+                    </div>
+
+                    <main style={mainContentStyle}>
+                      <Container>
+                        <Routes>
+                          <Route path="/login" element={<Login />} />
+                          <Route path="/register" element={<Register />} />
+                          {user && (
+                            <>
+                              <Route
+                                path="/devices"
+                                element={<DeviceManagement />}
+                              />
+                              <Route path="/device/:id" element={<Device />} />
+                              <Route
+                                path="/maintenance"
+                                element={<MaintenanceSchedule />}
+                              />
+                              <Route
+                                path="/incidents"
+                                element={<IncidentManagement />}
+                              />
+                              <Route
+                                path="/repair-history"
+                                element={<RepairHistory />}
+                              />
+                              <Route path="/profile" element={<Profile />} />
+                              <Route path="/forum" element={<Forum />} />
+                              <Route path="/settings" element={<Settings />} />
+                            </>
+                          )}
+                        </Routes>
+                      </Container>
+                    </main>
+
+                    <Footer />
                   </div>
-
-                  <main style={mainContentStyle}>
-                    <Container>
-                      <Routes>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        {user && (
-                          <>
-                            <Route
-                              path="/devices"
-                              element={<DeviceManagement />}
-                            />
-                            <Route path="/device/:id" element={<Device />} />
-                            <Route
-                              path="/maintenance"
-                              element={<MaintenanceSchedule />}
-                            />
-                            <Route
-                              path="/incidents"
-                              element={<IncidentManagement />}
-                            />
-                            <Route
-                              path="/repair-history"
-                              element={<RepairHistory />}
-                            />
-                            <Route path="/profile" element={<Profile />} />
-                            <Route path="/forum" element={<Forum />} />
-                          </>
-                        )}
-                      </Routes>
-                    </Container>
-                  </main>
-
-                  <Footer />
                 </div>
               </div>
-            </div>
-          </DeviceProvider>
-        </MyDispatchContext.Provider>
-      </MyUserContext.Provider>
+            </DeviceProvider>
+          </MyDispatchContext.Provider>
+        </MyUserContext.Provider>
+      </AppProvider>
     </>
   );
 };

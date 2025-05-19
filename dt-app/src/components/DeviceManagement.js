@@ -20,6 +20,7 @@ const DeviceManagement = () => {
     manufacturer: "",
     date: "",
     image: null,
+    file: null,
     baseId: "",
     categoryId: "",
     statusId: 1,
@@ -74,7 +75,7 @@ const DeviceManagement = () => {
   };
   const loadCategories = async () => {
     try {
-      const res = await authApis().get(endpoints.categories);
+      const res = await Apis.get(endpoints.categories);
       setCategories(res.data);
     } catch (err) {
       console.error("Lỗi khi tải loại thiết bị:", err);
@@ -118,7 +119,7 @@ const DeviceManagement = () => {
     const { name, value, files } = e.target;
     if (name === "image") {
       const file = files[0];
-      setNewDevice({ ...newDevice, image: file });
+      setNewDevice({ ...newDevice, file: file });
       setImagePreview(URL.createObjectURL(file));
     } else {
       setNewDevice({ ...newDevice, [name]: value });
@@ -155,12 +156,13 @@ const DeviceManagement = () => {
     formData.append("manufacturer", newDevice.manufacturer);
     formData.append("date", newDevice.date); // YYYY-MM-DD
     if (newDevice.image) {
-      formData.append("file", newDevice.image);
+      formData.append("file", newDevice.file);
     }
+    formData.append("image", newDevice.image);
     formData.append("baseId.id", newDevice.baseId);
     formData.append("categoryId.id", newDevice.categoryId);
     formData.append("statusId.id", newDevice.statusId);
-
+    console.log("Form data:", formData);
     try {
       setIsLoading(true);
       await authApis().post(endpoints["device-add"], formData, {
@@ -173,9 +175,10 @@ const DeviceManagement = () => {
       resetForm();
       setShowForm(false); // Ẩn form sau khi thêm thành công
     } catch (err) {
-      setIsLoading(false);
       console.error(err);
       alert("Lỗi khi thêm thiết bị.");
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -191,11 +194,13 @@ const DeviceManagement = () => {
       name: device.name,
       manufacturer: device.manufacturer,
       date: formattedDate,
-      image: null,
+      imaage: device.file,
+      image: device.image,
       baseId: device.baseId?.id || "",
       categoryId: device.categoryId?.id || "",
       statusId: device.statusId?.id || "",
     });
+    console.log("Editing device:", device);
     setImagePreview(device.image || "");
   };
 
@@ -455,12 +460,12 @@ const DeviceManagement = () => {
                 >
                   <FaEdit /> Sửa
                 </button>
-                <button
+                {/* <button
                   onClick={() => deleteDevice(d.id)}
                   className={`${styles.deleteButton}`}
                 >
                   <FaTrash /> Xoá
-                </button>
+                </button> */}
               </td>
             </tr>
           ))}
