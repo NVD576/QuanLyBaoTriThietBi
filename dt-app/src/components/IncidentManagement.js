@@ -19,6 +19,8 @@ const IncidentManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false); // State để kiểm soát hiển thị form
+  const [selectedIssueId, setSelectedIssueId] = useState(null);
+  const [costInput, setCostInput] = useState("");
   const user = useContext(MyUserContext);
 
   useEffect(() => {
@@ -78,14 +80,19 @@ const IncidentManagement = () => {
     }
   };
 
-  const confirmResolved = async (id) => {
+  const confirmResolved = async (id, cost) => {
     try {
-      await Apis.post(`${endpoints["issue"]}/${id}/confirm`);
+      const formData = new FormData();
+      formData.append("cost", cost);
+      formData.append("accountId", user.id);
+      await Apis.post(`${endpoints["issue"]}/${id}/confirm`, formData);
 
       const updatedIssues = issues.map((issue) =>
         issue.id === id ? { ...issue, isResolved: true } : issue
       );
       setIssues(updatedIssues);
+      setSelectedIssueId(null); // ẩn input sau khi submit
+      setCostInput("");
     } catch (err) {
       console.error(err);
       alert("Lỗi khi xác nhận xử lý!");
@@ -228,9 +235,30 @@ const IncidentManagement = () => {
                   </td>
                   <td>
                     {!issue.isResolved ? (
-                      <button onClick={() => confirmResolved(issue.id)} className="confirm-button">
-                        Xác nhận xử lý
-                      </button>
+                      selectedIssueId === issue.id ? (
+                        <div>
+                          <input
+                            type="number"
+                            placeholder="Nhập chi phí xử lý"
+                            value={costInput}
+                            onChange={(e) => setCostInput(e.target.value)}
+                            className="border p-1 rounded mr-2"
+                          />
+                          <button
+                            onClick={() => confirmResolved(issue.id, costInput)}
+                            className="confirm-button"
+                          >
+                            Xác nhận
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setSelectedIssueId(issue.id)}
+                          className="confirm-button"
+                        >
+                          Xác nhận xử lý
+                        </button>
+                      )
                     ) : (
                       <span className="text-green-600">Đã xử lý</span>
                     )}
