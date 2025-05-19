@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import styles from "./RepairHistory.module.css"; // Import CSS Module
 import { useContext } from "react";
-import { DeviceContext, MyUserContext } from "../configs/MyContexts";
+import {  MyUserContext } from "../configs/MyContexts";
 
 const RepairHistory = () => {
   pdfMake.vfs = pdfFonts.vfs;
@@ -27,14 +27,29 @@ const RepairHistory = () => {
     typeId: "",
     cost: "",
   });
-  // const [devices, setDevices] = useState([]);
-  const { devices } = useContext(DeviceContext);
+  const [devices, setDevices] = useState([]);
+  // const { devices, } = useContext(DeviceContext);
   const [repairTypes, setRepairTypes] = useState([]);
   const [selectedDevices, setSelectedDevices] = useState([]);
 
   const [reportData, setReportData] = useState([]);
   const [costAnalysis, setCostAnalysis] = useState({});
   const user = useContext(MyUserContext);
+
+  const fetchDevices = async () => {
+    try {
+      let url = `${endpoints.devices}?`;
+      // Nếu không phải ROLE_ADMIN thì thêm baseId của user vào URL
+      if (user.role !== "ROLE_ADMIN") {
+        url += `&baseId=${user.baseId.id}`;
+      }
+      const res = await Apis.get(url);
+      setDevices(res.data);
+    } catch (err) {
+      console.error("Lỗi khi tải thiết bị:", err);
+    }
+  };
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -53,7 +68,7 @@ const RepairHistory = () => {
                 (repair) => repair.deviceId?.baseId.id === user.baseId.id
               );
 
-
+        fetchDevices();
         setRepairs(filteredRepairs);
         setRepairTypes(repairTypesRes.data);
       } catch (err) {
@@ -65,6 +80,7 @@ const RepairHistory = () => {
     };
 
     loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.baseId.id, user.role]);
 
   useEffect(() => {

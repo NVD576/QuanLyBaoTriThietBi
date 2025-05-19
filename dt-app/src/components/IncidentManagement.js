@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import Apis, { endpoints } from "../configs/Apis";
 import "./IncidentManagement.css"; // Import file CSS
 import { useContext } from "react";
-import { DeviceContext, MyUserContext } from "../configs/MyContexts";
+import {  MyUserContext } from "../configs/MyContexts";
 
 const IncidentManagement = () => {
   const [issues, setIssues] = useState([]);
   const [levels, setLevels] = useState([]);
-  // const [devices, setDevices] = useState([]);
-  const{devices} = useContext(DeviceContext);
+  const [devices, setDevices] = useState([]);
+  // const{devices} = useContext(DeviceContext);
   const [formData, setFormData] = useState({
     deviceId: "",
     des: "",
@@ -49,9 +49,24 @@ const IncidentManagement = () => {
         setLoading(false);
       }
     };
-
+    fetchDevices();
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.baseId.id, user.role]);
+
+  const fetchDevices = async () => {
+    try {
+      let url = `${endpoints.devices}?`;
+      // Nếu không phải ROLE_ADMIN thì thêm baseId của user vào URL
+      if (user.role !== "ROLE_ADMIN") {
+        url += `&baseId=${user.baseId.id}`;
+      }
+      const res = await Apis.get(url);
+      setDevices(res.data);
+    } catch (err) {
+      console.error("Lỗi khi tải thiết bị:", err);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

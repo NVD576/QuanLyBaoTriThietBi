@@ -10,14 +10,15 @@ const localizer = momentLocalizer(moment);
 
 const MaintenanceSchedule = () => {
   const [schedules, setSchedules] = useState([]);
-  const [devices, setDeviecs] = useState([]);
+  const [devices, setDevices] = useState([]);
   const [frequencies, setFrequencies] = useState([]);
   const [types, setTypes] = useState([]);
   const [show, setShow] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Thêm state lưu ngày được chọn khi click vào lịch (slot)
-  const [ setSelectedDate] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const [newSchedule, setNewSchedule] = useState({
     id: "",
@@ -43,22 +44,22 @@ const MaintenanceSchedule = () => {
 
 const checkNotifications = (schedules) => {
   const today = new Date();
-  const upcomingLimit = new Date();
-  upcomingLimit.setDate(today.getDate() + 30);
-
-  const overdueStart = new Date();
-  overdueStart.setDate(today.getDate() - 30);
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
 
   const overdue = [];
   const upcoming = [];
 
   schedules.forEach((s) => {
     const scheduleDate = new Date(s.date);
+    const sameMonth =
+      scheduleDate.getMonth() === currentMonth &&
+      scheduleDate.getFullYear() === currentYear;
 
-    if (scheduleDate < today && scheduleDate >= overdueStart) {
-      overdue.push(s); // Quá hạn trong vòng 7 ngày
-    } else if (scheduleDate >= today && scheduleDate <= upcomingLimit) {
-      upcoming.push(s); // Sắp đến hạn trong vòng 7 ngày tới
+    if (scheduleDate < today && sameMonth) {
+      overdue.push(s); // Quá hạn trong tháng này
+    } else if (scheduleDate >= today && sameMonth) {
+      upcoming.push(s); // Sắp đến hạn trong tháng này
     }
   });
 
@@ -67,10 +68,15 @@ const checkNotifications = (schedules) => {
 
   const fetchDevices = async () => {
     try {
-      const res = await Apis.get(endpoints.devices);
-      setDeviecs(res.data);
+      let url = `${endpoints.devices}?`;
+      // Nếu không phải ROLE_ADMIN thì thêm baseId của user vào URL
+      if (user.role !== "ROLE_ADMIN") {
+        url += `&baseId=${user.baseId.id}`;
+      }
+      const res = await Apis.get(url);
+      setDevices(res.data);
     } catch (err) {
-      console.error("Lỗi khi tải tần suất:", err);
+      console.error("Lỗi khi tải thiết bị:", err);
     }
   };
 
