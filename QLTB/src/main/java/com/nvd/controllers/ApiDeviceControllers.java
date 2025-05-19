@@ -108,7 +108,7 @@ public class ApiDeviceControllers {
 //                // Files.copy(...) hoặc sử dụng service lưu ảnh
 //            }
             // Lưu device
-            
+
             Device device = deviceService.addOrUpdateDevice(p);
 
             // Tạo Maintenance
@@ -124,4 +124,17 @@ public class ApiDeviceControllers {
     
 
 
+    @PatchMapping("/device/edit")
+    public ResponseEntity<?> editDevice(@ModelAttribute Device p,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
+
+        try {
+            System.out.println("Received device: " + p);
+            this.deviceService.addOrUpdateDevice(p);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Thiết bị đã được thêm");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Lỗi khi thêm thiết bị", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

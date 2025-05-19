@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,36 +31,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 @CrossOrigin
 public class ApiIssueControllerss {
+
     @Autowired
     private IssueService issueService;
     @Autowired
     private IncidentLevelService incidentLevelService;
-    
+
     @DeleteMapping("/issue/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
-        
+
     }
 
     @GetMapping("/issues")
     public ResponseEntity<List<Issue>> getIssues() {
         return new ResponseEntity<>(this.issueService.getIssues(), HttpStatus.OK);
     }
-    
+
     @GetMapping("/issue/{id}")
     public ResponseEntity<Issue> getIssueById(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(this.issueService.getIssueById(id), HttpStatus.OK);
     }
-    
+
     @PostMapping("/issue/add")
     public ResponseEntity<Issue> create(@RequestBody Issue p) {
         return null; // new ResponseEntity<>(this.issueService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
     }
-    
+
     @GetMapping("/levels")
     public ResponseEntity<List<IncidentLevel>> getIncidentLevels() {
         return new ResponseEntity<>(this.incidentLevelService.getIncidentLevels(), HttpStatus.OK);
     }
-    
-    
+
+    @PostMapping("/issue/{id}/confirm")
+    public ResponseEntity<Issue> edit(@PathVariable(value = "id") int id) {
+        Issue p = this.issueService.getIssueById(id);
+        if (p == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        p.setIsResolved(true);
+        return new ResponseEntity<>(this.issueService.addOrUpdateIssue(p), HttpStatus.OK);
+    }
 }
