@@ -97,12 +97,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account addOrUpdateAccount(Account acc) {
+        Account currentAcc = this.getAccountById(acc.getId());
         if (acc.getId() == null) {
             // Trường hợp thêm mới: mã hóa password bắt buộc
             acc.setPassword(this.passwordEncoder.encode(acc.getPassword()));
         } else {
             // Trường hợp update: kiểm tra nếu password khác null và khác rỗng, encode lại
-            Account currentAcc = this.getAccountById(acc.getId());
             if (acc.getPassword() != null && !acc.getPassword().isEmpty()) {
                 // Có thể kiểm tra nếu khác mật khẩu hiện tại mới encode (tùy logic)
                 acc.setPassword(this.passwordEncoder.encode(acc.getPassword()));
@@ -112,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
             }
         }
 
-        if (!acc.getFile().isEmpty()) {
+        if (acc.getFile() != null && !acc.getFile().isEmpty()) {
             try {
                 Map res = cloudinary.uploader().upload(acc.getFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
@@ -120,8 +120,55 @@ public class AccountServiceImpl implements AccountService {
             } catch (IOException ex) {
                 Logger.getLogger(AccountServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            acc.setAvatar(currentAcc.getAvatar());
         }
         return this.accountRepo.addOrUpdateAccount(acc);
     }
-
+    
+//    @Override
+//    public User addOrUpdateUser(User u) {
+//        if (u.getId() != null) {
+//            User existingUser = usrRepo.getUserById(u.getId());
+//            if (u.getPassword() == null || u.getPassword().isEmpty()) {
+//                u.setPassword(existingUser.getPassword());
+//            } else if (!u.getPassword().equals(existingUser.getPassword())) {
+//                u.setPassword(this.passwordEncoder.encode(u.getPassword()));
+//            }
+//            if (u.getFile() != null && !u.getFile().isEmpty()) {
+//                try {
+//                    Map res = cloudinary.uploader().upload(u.getFile().getBytes(), ObjectUtils.asMap(
+//                            "resource_type", "auto",
+//                            "folder", "BaoTriThietBi"
+//                    ));
+//                    u.setAvatar(res.get("secure_url").toString());
+//                } catch (IOException ex) {
+//                    Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            } else {
+//                u.setAvatar(existingUser.getAvatar());
+//            }
+//            if (u.getActive() != null) {
+//                u.setActive(u.getActive());
+//            } else {
+//                u.setActive(existingUser.getActive());
+//            }
+//        } else {
+//            u.setPassword(this.passwordEncoder.encode("123"));
+//            if (u.getFile() != null && !u.getFile().isEmpty()) {
+//                try {
+//                    Map res = cloudinary.uploader().upload(u.getFile().getBytes(), ObjectUtils.asMap(
+//                            "resource_type", "auto",
+//                            "folder", "BaoTriThietBi"
+//                    ));
+//                    u.setAvatar(res.get("secure_url").toString());
+//                } catch (IOException ex) {
+//                    Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            } else {
+//                u.setAvatar("https://res.cloudinary.com/dp9b0dkkt/image/upload/v1745512749/de995be2-6311-4125-9ac2-19e11fcaf801_jo8gcs.png");
+//            }
+//        }
+//        return this.usrRepo.addOrUpdateUser(u);
+//    }
 }

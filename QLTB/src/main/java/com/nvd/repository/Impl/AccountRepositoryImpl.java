@@ -96,10 +96,8 @@ public class AccountRepositoryImpl implements AccountRepository {
                     Base base = session.get(Base.class, acc.getBaseId().getId());
                     acc.setBaseId(base);
                 }
-
                 session.merge(acc);
             }
-
             session.refresh(acc);
         } catch (HibernateException ex) {
             ex.printStackTrace();
