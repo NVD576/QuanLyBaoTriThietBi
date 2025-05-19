@@ -61,7 +61,7 @@ const Profile = () => {
     console.log(profile.email);
     console.log(profile.avatar);
     try {
-      await authApis().post(endpoints.profile, formData, {
+      await authApis().post(endpoints["profile-update"], formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Cập nhật thông tin thành công!");
