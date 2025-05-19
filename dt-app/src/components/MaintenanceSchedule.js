@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal, Alert } from "react-bootstrap";
 import Apis, { authApis, endpoints } from "../configs/Apis";
-import { DeviceContext, MyUserContext } from "../configs/MyContexts";
+import {  MyUserContext } from "../configs/MyContexts";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -10,14 +10,14 @@ const localizer = momentLocalizer(moment);
 
 const MaintenanceSchedule = () => {
   const [schedules, setSchedules] = useState([]);
-  const { devices } = useContext(DeviceContext);
+  const [devices, setDeviecs] = useState([]);
   const [frequencies, setFrequencies] = useState([]);
   const [types, setTypes] = useState([]);
   const [show, setShow] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Thêm state lưu ngày được chọn khi click vào lịch (slot)
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [ setSelectedDate] = useState(null);
 
   const [newSchedule, setNewSchedule] = useState({
     id: "",
@@ -37,26 +37,41 @@ const MaintenanceSchedule = () => {
     fetchSchedules();
     fetchFrequencies();
     fetchTypes();
+    fetchDevices();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkNotifications = (schedules) => {
-    const today = new Date();
-    const upcomingLimit = new Date();
-    upcomingLimit.setDate(today.getDate() + 7);
+const checkNotifications = (schedules) => {
+  const today = new Date();
+  const upcomingLimit = new Date();
+  upcomingLimit.setDate(today.getDate() + 30);
 
-    const overdue = [];
-    const upcoming = [];
+  const overdueStart = new Date();
+  overdueStart.setDate(today.getDate() - 30);
 
-    schedules.forEach((s) => {
-      const scheduleDate = new Date(s.date);
-      if (scheduleDate < today) {
-        overdue.push(s);
-      } else if (scheduleDate >= today && scheduleDate <= upcomingLimit) {
-        upcoming.push(s);
-      }
-    });
+  const overdue = [];
+  const upcoming = [];
 
-    setNotifications({ overdue, upcoming });
+  schedules.forEach((s) => {
+    const scheduleDate = new Date(s.date);
+
+    if (scheduleDate < today && scheduleDate >= overdueStart) {
+      overdue.push(s); // Quá hạn trong vòng 7 ngày
+    } else if (scheduleDate >= today && scheduleDate <= upcomingLimit) {
+      upcoming.push(s); // Sắp đến hạn trong vòng 7 ngày tới
+    }
+  });
+
+  setNotifications({ overdue, upcoming });
+};
+
+  const fetchDevices = async () => {
+    try {
+      const res = await Apis.get(endpoints.devices);
+      setDeviecs(res.data);
+    } catch (err) {
+      console.error("Lỗi khi tải tần suất:", err);
+    }
   };
 
   const fetchSchedules = async () => {
@@ -134,7 +149,7 @@ const MaintenanceSchedule = () => {
     if (!window.confirm("Bạn có chắc muốn xoá lịch bảo trì này?")) return;
 
     try {
-      await Apis.delete(`${endpoints.maintenances}/${id}`);
+      await Apis.delete(`${endpoints.maintenance}/${id}/delete`);
       const updated = schedules.filter((s) => s.id !== id);
       setSchedules(updated);
       checkNotifications(updated);
@@ -179,6 +194,12 @@ const MaintenanceSchedule = () => {
               <li key={s.id}>
                 <strong>{s.deviceId?.name}</strong> – ngày bảo trì:{" "}
                 {new Date(s.date).toLocaleDateString("vi-VN")}
+                <button
+                  className="btn btn-danger btn-sm ms-2"
+                  onClick={() => handleDelete(s.id)}
+                >
+                  Xoá
+                </button>
               </li>
             ))}
           </ul>

@@ -51,7 +51,7 @@ const IncidentManagement = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user.baseId.id, user.role]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

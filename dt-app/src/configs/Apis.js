@@ -14,6 +14,7 @@ export const endpoints = {
   "device-add": "/device/add",
   "statuses": "/statuses",  
   "bases": "/base",
+  "maintenance": "/maintenance",
   "maintenances": "/maintenances",
   "maintenance-add": "/maintenances/add",
   "types": "/maintenanceTypes",

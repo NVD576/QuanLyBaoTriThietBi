@@ -133,4 +133,15 @@ public class MaintenanceRepositoryImpl implements MaintenanceRepository {
         s.refresh(p);
         return p;
     }
+
+    @Override
+    public void deleteMaintenance(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Maintenance p = this.getMaintenanceById(id);
+        if (p != null) {
+            s.remove(p);
+        } else {
+            throw new IllegalArgumentException("Device không tồn tại với id = " + id);
+        }
+    }
 }

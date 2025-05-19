@@ -3,8 +3,8 @@ import Apis, { authApis, endpoints } from "../configs/Apis";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./DeviceManagement.module.css"; // Import CSS Module
 import { Button } from "react-bootstrap";
-import {  DeviceContext } from "../configs/MyContexts";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { DeviceContext } from "../configs/MyContexts";
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import { Modal } from "react-bootstrap";
 
 const DeviceManagement = () => {
@@ -32,9 +32,9 @@ const DeviceManagement = () => {
   const nav = useNavigate();
   const [page, setPage] = useState(1);
   const [user] = useState(() => {
-  const savedUser = localStorage.getItem("user");
-  return savedUser ? JSON.parse(savedUser) : null;
-}); 
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [isLoading, setIsLoading] = useState(false);
   const loadDevices = async () => {
     try {
@@ -101,19 +101,20 @@ const DeviceManagement = () => {
   };
 
   useEffect(() => {
-    if (  page > 0) loadDevices();
-  }, [ page, q]);
+    if (page > 0) loadDevices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, q]);
 
-  useEffect(() => { 
-      loadCategories();
-      loadStatuses();
-      loadBases();
-    
+  useEffect(() => {
+    loadCategories();
+    loadStatuses();
+    loadBases();
   }, []);
 
   useEffect(() => {
     setPage(1);
     setDevices([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q]);
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -176,7 +177,7 @@ const DeviceManagement = () => {
     } catch (err) {
       console.error(err);
       alert("Lỗi khi thêm thiết bị.");
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -214,7 +215,6 @@ const DeviceManagement = () => {
       }
     }
   };
-
 
   return (
     <div className={styles.container}>
@@ -392,13 +392,15 @@ const DeviceManagement = () => {
                     "Thêm thiết bị"
                   )}
                 </button>
-                {/* <button
-                  type="button"
-                  onClick={resetForm}
-                  className={styles.formResetButton}
-                >
-                  Xóa trắng
-                </button> */}
+                {user.role === "ROLE_ADMIN" && (
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className={styles.formResetButton}
+                  >
+                    Xóa trắng
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
@@ -459,12 +461,14 @@ const DeviceManagement = () => {
                 >
                   <FaEdit /> Sửa
                 </button>
-                {/* <button
-                  onClick={() => deleteDevice(d.id)}
-                  className={`${styles.deleteButton}`}
-                >
-                  <FaTrash /> Xoá
-                </button> */}
+                {user.role === "ROLE_ADMIN" && (
+                  <button
+                    onClick={() => deleteDevice(d.id)}
+                    className={`${styles.deleteButton}`}
+                  >
+                    <FaTrash /> Xoá
+                  </button>
+                )}
               </td>
             </tr>
           ))}
@@ -478,6 +482,5 @@ const DeviceManagement = () => {
     </div>
   );
 };
-
 
 export default DeviceManagement;

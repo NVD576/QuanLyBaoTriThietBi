@@ -49,7 +49,7 @@ public class ApiMaintenanceControllers {
     @DeleteMapping("/maintenance/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
-
+        this.maintenanceService.deleteMaintenance(id);
     }
 
     @GetMapping("/maintenances")

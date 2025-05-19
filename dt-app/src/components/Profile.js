@@ -57,9 +57,6 @@ const Profile = () => {
     if (profile.avatar instanceof File) {
       formData.append("avatar", profile.avatar);
     }
-    console.log(profile.name);
-    console.log(profile.email);
-    console.log(profile.avatar);
     try {
       await authApis().post(endpoints["profile-update"], formData, {
         headers: { "Content-Type": "multipart/form-data" },
