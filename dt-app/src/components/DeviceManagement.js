@@ -161,6 +161,7 @@ const DeviceManagement = () => {
     formData.append("baseId.id", newDevice.baseId);
     formData.append("categoryId.id", newDevice.categoryId);
     formData.append("statusId.id", newDevice.statusId);
+    console.log("new device:", newDevice);
     try {
       setIsLoading(true);
       await authApis().post(endpoints["device-add"], formData, {

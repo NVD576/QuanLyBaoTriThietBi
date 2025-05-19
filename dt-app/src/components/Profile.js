@@ -88,7 +88,7 @@ const Profile = () => {
           Họ và tên:
           <input
             type="text"
-            name="fullName"
+            name="name"
             value={profile.name}
             onChange={handleChange}
             style={styles.input}

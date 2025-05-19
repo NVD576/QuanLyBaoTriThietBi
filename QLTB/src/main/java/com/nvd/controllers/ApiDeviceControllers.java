@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -82,13 +83,16 @@ public class ApiDeviceControllers {
         return new ResponseEntity<>(this.deviceService.getRepairsByDeviceId(id), HttpStatus.OK);
     }
 
-    @PostMapping("/device/add")
+    @PostMapping(path="/device/add",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addDevice(
-            @ModelAttribute Device p, // chứa các trường cơ bản và các quan hệ ManyToOne
-            @RequestParam(value = "image", required = false) MultipartFile image) {
+            @ModelAttribute Device p // chứa các trường cơ bản và các quan hệ ManyToOne
+            
+//                    @RequestParam(value = "image", required = false) MultipartFile image
+    ) {
 
         try {
-            System.out.println("Received device: " + p);
             // Xử lý ảnh (nếu có)
 //            if (image != null && !image.isEmpty()) {
 //                String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
@@ -98,19 +102,18 @@ public class ApiDeviceControllers {
 //            }
             // Lấy các entity từ id:
 
-            p.setBaseId(baseService.getBaseById(p.getBaseId().getId()));
-            p.setCategoryId(categoryService.getCategotryById(p.getCategoryId().getId()));
-            p.setStatusId(statusService.getStatusById(p.getStatusId().getId()));
-//            if (!p.getFile().isEmpty()) {
+//            p.setBaseId(baseService.getBaseById(p.getBaseId().getId()));
+//            p.setCategoryId(categoryService.getCategotryById(p.getCategoryId().getId()));
+//            p.setStatusId(statusService.getStatusById(p.getStatusId().getId()));
+//            if (p.getFile()!=null&&!p.getFile().isEmpty()) {
 //                String filename = p.getFile().getOriginalFilename();
 //                // xử lý lưu ảnh tại đây, ví dụ:
 //                p.setImage(filename);
 //                // Files.copy(...) hoặc sử dụng service lưu ảnh
 //            }
+
             // Lưu device
-
             Device device = deviceService.addOrUpdateDevice(p);
-
             // Tạo Maintenance
             Maintenance m = new Maintenance();
             maintenanceService.addNewDevice(m, device);
