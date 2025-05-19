@@ -54,7 +54,7 @@ public class AccountServiceImpl implements AccountService {
         }
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(u.getRole()));
-        
+
         return new org.springframework.security.core.userdetails.User(
                 u.getUsername(), u.getPassword(), authorities);
     }
@@ -97,7 +97,21 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account addOrUpdateAccount(Account acc) {
-        acc.setPassword(this.passwordEncoder.encode(acc.getPassword()));
+        if (acc.getId() == null) {
+            // Trường hợp thêm mới: mã hóa password bắt buộc
+            acc.setPassword(this.passwordEncoder.encode(acc.getPassword()));
+        } else {
+            // Trường hợp update: kiểm tra nếu password khác null và khác rỗng, encode lại
+            Account currentAcc = this.getAccountById(acc.getId());
+            if (acc.getPassword() != null && !acc.getPassword().isEmpty()) {
+                // Có thể kiểm tra nếu khác mật khẩu hiện tại mới encode (tùy logic)
+                acc.setPassword(this.passwordEncoder.encode(acc.getPassword()));
+            } else {
+                // Giữ nguyên password cũ
+                acc.setPassword(currentAcc.getPassword());
+            }
+        }
+
         if (!acc.getFile().isEmpty()) {
             try {
                 Map res = cloudinary.uploader().upload(acc.getFile().getBytes(),

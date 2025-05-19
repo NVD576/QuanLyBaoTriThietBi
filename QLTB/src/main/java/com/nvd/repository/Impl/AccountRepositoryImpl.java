@@ -69,7 +69,6 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    @Transactional
     public Account addOrUpdateAccount(Account acc) {
         Session session = this.factory.getObject().getCurrentSession();
         try {

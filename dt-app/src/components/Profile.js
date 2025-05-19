@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { authApis, endpoints } from "../configs/Apis";
+import { MyUserContext } from "../configs/MyContexts";
 
 const Profile = () => {
   const [profile, setProfile] = useState({
-    username: "",
+    role: "",
     name: "",
     email: "",
     baseId: "",
@@ -11,6 +12,7 @@ const Profile = () => {
   });
   const [avatarPreview, setAvatarPreview] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const user = useContext(MyUserContext);
 
   // Load profile info từ API
   const loadProfile = async () => {
@@ -39,24 +41,27 @@ const Profile = () => {
     const { name, value, files } = e.target;
     if (name === "avatar") {
       const file = files[0];
-      setProfile({ ...profile, avatar: file });
+      setProfile(profile => ({ ...profile, avatar: file }));
       setAvatarPreview(URL.createObjectURL(file));
     } else {
-      setProfile({ ...profile, [name]: value });
+      setProfile(profile => ({ ...profile, [name]: value }));
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    formData.append("id", user.id);
     formData.append("name", profile.name);
     formData.append("email", profile.email);
-    if (profile.avatar) {
+    if (profile.avatar instanceof File) {
       formData.append("avatar", profile.avatar);
     }
-
+    console.log(profile.name);
+    console.log(profile.email);
+    console.log(profile.avatar);
     try {
-      await authApis().put(endpoints.profile, formData, {
+      await authApis().post(endpoints.profile, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Cập nhật thông tin thành công!");
@@ -71,12 +76,12 @@ const Profile = () => {
   return (
     <div style={styles.container}>
       <h2>Thông tin cá nhân</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
+      <form onSubmit={handleUpdateProfile} style={styles.form}>
         <label>
           ROLE:
           <input
             type="text"
-            name="username"
+            name="role"
             value={profile.role}
             onChange={handleChange}
             disabled
@@ -88,7 +93,7 @@ const Profile = () => {
           Họ và tên:
           <input
             type="text"
-            name="fullName"
+            name="name"
             value={profile.name}
             onChange={handleChange}
             style={styles.input}
