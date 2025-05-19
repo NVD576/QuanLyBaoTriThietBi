@@ -20,6 +20,7 @@ const MaintenanceSchedule = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   const [newSchedule, setNewSchedule] = useState({
+    id: "",
     deviceId: "",
     frequencyId: "",
     typeId: "",
@@ -107,13 +108,11 @@ const MaintenanceSchedule = () => {
     }
 
     try {
-      console.log("Thêm lịch bảo trì:", newSchedule);
       const formData = new FormData();
-      formData.append("id", newSchedule.id);
-      formData.append("deviceId", newSchedule.deviceId);
-      formData.append("frequencyId", newSchedule.frequencyId);
+      formData.append("deviceId.id", newSchedule.deviceId);
+      formData.append("frequencyId.id", newSchedule.frequencyId);
       formData.append("date", newSchedule.date); // YYYY-MM-DD
-      formData.append("typeId", newSchedule.typeId);
+      formData.append("typeId.id", newSchedule.typeId);
       const res = await authApis().post(endpoints["maintenance-add"], formData,{
         headers: {
           "Content-Type": "multipart/form-data",

@@ -131,5 +131,26 @@ public class Maintenance implements Serializable {
     public String toString() {
         return "com.nvd.pojo.Maintenance[ id=" + id + " ]";
     }
-    
+
+    public void setDeviceId(Integer id) {
+        if (this.deviceId == null) {
+            this.deviceId = new Device();
+        }
+        this.deviceId.setId(id);
+    }
+
+    public void setFrequencyId(Integer id) {
+        if (this.frequencyId == null) {
+            this.frequencyId = new Frequency();
+        }
+        this.frequencyId.setId(id);
+    }
+
+    public void setTypeId(Integer id) {
+        if (this.typeId == null) {
+            this.typeId = new MaintenanceType();
+        }
+        this.typeId.setId(id);
+    }
+
 }

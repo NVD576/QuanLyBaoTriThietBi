@@ -20,6 +20,7 @@ const IncidentManagement = () => {
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false); // State để kiểm soát hiển thị form
   const user = useContext(MyUserContext);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

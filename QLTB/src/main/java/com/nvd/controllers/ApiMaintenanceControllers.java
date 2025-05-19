@@ -43,9 +43,9 @@ public class ApiMaintenanceControllers {
     private MaintenanceTypeService maintenanceTypeService;
     @Autowired
     private FrequencyService frequencyService;
-
     @Autowired
     private DeviceService deviceService;
+    
     @DeleteMapping("/maintenance/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
