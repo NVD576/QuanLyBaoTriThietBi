@@ -7,6 +7,7 @@ package com.nvd.controllers;
 import com.nvd.pojo.Frequency;
 import com.nvd.pojo.Maintenance;
 import com.nvd.pojo.MaintenanceType;
+import com.nvd.service.DeviceService;
 import com.nvd.service.FrequencyService;
 import com.nvd.service.MaintenanceService;
 import com.nvd.service.MaintenanceTypeService;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +44,8 @@ public class ApiMaintenanceControllers {
     @Autowired
     private FrequencyService frequencyService;
 
+    @Autowired
+    private DeviceService deviceService;
     @DeleteMapping("/maintenance/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
@@ -59,7 +63,10 @@ public class ApiMaintenanceControllers {
     }
 
     @PostMapping("/maintenances/add")
-    public ResponseEntity<Maintenance> create(@RequestBody Maintenance p) {
+    public ResponseEntity<Maintenance> create(@ModelAttribute Maintenance p) {
+        p.setDeviceId(deviceService.getDeviceById(p.getDeviceId().getId()));
+        p.setFrequencyId(frequencyService.getFrequencyById(p.getFrequencyId().getId()));
+        p.setTypeId(maintenanceTypeService.getMaintenanceTypeById(p.getTypeId().getId()));
         return new ResponseEntity<>(this.maintenanceService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
     }
 

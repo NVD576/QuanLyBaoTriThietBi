@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,12 +101,12 @@ public class ApiDeviceControllers {
             p.setBaseId(baseService.getBaseById(p.getBaseId().getId()));
             p.setCategoryId(categoryService.getCategotryById(p.getCategoryId().getId()));
             p.setStatusId(statusService.getStatusById(p.getStatusId().getId()));
-            if (p.getFile() != null && !p.getFile().isEmpty()) {
-                String filename = p.getFile().getOriginalFilename();
-                // xử lý lưu ảnh tại đây, ví dụ:
-                p.setImage(filename);
-                // Files.copy(...) hoặc sử dụng service lưu ảnh
-            }
+//            if (!p.getFile().isEmpty()) {
+//                String filename = p.getFile().getOriginalFilename();
+//                // xử lý lưu ảnh tại đây, ví dụ:
+//                p.setImage(filename);
+//                // Files.copy(...) hoặc sử dụng service lưu ảnh
+//            }
             // Lưu device
             
             Device device = deviceService.addOrUpdateDevice(p);
@@ -120,5 +121,7 @@ public class ApiDeviceControllers {
             return new ResponseEntity<>("Lỗi khi thêm thiết bị", HttpStatus.BAD_REQUEST);
         }
     }
+    
+
 
 }

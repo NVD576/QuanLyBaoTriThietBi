@@ -4,6 +4,7 @@
  */
 package com.nvd.repository.Impl;
 
+import com.nvd.pojo.Base;
 import com.nvd.pojo.Maintenance;
 import com.nvd.pojo.MaintenanceType;
 import com.nvd.repository.MaintenanceRepository;
@@ -22,14 +23,21 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class MaintenanceTypeRepositoryImpl implements MaintenanceTypeRepository{
+public class MaintenanceTypeRepositoryImpl implements MaintenanceTypeRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+
     @Override
     public List<MaintenanceType> getMaintenanceTypes() {
         Session s = this.factory.getObject().getCurrentSession();
         Query q = s.createQuery("FROM MaintenanceType ORDER BY id ASC", MaintenanceType.class);
         return q.getResultList();
+    }
+
+    @Override
+    public MaintenanceType getMaintenanceTypeById(int id) {
+        Session session = this.factory.getObject().getCurrentSession();
+        return session.get(MaintenanceType.class, id);
     }
 }

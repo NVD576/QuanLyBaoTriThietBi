@@ -23,5 +23,10 @@ public class FrequencyServiceImpl implements FrequencyService{
     public List<Frequency> getFrequency() {
         return this.frequencyRepository.getFrequencys();
     }
+
+    @Override
+    public Frequency getFrequencyById(int id) {
+        return frequencyRepository.getFrequencyById(id);
+    }
     
 }

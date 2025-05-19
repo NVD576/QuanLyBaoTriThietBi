@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Form, Modal, Alert } from "react-bootstrap";
-import Apis, { endpoints } from "../configs/Apis";
+import Apis, { authApis, endpoints } from "../configs/Apis";
 import { DeviceContext, MyUserContext } from "../configs/MyContexts";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -107,7 +107,18 @@ const MaintenanceSchedule = () => {
     }
 
     try {
-      const res = await Apis.post(endpoints.maintenances, newSchedule);
+      console.log("Thêm lịch bảo trì:", newSchedule);
+      const formData = new FormData();
+      formData.append("id", newSchedule.id);
+      formData.append("deviceId", newSchedule.deviceId);
+      formData.append("frequencyId", newSchedule.frequencyId);
+      formData.append("date", newSchedule.date); // YYYY-MM-DD
+      formData.append("typeId", newSchedule.typeId);
+      const res = await authApis().post(endpoints["maintenance-add"], formData,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       const updated = [...schedules, res.data];
       setSchedules(updated);
       checkNotifications(updated);
@@ -190,11 +201,20 @@ const MaintenanceSchedule = () => {
         </Alert>
       )}
 
-      <Button variant="success" className="mb-3" onClick={() => {
-        setSelectedDate(null);
-        setNewSchedule({ deviceId: "", frequencyId: "", typeId: "", date: "" });
-        setShow(true);
-      }}>
+      <Button
+        variant="success"
+        className="mb-3"
+        onClick={() => {
+          setSelectedDate(null);
+          setNewSchedule({
+            deviceId: "",
+            frequencyId: "",
+            typeId: "",
+            date: "",
+          });
+          setShow(true);
+        }}
+      >
         + Thêm Lịch Bảo Trì
       </Button>
 
@@ -206,7 +226,7 @@ const MaintenanceSchedule = () => {
         style={{ height: 600 }}
         onSelectEvent={(event) => setSelectedEvent(event)}
         selectable
-        onSelectSlot={handleSelectSlot}  // Bắt sự kiện click vào ô ngày
+        onSelectSlot={handleSelectSlot} // Bắt sự kiện click vào ô ngày
       />
 
       {/* Modal chi tiết sự kiện */}
@@ -222,17 +242,22 @@ const MaintenanceSchedule = () => {
           {selectedEvent && (
             <>
               <p>
-                <strong>Thiết bị:</strong> {selectedEvent.schedule.deviceId?.name}
+                <strong>Thiết bị:</strong>{" "}
+                {selectedEvent.schedule.deviceId?.name}
               </p>
               <p>
-                <strong>Loại bảo trì:</strong> {selectedEvent.schedule.typeId?.type}
+                <strong>Loại bảo trì:</strong>{" "}
+                {selectedEvent.schedule.typeId?.type}
               </p>
               <p>
-                <strong>Tần suất:</strong> {selectedEvent.schedule.frequencyId?.frequency}
+                <strong>Tần suất:</strong>{" "}
+                {selectedEvent.schedule.frequencyId?.frequency}
               </p>
               <p>
                 <strong>Ngày dự kiến:</strong>{" "}
-                {new Date(selectedEvent.schedule.date).toLocaleDateString("vi-VN")}
+                {new Date(selectedEvent.schedule.date).toLocaleDateString(
+                  "vi-VN"
+                )}
               </p>
             </>
           )}
