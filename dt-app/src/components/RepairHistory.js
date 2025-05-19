@@ -354,7 +354,7 @@ const RepairHistory = () => {
         </tbody>
       </table>
 
-      <div className={styles.formContainer}>
+      {/* <div className={styles.formContainer}>
         <h3 className={styles.formTitle}>Thêm sửa chữa mới</h3>
         <form onSubmit={handleAddRepair}>
           <div className={styles.formGroup}>
@@ -433,7 +433,7 @@ const RepairHistory = () => {
             Thêm
           </button>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 };

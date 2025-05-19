@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 
 const Sidebar = ({ sidebarOpen }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const [currentTitle, setCurrentTitle] = useState(t("DeviceManagement"));
 
@@ -66,14 +66,20 @@ const Sidebar = ({ sidebarOpen }) => {
   };
 
   const links = [
-    { to: "/devices", icon: <FaTools />, title: t("DeviceManagement") },
-    { to: "/maintenance", icon: <FaCalendarCheck />, title: t("MaintenanceSchedule") },
-    { to: "/incidents", icon: <FaExclamationTriangle />, title: t("IncidentManagement") },
-    { to: "/repair-history", icon: <FaHistory />, title: t("RepairHistory") },
-    { to: "/forum", icon: <FaComments />, title: t("Forum") },
-    { to: "/profile", icon: <FaUser />, title: t("Profile") },
-    { to: "/settings", icon: <FaCog />, title: t("Settings") },
+    { to: "/devices", icon: <FaTools />, title: t("DeviceManagement"), key: "DeviceManagement" },
+    { to: "/maintenance", icon: <FaCalendarCheck />, title: t("MaintenanceSchedule"), key: "MaintenanceSchedule" },
+    { to: "/incidents", icon: <FaExclamationTriangle />, title: t("IncidentManagement"), key: "IncidentManagement" },
+    { to: "/repair-history", icon: <FaHistory />, title: t("RepairHistory"), key: "RepairHistory" },
+    { to: "/forum", icon: <FaComments />, title: t("Forum"), key: "Forum" },
+    { to: "/profile", icon: <FaUser />, title: t("Profile"), key: "Profile" },
+    { to: "/settings", icon: <FaCog />, title: t("Settings"), key: "Settings" },
   ];
+
+  // Update currentTitle when language or pathname changes
+  useEffect(() => {
+    const currentLink = links.find((link) => location.pathname === link.to) || links[0];
+    setCurrentTitle(t(currentLink.key));
+  }, [location.pathname, i18n.language, t]);
 
   return (
     <div style={sidebarStyle}>
@@ -100,7 +106,7 @@ const Sidebar = ({ sidebarOpen }) => {
           key={link.to}
           to={link.to}
           style={navLinkStyle(link.to)}
-          onClick={() => setCurrentTitle(link.title)}
+          onClick={() => setCurrentTitle(t(link.key))}
           onMouseEnter={handleHover}
           onMouseLeave={(e) => handleLeave(e, link.to)}
         >
