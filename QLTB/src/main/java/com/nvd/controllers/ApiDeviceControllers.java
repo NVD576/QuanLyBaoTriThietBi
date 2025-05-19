@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,7 +108,7 @@ public class ApiDeviceControllers {
                 // Files.copy(...) hoặc sử dụng service lưu ảnh
             }
             // Lưu device
-            
+
             Device device = deviceService.addOrUpdateDevice(p);
 
             // Tạo Maintenance
@@ -121,4 +122,17 @@ public class ApiDeviceControllers {
         }
     }
 
+    @PatchMapping("/device/edit")
+    public ResponseEntity<?> editDevice(@ModelAttribute Device p,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
+
+        try {
+            System.out.println("Received device: " + p);
+            this.deviceService.addOrUpdateDevice(p);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Thiết bị đã được thêm");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Lỗi khi thêm thiết bị", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
