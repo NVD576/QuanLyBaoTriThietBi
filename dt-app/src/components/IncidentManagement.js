@@ -55,15 +55,14 @@ const IncidentManagement = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
+    setFormData({ ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
   };
 
-  const handleAddIncident = async () => {
+  const handleAddIssue = async () => {
     try {
-      const res = await Apis.post(endpoints.issue, formData);
+      const res = await Apis.post(endpoints["issue-add"], formData);
       setIssues([...issues, res.data]);
       setFormData({
         deviceId: "",
@@ -82,10 +81,10 @@ const IncidentManagement = () => {
 
   const confirmResolved = async (id, cost) => {
     try {
-      const formData = new FormData();
-      formData.append("cost", cost);
-      formData.append("accountId", user.id);
-      await Apis.post(`${endpoints["issue"]}/${id}/confirm`, formData);
+      const data = new FormData();
+      data.append("cost", cost);
+      data.append("accountId", user.id);
+      await Apis.post(endpoints["issue-confirm"](id), data);
 
       const updatedIssues = issues.map((issue) =>
         issue.id === id ? { ...issue, isResolved: true } : issue
@@ -114,7 +113,7 @@ const IncidentManagement = () => {
 
       {!showAddForm && (
         <button onClick={() => setShowAddForm(true)} className="btn btn-add">
-          <i className="fas fa-plus"></i> Thêm Sự Cố Mới
+          <i className="fas fa-plus"></i> Báo cáo Sự Cố Mới
         </button>
       )}
 
@@ -180,20 +179,8 @@ const IncidentManagement = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="isResolved">Đã xử lý:</label>
-            <input
-              type="checkbox"
-              id="isResolved"
-              name="isResolved"
-              checked={formData.isResolved}
-              onChange={handleChange}
-              className="form-checkbox"
-            />
-          </div>
-
           <div className="form-actions">
-            <button onClick={handleAddIncident} className="btn btn-primary">
+            <button onClick={handleAddIssue} className="btn btn-primary">
               Ghi nhận
             </button>
             <button
