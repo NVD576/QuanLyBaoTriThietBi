@@ -77,20 +77,20 @@ const IncidentManagement = () => {
     }
   };
 
-  const updateStatus = async (id, newStatus) => {
+  const confirmResolved = async (id) => {
     try {
-      await Apis.patch(`${endpoints.issue}${id}/`, {
-        isResolved: newStatus,
-      });
+      await Apis.post(`${endpoints["issue"]}/${id}/confirm`);
+
       const updatedIssues = issues.map((issue) =>
-        issue.id === id ? { ...issue, isResolved: newStatus } : issue
+        issue.id === id ? { ...issue, isResolved: true } : issue
       );
       setIssues(updatedIssues);
     } catch (err) {
       console.error(err);
-      alert("Lỗi khi cập nhật trạng thái!");
+      alert("Lỗi khi xác nhận xử lý!");
     }
   };
+
 
   if (loading) {
     return <div className="loading-spinner">Đang tải dữ liệu...</div>;
@@ -226,16 +226,13 @@ const IncidentManagement = () => {
                     {issue.isResolved ? "Đã xử lý" : "Chưa xử lý"}
                   </td>
                   <td>
-                    <select
-                      value={issue.isResolved}
-                      onChange={(e) =>
-                        updateStatus(issue.id, e.target.value === "true")
-                      }
-                      className="status-select"
-                    >
-                      <option value={false}>Chưa xử lý</option>
-                      <option value={true}>Đã xử lý</option>
-                    </select>
+                    {!issue.isResolved ? (
+                      <button onClick={() => confirmResolved(issue.id)} className="confirm-button">
+                        Xác nhận xử lý
+                      </button>
+                    ) : (
+                      <span className="text-green-600">Đã xử lý</span>
+                    )}
                   </td>
                 </tr>
               ))}

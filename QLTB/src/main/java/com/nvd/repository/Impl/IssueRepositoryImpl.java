@@ -70,5 +70,4 @@ public class IssueRepositoryImpl implements IssueRepository {
         Session s = this.factory.getObject().getCurrentSession();
         return s.get(Issue.class, id);
     }
-
 }
