@@ -19,4 +19,5 @@ public interface MaintenanceRepository {
     Maintenance addOrUpdateMaintenance(Maintenance p);
     List<Maintenance> getByDeviceId(int id);
     Maintenance addNewDevice(Maintenance p, Device d);
+    void deleteMaintenance(int id);
 }
