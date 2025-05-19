@@ -61,7 +61,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Device addOrUpdateDevice(Device p) {
-        if (!p.getFile().isEmpty()) {
+        Device currentDeivce = this.getDeviceById(p.getId());
+        if (p.getFile() != null && !p.getFile().isEmpty()) {
             try {
                 Map res = cloudinary.uploader().upload(p.getFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
@@ -69,6 +70,8 @@ public class DeviceServiceImpl implements DeviceService {
             } catch (IOException ex) {
                 Logger.getLogger(DeviceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            p.setImage(currentDeivce.getImage());
         }
         return this.deviceRepo.addOrUpdateDevice(p);
     }
