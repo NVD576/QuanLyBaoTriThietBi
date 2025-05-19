@@ -60,7 +60,7 @@
 
             <div class="col-md-12">
                 <label for="image" class="form-label"><strong>Ảnh:</strong></label>
-                <input type="file" class="form-control" th:field="*{file}" placeholder="URL ảnh" /> <!-- accept="image/*"-->
+                <input type="file" class="form-control" th:field="*{file}" placeholder="URL ảnh" /> 
                 <img th:if="${device.image != null}"  alt="Ảnh minh họa" th:src="${device.image}" style="max-width: 150px; max-height: 150px;" class="mb-2" />
             </div>
 

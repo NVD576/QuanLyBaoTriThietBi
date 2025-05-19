@@ -101,12 +101,12 @@ public class ApiDeviceControllers {
             p.setBaseId(baseService.getBaseById(p.getBaseId().getId()));
             p.setCategoryId(categoryService.getCategotryById(p.getCategoryId().getId()));
             p.setStatusId(statusService.getStatusById(p.getStatusId().getId()));
-            if (p.getFile() != null && !p.getFile().isEmpty()) {
-                String filename = p.getFile().getOriginalFilename();
-                // xử lý lưu ảnh tại đây, ví dụ:
-                p.setImage(filename);
-                // Files.copy(...) hoặc sử dụng service lưu ảnh
-            }
+//            if (!p.getFile().isEmpty()) {
+//                String filename = p.getFile().getOriginalFilename();
+//                // xử lý lưu ảnh tại đây, ví dụ:
+//                p.setImage(filename);
+//                // Files.copy(...) hoặc sử dụng service lưu ảnh
+//            }
             // Lưu device
 
             Device device = deviceService.addOrUpdateDevice(p);
@@ -121,6 +121,8 @@ public class ApiDeviceControllers {
             return new ResponseEntity<>("Lỗi khi thêm thiết bị", HttpStatus.BAD_REQUEST);
         }
     }
+    
+
 
     @PatchMapping("/device/edit")
     public ResponseEntity<?> editDevice(@ModelAttribute Device p,

@@ -14,6 +14,7 @@ export const endpoints = {
   "statuses": "/statuses",  
   "bases": "/base",
   "maintenances": "/maintenances",
+  "maintenance-add": "/maintenances/add",
   "issues": "/issues",
   "issue": "/issue",
   "repairs": "/repairs",

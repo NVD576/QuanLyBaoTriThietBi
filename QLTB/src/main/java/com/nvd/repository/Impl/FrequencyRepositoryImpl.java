@@ -4,6 +4,7 @@
  */
 package com.nvd.repository.Impl;
 
+import com.nvd.pojo.Base;
 import com.nvd.pojo.Frequency;
 import com.nvd.repository.FrequencyRepository;
 import jakarta.persistence.Query;
@@ -30,6 +31,12 @@ public class FrequencyRepositoryImpl implements FrequencyRepository {
         Session s = this.factory.getObject().getCurrentSession();
         Query q = s.createQuery("FROM Frequency ORDER BY id ASC", Frequency.class);
         return q.getResultList();
+    }
+
+    @Override
+    public Frequency getFrequencyById(int id) {
+        Session session = this.factory.getObject().getCurrentSession();
+        return session.get(Frequency.class, id);
     }
 
 }

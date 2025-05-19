@@ -20,6 +20,7 @@ const DeviceManagement = () => {
     manufacturer: "",
     date: "",
     image: null,
+    file: null,
     baseId: "",
     categoryId: "",
     statusId: 1,
@@ -118,7 +119,7 @@ const DeviceManagement = () => {
     const { name, value, files } = e.target;
     if (name === "image") {
       const file = files[0];
-      setNewDevice({ ...newDevice, image: file });
+      setNewDevice({ ...newDevice, file: file });
       setImagePreview(URL.createObjectURL(file));
     } else {
       setNewDevice({ ...newDevice, [name]: value });
@@ -154,13 +155,12 @@ const DeviceManagement = () => {
     formData.append("name", newDevice.name);
     formData.append("manufacturer", newDevice.manufacturer);
     formData.append("date", newDevice.date); // YYYY-MM-DD
-    if (newDevice.image) {
-      formData.append("file", newDevice.image);
+    if (newDevice.file) {
+      formData.append("file", newDevice.file);
     }
     formData.append("baseId.id", newDevice.baseId);
     formData.append("categoryId.id", newDevice.categoryId);
     formData.append("statusId.id", newDevice.statusId);
-    console.log("Form data:", formData);
     try {
       setIsLoading(true);
       await authApis().post(endpoints["device-add"], formData, {
@@ -192,7 +192,8 @@ const DeviceManagement = () => {
       name: device.name,
       manufacturer: device.manufacturer,
       date: formattedDate,
-      file: device.image,
+      file: device.file,
+      image: device.image,
       baseId: device.baseId?.id || "",
       categoryId: device.categoryId?.id || "",
       statusId: device.statusId?.id || "",

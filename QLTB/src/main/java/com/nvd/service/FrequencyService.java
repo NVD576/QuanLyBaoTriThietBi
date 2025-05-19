@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface FrequencyService {
     List<Frequency> getFrequency();
+    Frequency getFrequencyById(int id);
 }
