@@ -35,7 +35,7 @@ CREATE TABLE `account` (
   UNIQUE KEY `username` (`username`),
   KEY `base_id` (`base_id`),
   CONSTRAINT `account_ibfk_1` FOREIGN KEY (`base_id`) REFERENCES `base` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'admin','123','Nguyễn Văn A','a@example.com','admin','avatar1.png',1),(2,'trung','123','Lư Hiếu Trung','b@example.com','admin','avatar2.png',2),(3,'duc','123','Nguyễn Văn Đức','c@example.com','admin','avatar3.png',3),(4,'user','123','Phạm Thị D','d@example.com','user','avatar4.png',4);
+INSERT INTO `account` VALUES (1,'admin','$2a$10$5X9k5N1sTc1/CjVH5XJoje3QMYijH3ETpgkox00R0MdPaJPPrf7wO','Nguyễn Văn A','a@example.com','ROLE_ADMIN','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747398195/ujxi2ngvtkszpj5nvjvx.png',1),(2,'trung','$2a$10$5X9k5N1sTc1/CjVH5XJoje3QMYijH3ETpgkox00R0MdPaJPPrf7wO','Lư Hiếu Trung','b@example.com','ROLE_USER','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747398195/ujxi2ngvtkszpj5nvjvx.png',2),(3,'duc','$2a$10$5X9k5N1sTc1/CjVH5XJoje3QMYijH3ETpgkox00R0MdPaJPPrf7wO','Nguyễn Văn Đức','c@example.com','ROLE_USER','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747398195/ujxi2ngvtkszpj5nvjvx.png',3),(4,'user','$2a$10$5X9k5N1sTc1/CjVH5XJoje3QMYijH3ETpgkox00R0MdPaJPPrf7wO','Phạm Thị D','d@example.com','ROLE_USER','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747398195/ujxi2ngvtkszpj5nvjvx.png',4),(5,'Duc Nguyen','$2a$10$5X9k5N1sTc1/CjVH5XJoje3QMYijH3ETpgkox00R0MdPaJPPrf7wO','Đức Nguyễn','duw3210@gmail.com','ROLE_USER','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747398195/ujxi2ngvtkszpj5nvjvx.png',1);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +120,7 @@ CREATE TABLE `device` (
   CONSTRAINT `device_ibfk_1` FOREIGN KEY (`base_id`) REFERENCES `base` (`id`),
   CONSTRAINT `device_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
   CONSTRAINT `device_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE `device` (
 
 LOCK TABLES `device` WRITE;
 /*!40000 ALTER TABLE `device` DISABLE KEYS */;
-INSERT INTO `device` VALUES (1,'Máy lạnh Daikin 1HP 3','2022-05-01','Daikin','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',1,1,1),(2,'Tủ lạnh Panasonic 200L','2023-02-10','Panasonic','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',2,1,1),(3,'Máy giặt LG Inverter','2021-07-18','LG','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',3,4,2),(4,'Máy in HP LaserJet Pro M404','2022-09-05','HP','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1735652094/ks4nkbgqzm1tuhyfwolc.jpg',4,2,1),(5,'LEGO','2025-05-10','HP','https://res.cloudinary.com/dtbpkn17m/image/upload/v1746873607/haqjo49mp5nxqbnk3dpl.jpg',1,1,1),(7,'Máy tính','2025-05-11','HP','',1,1,1);
+INSERT INTO `device` VALUES (1,'Máy lạnh Daikin 1HP 3','2022-05-01','Daikin','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747558890/download_xvrpni.jpg',1,1,1),(2,'Tủ lạnh Panasonic 200L','2023-02-10','Panasonic','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747558931/download_cyj5uc.jpg',2,1,1),(3,'Máy giặt LG Inverter','2021-07-18','LG','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747565387/download_ye3ogn.jpg',3,4,2),(4,'Máy in HP LaserJet Pro M404','2022-09-05','HP','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747565413/download_yqp5rs.jpg',4,2,1),(8,'macbook','2025-05-17','HP','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747558873/macbookairm120207-1_us3vcp.jpg',1,3,1),(9,'iphone11','2025-05-17','apple','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747558807/download_bripso.jpg',3,1,1),(10,'iphone12','2025-05-17','apple','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747558807/download_bripso.jpg',4,1,1),(11,'Máy photocopy Canon','2024-03-10','Canon','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747565453/download_nt92i1.jpg',2,2,1),(12,'Switch Cisco 24 port','2023-12-01','Cisco','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747565480/download_kicrxu.jpg',3,3,1),(13,'Router MikroTik','2022-10-20','MikroTik','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747566298/download_npf7nk.jpg',1,3,2),(14,'Máy lạnh Samsung 2HP','2023-06-15','Samsung','',4,1,1),(15,'Tủ lạnh Toshiba 150L','2021-11-05','Toshiba','',2,1,3),(16,'Máy in Brother HL-1201','2023-04-28','Brother','',3,2,2),(17,'Điều hòa Panasonic','2023-08-10','Panasonic','',1,1,1),(18,'Máy quét Canon LIDE 300','2022-09-14','Canon','',1,2,1),(19,'Bộ phát WiFi TP-Link','2023-01-12','TP-Link','',4,3,1),(20,'Laptop Dell Vostro','2022-02-25','Dell','',3,2,2),(21,'Máy tính để bàn Lenovo','2023-07-19','Lenovo','',2,2,1),(22,'Bàn phím Logitech','2024-01-09','Logitech','',1,2,1),(23,'Màn hình Samsung 24\"','2023-03-03','Samsung','',1,2,1),(24,'Máy in màu Epson L3150','2023-05-14','Epson','',3,2,1),(25,'Ổ cứng NAS Synology','2022-12-22','Synology','',4,3,1),(26,'Camera IP Dahua','2023-06-30','Dahua','',1,3,1),(27,'Thiết bị phát WiFi Mesh Tenda','2024-02-17','Tenda','',2,3,1),(28,'Máy chiếu ViewSonic','2023-11-11','ViewSonic','',3,2,1),(29,'Điều hòa LG Inverter','2023-07-01','LG','',1,1,1),(30,'Tủ đông Alaska','2024-01-15','Alaska','',4,1,2),(31,'máy tính','2025-05-17','Dell','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747498658/ookdco65kajmbu9ukhqe.jpg',2,2,1),(33,'laptop','2025-05-17','Dell','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747499064/zp51pireoqodayuaof6y.jpg',2,2,1),(35,'b','2025-05-19','Daikin','https://res.cloudinary.com/dqpoa9ukn/image/upload/v1747593700/jc5r48htxuvfymo64jrm.png',3,2,1);
 /*!40000 ALTER TABLE `device` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,10 +197,10 @@ CREATE TABLE `issue` (
   `is_resolved` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `level_id` (`level_id`),
-  KEY `device_id` (`device_id`),
+  KEY `issue_ibfk_2` (`device_id`),
   CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`level_id`) REFERENCES `incident_level` (`id`),
-  CONSTRAINT `issue_ibfk_2` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `issue_ibfk_2` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +209,7 @@ CREATE TABLE `issue` (
 
 LOCK TABLES `issue` WRITE;
 /*!40000 ALTER TABLE `issue` DISABLE KEYS */;
-INSERT INTO `issue` VALUES (1,'Không khởi động được','2025-05-11',2,3,0),(2,'Kêu to khi hoạt động','2025-01-20',2,1,1),(3,'In bị nhòe mực','2025-03-10',1,2,0),(4,'Mất kết nối mạng','2025-04-05',2,4,0),(5,'Bị hư','2025-05-10',1,5,0);
+INSERT INTO `issue` VALUES (1,'Không khởi động được','2025-05-11',2,3,0),(2,'Kêu to khi hoạt động','2025-01-20',2,1,1),(3,'In bị nhòe mực','2025-03-10',1,2,0),(4,'Mất kết nối mạng','2025-04-05',2,4,0),(17,'Mất kết nối mạng liên tục.','2024-04-15',3,2,0),(18,'Tủ lạnh không làm lạnh.','2024-03-10',2,8,0),(19,'Máy in bị kẹt giấy thường xuyên.','2024-02-22',1,9,0),(20,'Laptop bị chậm, nghi lỗi ổ cứng.','2024-05-01',2,10,0),(21,'Không truy cập được NAS.','2024-01-30',2,15,0),(22,'Máy chiếu không lên hình.','2024-04-05',1,18,0),(23,'Tủ đông phát ra tiếng ồn lớn.','2024-05-10',3,20,0);
 /*!40000 ALTER TABLE `issue` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,12 +228,12 @@ CREATE TABLE `maintenance` (
   `type_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `frequency_id` (`frequency_id`),
-  KEY `device_id` (`device_id`),
   KEY `type_id` (`type_id`),
+  KEY `maintenance_ibfk_2` (`device_id`),
   CONSTRAINT `maintenance_ibfk_1` FOREIGN KEY (`frequency_id`) REFERENCES `frequency` (`id`),
-  CONSTRAINT `maintenance_ibfk_2` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`),
+  CONSTRAINT `maintenance_ibfk_2` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`) ON DELETE CASCADE,
   CONSTRAINT `maintenance_ibfk_3` FOREIGN KEY (`type_id`) REFERENCES `maintenance_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,7 +242,7 @@ CREATE TABLE `maintenance` (
 
 LOCK TABLES `maintenance` WRITE;
 /*!40000 ALTER TABLE `maintenance` DISABLE KEYS */;
-INSERT INTO `maintenance` VALUES (1,'2025-01-01',1,1,1),(2,'2025-03-01',2,2,2),(3,'2025-04-15',3,3,1),(4,'2025-05-01',1,4,2),(5,'2025-05-10',1,5,1),(6,'2025-06-10',1,7,1);
+INSERT INTO `maintenance` VALUES (1,'2025-01-01',1,1,1),(2,'2025-03-01',2,2,2),(3,'2025-04-15',3,3,1),(4,'2025-05-01',1,4,2),(7,'2025-06-16',1,8,1),(8,'2025-06-16',1,9,1),(9,'2025-06-16',1,10,1),(20,'2024-01-10',1,1,1),(21,'2024-02-15',2,2,2),(22,'2024-03-20',3,3,1),(23,'2024-04-05',1,4,1),(24,'2024-05-01',2,8,2),(25,'2024-05-12',1,10,1),(26,'2024-06-10',3,12,2),(27,'2024-06-20',1,15,1),(28,'2024-07-01',2,17,2),(29,'2024-07-15',1,20,1),(30,'2025-06-16',1,31,1),(32,'2025-06-16',1,33,1),(35,'2025-06-18',1,35,1);
 /*!40000 ALTER TABLE `maintenance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -285,13 +285,13 @@ CREATE TABLE `repair` (
   `type_id` int DEFAULT NULL,
   `account_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `device_id` (`device_id`),
   KEY `type_id` (`type_id`),
   KEY `account_id` (`account_id`),
-  CONSTRAINT `repair_ibfk_1` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`),
+  KEY `repair_ibfk_1` (`device_id`),
+  CONSTRAINT `repair_ibfk_1` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`) ON DELETE CASCADE,
   CONSTRAINT `repair_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `repair_type` (`id`),
   CONSTRAINT `repair_ibfk_3` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -300,7 +300,7 @@ CREATE TABLE `repair` (
 
 LOCK TABLES `repair` WRITE;
 /*!40000 ALTER TABLE `repair` DISABLE KEYS */;
-INSERT INTO `repair` VALUES (1,'2025-01-10',500000.00,3,1,2),(2,'2025-02-05',200000.00,2,2,4),(3,'2025-03-20',150000.00,1,2,3),(4,'2025-04-25',100000.00,4,1,4),(7,'2025-05-11',4235235.00,1,1,3);
+INSERT INTO `repair` VALUES (1,'2025-01-10',500000.00,3,1,2),(2,'2025-02-05',200000.00,2,2,4),(3,'2025-03-20',150000.00,1,2,3),(4,'2025-04-25',100000.00,4,1,4),(7,'2025-05-11',4235235.00,1,1,3),(8,'2025-05-13',1214234.00,1,2,2),(9,'2024-02-10',500000.00,1,1,1),(10,'2024-03-15',750000.00,3,2,2),(11,'2024-04-05',200000.00,26,1,3),(12,'2024-04-20',1000000.00,27,1,4),(13,'2024-05-01',450000.00,9,2,1),(14,'2024-05-10',300000.00,12,2,2),(15,'2024-05-25',900000.00,15,1,3),(16,'2024-06-01',650000.00,18,2,4),(17,'2024-06-10',800000.00,20,1,3),(18,'2024-06-15',400000.00,2,1,1);
 /*!40000 ALTER TABLE `repair` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -365,4 +365,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-11 23:48:52
+-- Dump completed on 2025-05-19 10:54:44
