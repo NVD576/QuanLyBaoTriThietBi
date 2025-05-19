@@ -64,7 +64,7 @@ public class ApiIssueControllerss {
 
     @PostMapping("/issue/add")
     public ResponseEntity<Issue> create(@RequestBody Issue p) {
-        return null; // new ResponseEntity<>(this.issueService.addOrUpdateMaintenance(p), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.issueService.addOrUpdateIssue(p), HttpStatus.CREATED);
     }
 
     @GetMapping("/levels")

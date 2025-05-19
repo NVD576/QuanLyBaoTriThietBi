@@ -4,24 +4,27 @@ import cookie from "react-cookies";
 const BASE_URL = "http://localhost:8080/QLTB/api/";
 
 export const endpoints = {
-  "categories": "/categories",
-  "devices": "/devices",
-  "device-add": "/device/add",
-  "device": "/device",
   "register": "/accounts",
   "login": "/login",
   "profile": "/secure/profile",
+  "profile-update": "/account/edit",
+  "categories": "/categories",
+  "devices": "/devices",
+  "device": "/device",
+  "device-add": "/device/add",
   "statuses": "/statuses",  
   "bases": "/base",
   "maintenances": "/maintenances",
   "maintenance-add": "/maintenances/add",
+  "types": "/maintenanceTypes",
   "issues": "/issues",
   "issue": "/issue",
+  "issue-add": "/issue/add",
+  "issue-confirm": (id) => `/issue/${id}/confirm`,
   "repairs": "/repairs",
   "repair": "/repair",
   "repairTypes": "/repairTypes",
   "frequencies": "/frequencies",
-  "types": "/maintenanceTypes",
   "levels": "/levels",
 };
 
