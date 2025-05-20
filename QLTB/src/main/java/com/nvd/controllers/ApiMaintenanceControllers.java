@@ -7,10 +7,14 @@ package com.nvd.controllers;
 import com.nvd.pojo.Frequency;
 import com.nvd.pojo.Maintenance;
 import com.nvd.pojo.MaintenanceType;
+import com.nvd.pojo.Repair;
 import com.nvd.service.DeviceService;
 import com.nvd.service.FrequencyService;
 import com.nvd.service.MaintenanceService;
 import com.nvd.service.MaintenanceTypeService;
+import com.nvd.service.RepairService;
+import com.nvd.service.RepairTypeService;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +49,10 @@ public class ApiMaintenanceControllers {
     private FrequencyService frequencyService;
     @Autowired
     private DeviceService deviceService;
+    @Autowired
+    private RepairService repairService;
+    @Autowired
+    private RepairTypeService repairTypeService;
     
     @DeleteMapping("/maintenance/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -77,5 +85,19 @@ public class ApiMaintenanceControllers {
     @GetMapping("/frequencies")
     public ResponseEntity<List<Frequency>>getFrequencies() {
         return new ResponseEntity<>(this.frequencyService.getFrequency(), HttpStatus.OK);
+    }
+    
+    @DeleteMapping("/maintenance/{id}/confirm")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void destroy (@PathVariable(value = "id") int id,
+            @RequestParam("cost") BigDecimal cost,
+            @RequestParam("accountId") int accountId) {
+        Maintenance p = this.maintenanceService.getMaintenanceById(id);
+        //nếu p được xác định thì tạo repair với type "sữa chữa bảo trì" và xóa maintenancy
+        if (p != null) {
+            Repair repair = new Repair();
+            repairService.addNewMaintenancyOrIssue(repair, cost, p.getDeviceId(), this.repairTypeService.getTypeById(1), accountId);
+        }
+        this.maintenanceService.deleteMaintenance(p.getId());
     }
 }

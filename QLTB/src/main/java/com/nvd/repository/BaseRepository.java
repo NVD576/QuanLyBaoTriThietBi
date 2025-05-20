@@ -13,10 +13,9 @@ import java.util.List;
  * @author ADMIN
  */
 public interface BaseRepository {
-
     List<Base> getBases();
-
     Base getBaseById(int id);
     List<Device> getDevicesByBaseId(int baseId);
-    
+    Base addOrUpdateBase(Base p);
+    void deleteBase (int id);
 }

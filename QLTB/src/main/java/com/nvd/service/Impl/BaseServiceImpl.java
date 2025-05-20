@@ -34,5 +34,15 @@ public class BaseServiceImpl implements BaseService{
     public List<Device> getDevicesByBaseId(int baseId) {
         return this.baseRepo.getDevicesByBaseId(baseId);
     }
+
+    @Override
+    public Base addOrUpdateBase(Base p) {
+        return this.baseRepo.addOrUpdateBase(p);
+    }
+
+    @Override
+    public void deleteBase(int id) {
+        this.baseRepo.deleteBase(id);
+    }
     
 }

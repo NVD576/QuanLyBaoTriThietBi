@@ -99,6 +99,7 @@ const IncidentManagement = () => {
       const data = new FormData();
       data.append("cost", cost);
       data.append("accountId", user.id);
+      console.log("URL:", endpoints["issue-confirm"](id));
       await Apis.post(endpoints["issue-confirm"](id), data);
 
       const updatedIssues = issues.map((issue) =>

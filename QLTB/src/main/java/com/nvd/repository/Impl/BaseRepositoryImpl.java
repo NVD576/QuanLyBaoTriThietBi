@@ -70,4 +70,39 @@ public class BaseRepositoryImpl implements BaseRepository {
         return Collections.emptyList();
     }
 
+    @Override
+    public Base addOrUpdateBase(Base p) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            if (p.getId() == null) {
+                System.out.println("Saving new base: " + p);
+                if (p.getName() == null || p.getName().isEmpty()){
+                    p.setName("Cơ sở TpHCM");
+                }
+                if (p.getAddress()== null || p.getAddress().isEmpty()){
+                    p.setAddress("97 Võ Văn Tần, Quận 3, Tp.HCM");
+                }
+                s.persist(p);
+            } else {
+                System.out.println("Updating base with ID: " + p.getId());
+                s.merge(p);
+            }
+            s.refresh(p);
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return p;
+    }
+
+    @Override
+    public void deleteBase(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Base p = this.getBaseById(id);
+        if (p != null) {
+            s.remove(p);
+        } else {
+            throw new IllegalArgumentException("Device không tồn tại với id = " + id);
+        }
+    }
+
 }
