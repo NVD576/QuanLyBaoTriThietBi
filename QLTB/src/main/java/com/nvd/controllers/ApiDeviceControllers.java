@@ -60,6 +60,7 @@ public class ApiDeviceControllers {
 
     @GetMapping("/devices")
     public ResponseEntity<List<Device>> list(@RequestParam Map<String, String> params) {
+        int count = deviceService.countDevice();
         return new ResponseEntity<>(this.deviceService.getDevices(params), HttpStatus.OK);
     }
 
