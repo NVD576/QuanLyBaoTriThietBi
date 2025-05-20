@@ -17,6 +17,7 @@ export const endpoints = {
   "maintenance": "/maintenance",
   "maintenances": "/maintenances",
   "maintenance-add": "/maintenances/add",
+  "maintenance-confirm": (id) => `/maintenance/${id}/confirm`,
   "types": "/maintenanceTypes",
   "issues": "/issues",
   "issue": "/issue",

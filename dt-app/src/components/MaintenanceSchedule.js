@@ -15,6 +15,9 @@ const MaintenanceSchedule = () => {
   const [types, setTypes] = useState([]);
   const [show, setShow] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showCostInput, setShowCostInput] = useState(false);
+  const [costInput, setCostInput] = useState("");
+
 
   // Thêm state lưu ngày được chọn khi click vào lịch (slot)
   // eslint-disable-next-line no-unused-vars
@@ -42,29 +45,29 @@ const MaintenanceSchedule = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-const checkNotifications = (schedules) => {
-  const today = new Date();
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
+  const checkNotifications = (schedules) => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
 
-  const overdue = [];
-  const upcoming = [];
+    const overdue = [];
+    const upcoming = [];
 
-  schedules.forEach((s) => {
-    const scheduleDate = new Date(s.date);
-    const sameMonth =
-      scheduleDate.getMonth() === currentMonth &&
-      scheduleDate.getFullYear() === currentYear;
+    schedules.forEach((s) => {
+      const scheduleDate = new Date(s.date);
+      const sameMonth =
+        scheduleDate.getMonth() === currentMonth &&
+        scheduleDate.getFullYear() === currentYear;
 
-    if (scheduleDate < today && sameMonth) {
-      overdue.push(s); // Quá hạn trong tháng này
-    } else if (scheduleDate >= today && sameMonth) {
-      upcoming.push(s); // Sắp đến hạn trong tháng này
-    }
-  });
+      if (scheduleDate < today && sameMonth) {
+        overdue.push(s); // Quá hạn trong tháng này
+      } else if (scheduleDate >= today && sameMonth) {
+        upcoming.push(s); // Sắp đến hạn trong tháng này
+      }
+    });
 
-  setNotifications({ overdue, upcoming });
-};
+    setNotifications({ overdue, upcoming });
+  };
 
   const fetchDevices = async () => {
     try {
@@ -187,6 +190,26 @@ const checkNotifications = (schedules) => {
     setShow(true);
   };
 
+  const confirmResolved = async (id, cost) => {
+    try {
+      const data = new FormData();
+      data.append("cost", cost);
+      data.append("accountId", user.id);
+      console.log("URL:", endpoints["maintenance-confirm"](id));
+      await Apis.delete(endpoints["maintenance-confirm"](id), { data });
+
+      // Gọi lại fetchSchedules để làm mới dữ liệu từ server
+      await fetchSchedules();
+
+      setSelectedEvent(null);
+      setCostInput("");
+      setShowCostInput(false);
+    } catch (err) {
+      console.error(err);
+      alert("Lỗi khi xác nhận xử lý!");
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h2 style={{ color: "#1976d2" }}>Lịch Bảo Trì</h2>
@@ -285,22 +308,60 @@ const checkNotifications = (schedules) => {
                   "vi-VN"
                 )}
               </p>
+
+              {showCostInput && (
+                <Form.Group className="mt-3">
+                  <Form.Label>Nhập chi phí bảo trì (VNĐ)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={costInput}
+                    onChange={(e) => setCostInput(e.target.value)}
+                    placeholder="Ví dụ: 150000"
+                  />
+                </Form.Group>
+              )}
             </>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="danger"
-            onClick={() => {
+          <Button variant="secondary" onClick={() => setSelectedEvent(null)}>
+            Đóng
+          </Button>
+          <Button variant="danger" onClick={() => {
               handleDelete(selectedEvent.schedule.id);
               setSelectedEvent(null);
             }}
           >
             Xoá
           </Button>
-          <Button variant="secondary" onClick={() => setSelectedEvent(null)}>
-            Đóng
-          </Button>
+          {!showCostInput ? (
+            <Button
+              variant="success"
+              onClick={() => setShowCostInput(true)}
+            >
+              Xác nhận đã xử lý
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="outline-secondary"
+                onClick={() => {
+                  setShowCostInput(false);
+                  setCostInput("");
+                }}
+              >
+                Huỷ
+              </Button>
+              <Button
+                variant="success"
+                onClick={() => { confirmResolved(selectedEvent.schedule.id, costInput);
+                }}
+                disabled={!costInput}
+              >
+                Gửi
+              </Button>
+            </>
+          )}
         </Modal.Footer>
       </Modal>
 
