@@ -1,303 +1,438 @@
 /* DeviceManagement.module.css */
+
+/* General container and headings */
 .container {
-  padding: 50px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8; /* Màu nền nhạt hơn */
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Bóng đổ nhẹ hơn và lan rộng hơn */
+  padding: 30px; /* Adjusted padding slightly */
+  background-color: #f8f9fa; /* Kept your light grey background */
+  border-radius: 12px; /* Slightly more rounded */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* More prominent shadow */
+  margin: 30px auto; /* Center container with some margin */
+  max-width: 1200px; /* Max width for better readability */
 }
 
 .heading {
-  color: #3f51b5; /* Màu tiêu đề hiện đại hơn */
+  color: #1a237e; /* Darker blue for heading, blending your provided color */
   margin-bottom: 30px;
   text-align: center;
+  font-size: 2.5rem; /* Larger heading */
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
+/* Add Button */
 .addButton {
-  padding: 12px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
+  background-color: #4caf50; /* Your fresh green */
   color: white;
-  background-color: #4caf50; /* Màu xanh lá cây tươi */
+  border: none;
+  padding: 12px 25px; /* Adjusted padding */
+  border-radius: 8px; /* More rounded */
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Thêm transition cho box-shadow */
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1.1rem; /* Slightly larger font */
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added transform and box-shadow */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Your initial shadow */
+  margin-bottom: 25px; /* Adjusted margin */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .addButton:hover {
-  background-color: #43a047;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  background-color: #43a047; /* Your darker green on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* More prominent shadow on hover */
+}
+.addButton svg {
+  margin-right: 5px; /* Space between icon and text */
 }
 
+/* Form container (for Modal content) */
 .formContainer {
-  background-color: rgb(255, 255, 255);
-  padding: 10px; /* Tăng padding */
-  border-radius: 8px; /* Bo tròn nhiều hơn */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Bóng đổ nhẹ hơn */
-  margin-bottom: 5px;
+  background-color: rgb(255, 255, 255); /* Your background */
+  padding: 20px; /* Increased padding slightly */
+  border-radius: 8px; /* Your border-radius */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Your shadow */
+  margin-bottom: 5px; /* Your margin */
   position: relative;
-  z-index: 100; 
+  z-index: 100;
 }
 
 .formTitle {
-  color: #2196f3; /* Màu tiêu đề form hiện đại */
-  margin-top: 25px;
-  margin-bottom: 10px;
-  border-bottom: 2px solid #2196f3;
-  padding-bottom: 8px;
+  color: #2196f3; /* Your modern form title color */
+  margin-top: 0px; /* Adjusted margin */
+  margin-bottom: 20px; /* Adjusted margin */
+  /* border-bottom: 2px solid #2196f3; /* Removed border-bottom for cleaner look */
+  padding-bottom: 0px; /* Removed padding-bottom */
+  text-align: center; /* Centered title */
+  font-size: 1.8rem; /* Larger font size */
+  font-weight: 600;
+}
+
+.formGrid {
+  display: grid; /* Changed to grid for more control */
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 20px; /* Your gap */
+}
+
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between form groups in a column */
 }
 
 .formGroup {
-  margin-bottom: 20px; /* Tăng khoảng cách giữa các group */
+  margin-bottom: 0; /* Removed margin-bottom here as gap handles it */
 }
 
 .formLabel {
   display: block;
   margin-bottom: 8px;
-  font-weight: 500; /* FontWeight nhẹ hơn */
-  color: #555;
+  font-weight: 600; /* Slightly bolder */
+  color: #343a40; /* Darker text for labels */
+  font-size: 0.95rem; /* Slightly smaller font */
 }
 
 .formInput,
 .formSelect {
-  width: calc(100% - 20px);
-  padding: 12px; /* Tăng padding */
-  border: 1px solid #ccc;
-  border-radius: 6px; /* Bo tròn nhẹ */
-  font-size: 16px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Thêm transition */
+  width: 100%; /* Full width within its container */
+  padding: 12px; /* Your padding */
+  border: 1px solid #ced4da; /* Slightly muted border */
+  border-radius: 6px; /* Your border-radius */
+  font-size: 1rem; /* Adjusted font size */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Your transitions */
+  box-sizing: border-box; /* Ensures padding is included in width */
 }
 
 .formInput:focus,
 .formSelect:focus {
   outline: none;
-  border-color: #2196f3;
-  box-shadow: 0 1px 3px rgba(33, 150, 243, 0.3);
+  border-color: #2196f3; /* Your focus color */
+  box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25); /* Adjusted shadow for modern look */
 }
 
 .formImagePreview {
-  max-width: 120px; /* Giảm kích thước preview */
-  max-height: 120px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-top: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 150px; /* Increased preview size for better visibility */
+  height: auto;
+  margin-top: 15px; /* Adjusted margin */
+  border-radius: 8px; /* More rounded */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* More prominent shadow */
+  display: block;
 }
 
 .formButtonContainer {
   display: flex;
-  gap: 15px; /* Tăng khoảng cách nút */
-  margin-top: 25px;
+  gap: 15px; /* Your gap */
+  justify-content: flex-end; /* Aligned to right */
+  margin-top: 30px; /* Adjusted margin */
+}
+
+.formSubmitButton,
+.formResetButton {
+  padding: 12px 20px; /* Adjusted padding */
+  border: none;
+  border-radius: 6px; /* Your border-radius */
+  font-size: 1rem; /* Adjusted font size */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added transform and box-shadow */
+  font-weight: 600; /* Bolder font */
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .formSubmitButton {
-  flex-grow: 1;
-  padding: 14px 20px; /* Tăng padding nút */
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
+  background-color: #2196f3; /* Your modern submit color */
   color: white;
-  background-color: #2196f3; /* Màu submit hiện đại */
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .formSubmitButton:hover {
-  background-color: #1976d2;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  background-color: #1976d2; /* Your darker hover color */
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(33, 150, 243, 0.3);
 }
 
 .formResetButton {
-  flex-grow: 1;
-  padding: 14px 20px;
-  font-size: 16px;
-  border: 1px solid #9e9e9e;
-  border-radius: 6px;
-  color: #555;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #6c757d; /* Muted grey for reset/cancel, blending your #f8f9fa with some color */
+  color: white; /* Changed to white for better contrast */
+  border: none; /* Removed border */
 }
 
 .formResetButton:hover {
-  background-color: #e0e0e0;
-  color: #333;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-}
-.formGrid {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  background-color: #5a6268; /* Darker grey on hover */
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(108, 117, 125, 0.3);
 }
 
-.formColumn {
-  flex: 1;
-  min-width: 300px;
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Device List - Card Layout */
 .deviceListTitle {
-  color: #388e3c; /* Màu tiêu đề danh sách hiện đại */
-  margin-top: 30px;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #388e3c;
-  padding-bottom: 8px;
+  color: #28a745; /* Modern list title color */
+  margin-top: 40px; /* Adjusted margin */
+  margin-bottom: 20px; /* Adjusted margin */
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  /* border-bottom: 2px solid #388e3c; /* Removed border-bottom for a cleaner look */
+  /* padding-bottom: 8px; /* Removed padding-bottom */
 }
 
-.deviceTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  overflow: hidden;
+.deviceCardsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid of cards */
+  gap: 25px; /* Space between cards */
+  padding: 10px; /* Slight padding around the grid */
+}
+
+.deviceCard {
   background-color: white;
-}
-
-.deviceTable thead tr {
-  background-color: #e3f2fd; /* Màu header bảng nhạt */
-  color: #333;
-  font-weight: 500;
-}
-
-.deviceTable th,
-.deviceTable td {
-  padding: 14px 16px; /* Tăng padding */
-  border-bottom: 1px solid #eee; /* Đường kẻ nhạt hơn */
-  text-align: left;
-}
-
-.deviceTable tbody tr:nth-child(even) {
-  background-color: #f9f9f9; /* Zebra striping */
-}
-
-.deviceImage {
-  max-width: 70px; /* Giảm kích thước ảnh trong bảng */
-  max-height: 70px;
-  object-fit: cover;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.actionButtonContainer {
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden; /* Ensures image corners are rounded */
   display: flex;
-  gap: 10px;
-  justify-content: flex-start;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.deviceCard:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); /* More prominent shadow on hover */
+}
+
+.deviceCardImageContainer {
+  width: 100%;
+  height: 180px; /* Fixed height for image container */
+  overflow: hidden; /* Ensures images are clipped if too large */
+  background-color: #e9ecef; /* Placeholder background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deviceCardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the container */
+  display: block;
+}
+
+.deviceCardInfo {
+  padding: 18px;
+  flex-grow: 1; /* Allows info section to expand */
+  display: flex;
+  flex-direction: column;
+}
+
+.deviceCardName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin-bottom: 8px;
+}
+
+.deviceCardDetail {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.deviceCardDetail strong {
+  color: #333;
+}
+.deviceCardDetail svg {
+  color: #007bff; /* Icon color */
+  font-size: 1.1em;
+}
+
+.deviceCardActions {
+  margin-top: 15px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end; /* Align buttons to the right within the card */
+  flex-wrap: wrap; /* Allow buttons to wrap */
 }
 
 .viewButton,
 .editButton,
 .deleteButton {
-  padding: 10px 14px;
+  padding: 10px 15px;
   border: none;
   border-radius: 6px;
-  color: white;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  font-size: 14px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .viewButton {
-  background-color: #1976d2;
+  background-color: #1976d2; /* Your view button color */
+  color: white;
 }
-
 .viewButton:hover {
-  background-color: #1565c0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  background-color: #1565c0; /* Your darker view button color */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(25, 118, 210, 0.2);
 }
 
 .editButton {
-  background-color: #43a047;
+  background-color: #43a047; /* Your edit button color */
+  color: white; /* Changed to white for better contrast */
 }
-
 .editButton:hover {
-  background-color: #388e3c;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  background-color: #388e3c; /* Your darker edit button color */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(67, 160, 71, 0.2);
 }
 
 .deleteButton {
-  background-color: #d32f2f;
+  background-color: #d32f2f; /* Your delete button color */
+  color: white;
 }
-
 .deleteButton:hover {
-  background-color: #c62828;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  background-color: #c62828; /* Your darker delete button color */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(211, 47, 47, 0.2);
 }
 
-/* Стилизация cho component Login (nếu cần) */
+/* Load More Button - using Bootstrap Button directly in JSX, so minimal styling here */
+.text-center {
+  text-align: center;
+}
+.my-3 {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Login Page Styling */
 .loginContainer {
-  max-width: 400px;
-  padding: 30px;
-  margin: 50px auto;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+  padding: 20px;
 }
 
 .loginHeading {
-  color: #3f51b5;
-  margin-bottom: 20px;
-  text-align: center;
+  color: white;
+  margin-bottom: 25px;
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .loginForm {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  backdrop-filter: blur(5px);
 }
 
 .loginInput {
-  width: calc(100% - 24px);
   padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #ced4da;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .loginInput:focus {
   outline: none;
-  border-color: #3f51b5;
-  box-shadow: 0 1px 3px rgba(63, 81, 181, 0.3);
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .loginButton {
-  padding: 14px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
+  background-color: #007bff;
   color: white;
-  background-color: #3f51b5;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  font-weight: 600;
 }
 
 .loginButton:hover {
-  background-color: #303f9f;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-}
-.spinner {
-  border: 4px solid #eee;
-  border-top: 4px solid #3498db;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  animation: spin 0.8s linear infinite;
-  display: inline-block;
-  margin-left: 8px;
-  vertical-align: middle;
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr; /* Stack columns on smaller screens */
   }
-  100% {
-    transform: rotate(360deg);
+  .deviceCardsContainer {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust min-width for smaller screens */
+    gap: 20px;
+  }
+  .deviceCardActions {
+    justify-content: center; /* Center buttons on smaller cards */
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+  .heading {
+    font-size: 2rem;
+  }
+  .addButton {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  .deviceListTitle {
+    font-size: 1.5rem;
+  }
+  .deviceCardsContainer {
+    grid-template-columns: 1fr; /* Stack cards vertically on very small screens */
+    padding: 0; /* Remove padding for full width */
+  }
+  .deviceCard {
+    margin: 0 10px; /* Add some side margin to stacked cards */
+  }
+  .viewButton, .editButton, .deleteButton {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  .loginForm {
+    padding: 25px;
+  }
+  .loginHeading {
+    font-size: 2.2rem;
   }
 }

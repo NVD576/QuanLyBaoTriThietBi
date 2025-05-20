@@ -18,4 +18,5 @@ public interface AccountRepository {
     boolean authenticate(String username, String password);
     Account addAccount(Account u);
     Account addOrUpdateAccount(Account acc);
+    void deleteAccount(int id);
 }

@@ -21,4 +21,5 @@ public interface AccountService extends UserDetailsService{
     boolean authenticate(String username, String password);
     Account addAccount(Map<String, String> params, MultipartFile avatar);
     Account addOrUpdateAccount(Account acc);
+    void deleteAccount(int id);
 }

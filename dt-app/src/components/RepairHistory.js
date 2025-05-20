@@ -1,54 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Apis, { endpoints } from "../configs/Apis";
-import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from "pdfmake/build/vfs_fonts";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import styles from "./RepairHistory.module.css"; // Import CSS Module
-import { useContext } from "react";
-import {  MyUserContext } from "../configs/MyContexts";
+import styles from "./RepairHistory.module.css";
+import { MyUserContext } from "../configs/MyContexts";
+import { FaCalendarAlt, FaDollarSign, FaTools } from "react-icons/fa";
+
+// Không cần import RepairAnalysisAndReporting ở đây nữa
 
 const RepairHistory = () => {
-  pdfMake.vfs = pdfFonts.vfs;
   const [repairs, setRepairs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [newRepair, setNewRepair] = useState({
-    deviceId: "",
-    date: "",
-    typeId: "",
-    cost: "",
-  });
-  const [devices, setDevices] = useState([]);
-  // const { devices, } = useContext(DeviceContext);
-  const [repairTypes, setRepairTypes] = useState([]);
-  const [selectedDevices, setSelectedDevices] = useState([]);
+  const [repairTypes, setRepairTypes] = useState([]); // Vẫn cần repairTypes cho bộ lọc
 
-  const [reportData, setReportData] = useState([]);
-  const [costAnalysis, setCostAnalysis] = useState({});
   const user = useContext(MyUserContext);
 
-  const fetchDevices = async () => {
-    try {
-      let url = `${endpoints.devices}?`;
-      // Nếu không phải ROLE_ADMIN thì thêm baseId của user vào URL
-      if (user.role !== "ROLE_ADMIN") {
-        url += `&baseId=${user.baseId.id}`;
-      }
-      const res = await Apis.get(url);
-      setDevices(res.data);
-    } catch (err) {
-      console.error("Lỗi khi tải thiết bị:", err);
-    }
-  };
+  // States for filters (để lọc bảng chi tiết)
+  const [filterStartDate, setFilterStartDate] = useState("");
+  const [filterEndDate, setFilterEndDate] = useState("");
+  const [filterRepairType, setFilterRepairType] = useState("");
+  const [filterMinCost, setFilterMinCost] = useState("");
+  const [filterMaxCost, setFilterMaxCost] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -57,19 +28,17 @@ const RepairHistory = () => {
       try {
         const [repairsRes, repairTypesRes] = await Promise.all([
           Apis.get(endpoints.repairs),
-          // Apis.get(endpoints.devices),
           Apis.get(endpoints.repairTypes),
         ]);
-        // Lọc dữ liệu sửa chữa theo baseId nếu không phải admin
-        const filteredRepairs =
+
+        const filteredRepairsByBaseId =
           user.role === "ROLE_ADMIN"
             ? repairsRes.data
             : repairsRes.data.filter(
                 (repair) => repair.deviceId?.baseId.id === user.baseId.id
               );
 
-        fetchDevices();
-        setRepairs(filteredRepairs);
+        setRepairs(filteredRepairsByBaseId);
         setRepairTypes(repairTypesRes.data);
       } catch (err) {
         console.error(err);
@@ -79,139 +48,29 @@ const RepairHistory = () => {
       }
     };
 
-    loadData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.baseId.id, user.role]);
-
-  useEffect(() => {
-    const analyzeCost = () => {
-      const analysis = {};
-      repairs.forEach((repair) => {
-        const deviceName =
-          repair.deviceId?.name || `Thiết bị ${repair.deviceId?.id}`;
-        if (!analysis[deviceName]) {
-          analysis[deviceName] = { totalCost: 0, count: 0 };
-        }
-        analysis[deviceName].totalCost += parseFloat(repair.cost || 0);
-        analysis[deviceName].count += 1;
-      });
-
-      Object.keys(analysis).forEach((device) => {
-        const item = analysis[device];
-        item.avgCost = item.count > 0 ? item.totalCost / item.count : 0;
-      });
-
-      setCostAnalysis(analysis);
-    };
-
-    analyzeCost();
-  }, [repairs]);
-
-  const handleChange = (e) => {
-    setNewRepair({ ...newRepair, [e.target.name]: e.target.value });
-  };
-
-  const handleAddRepair = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await Apis.post(endpoints.repairs, newRepair);
-      setRepairs([...repairs, res.data]);
-      setNewRepair({ deviceId: "", date: "", typeId: "", cost: "" });
-      alert("Thêm sửa chữa mới thành công!");
-    } catch (err) {
-      console.error(err);
-      alert("Lỗi khi thêm lịch sử sửa chữa!");
+    if (user) {
+        loadData();
     }
-  };
+  }, [user]);
 
-  const handleGenerateReport = () => {
-    const filteredData =
-      selectedDevices.length > 0
-        ? repairs.filter((r) =>
-            selectedDevices.includes(String(r.deviceId?.id))
-          )
-        : repairs;
+  // Filtered repairs based on user input for the detailed table
+  const filteredRepairs = Array.isArray(repairs) ? repairs.filter((r) => { // Thêm kiểm tra Array.isArray
+    const repairDateTime = new Date(r.date).getTime();
 
-    setReportData(filteredData);
-  };
+    const startDateTimestamp = filterStartDate ? new Date(filterStartDate).getTime() : 0;
+    const endDateTimestamp = filterEndDate ? new Date(filterEndDate).setHours(23, 59, 59, 999) : Infinity;
 
-  const handleExportPdf = () => {
-    const filteredData =
-      selectedDevices.length > 0
-        ? repairs.filter((r) =>
-            selectedDevices.includes(String(r.deviceId?.id))
-          )
-        : repairs;
+    const matchesDate =
+      (filterStartDate === "" || repairDateTime >= startDateTimestamp) &&
+      (filterEndDate === "" || repairDateTime <= endDateTimestamp);
 
-    const headers = ["Thiết bị", "Ngày sửa", "Loại sửa", "Chi phí (VND)"];
+    const matchesType = filterRepairType ? String(r.typeId?.id) === filterRepairType : true;
+    const matchesMinCost = filterMinCost ? parseFloat(r.cost) >= parseFloat(filterMinCost) : true;
+    const matchesMaxCost = filterMaxCost ? parseFloat(r.cost) <= parseFloat(filterMaxCost) : true;
 
-    const body = [
-      headers,
-      ...filteredData.map((r) => [
-        r.deviceId?.name || "",
-        new Date(r.date).toLocaleDateString("vi-VN"),
-        r.typeId?.type || "",
-        r.cost ? r.cost.toLocaleString("vi-VN") : "",
-      ]),
-    ];
-  // Tính tổng chi phí
-  const totalCost = filteredData.reduce(
-    (sum, r) => sum + parseFloat(r.cost || 0),
-    0
-  );
+    return matchesDate && matchesType && matchesMinCost && matchesMaxCost;
+  }) : [];
 
-  // Thêm dòng tổng chi phí vào cuối bảng
-  body.push([
-    { text: "Tổng chi phí", colSpan: 3, alignment: "right", bold: true },
-    {},
-    {},
-    { text: totalCost.toLocaleString("vi-VN"), bold: true },
-  ]);
-    const docDefinition = {
-      content: [
-        { text: "BÁO CÁO LỊCH SỬ SỬA CHỮA", style: "header" },
-        {
-          text: `Ngày xuất báo cáo: ${new Date().toLocaleDateString("vi-VN")}`,
-          margin: [0, 0, 0, 10],
-        },
-        {
-          table: {
-            headerRows: 1,
-            widths: ["*", "auto", "auto", "auto"],
-            body: body,
-          },
-        },
-      ],
-      styles: {
-        header: {
-          fontSize: 16,
-          bold: true,
-          alignment: "center",
-          margin: [0, 0, 0, 10],
-        },
-      },
-      defaultStyle: {
-        font: "Roboto",
-      },
-    };
-
-    pdfMake
-      .createPdf(docDefinition)
-      .download(
-        `bao_cao_sua_chua_${new Date().toLocaleDateString("vi-VN")}.pdf`
-      );
-  };
-
-  const handleDevicesChange = (e) => {
-    const options = e.target.options;
-    const selected = [];
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        selected.push(options[i].value);
-      }
-    }
-    setSelectedDevices(selected);
-  };
 
   if (loading) {
     return <div>Đang tải lịch sử sửa chữa...</div>;
@@ -221,118 +80,86 @@ const RepairHistory = () => {
     return <div>Lỗi: {error}</div>;
   }
 
-  const chartData = Object.entries(costAnalysis).map(([device, data]) => ({
-    name: device,
-    total: data.totalCost,
-    avg: data.avgCost,
-  }));
-
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Lịch Sử Sửa Chữa</h2>
 
-      <div className={styles.chartContainer}>
-        <h3 className={styles.sectionTitle}>
-          Biểu đồ chi phí bảo trì theo thiết bị
-        </h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            data={chartData}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-            <YAxis tickFormatter={(value) => value.toLocaleString()} />
-            <Tooltip formatter={(value) => `${value.toLocaleString()} VND`} />
-            <Legend />
-            <Bar dataKey="total" fill="#42a5f5" name="Tổng chi phí" />
-            <Bar dataKey="avg" fill="#66bb6a" name="Chi phí TB/lần" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      {/* KHÔNG CẦN COMPONENT PHÂN TÍCH VÀ BÁO CÁO Ở ĐÂY NỮA */}
 
-      <div className={styles.sectionTitle}>Theo dõi chi phí</div>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Thiết bị</th>
-            <th>Số lần sửa chữa</th>
-            <th>Tổng chi phí (VND)</th>
-            <th>Chi phí trung bình (VND)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(costAnalysis).map(([device, data]) => (
-            <tr key={device}>
-              <td>{device}</td>
-              <td>{data.count}</td>
-              <td>{data.totalCost.toLocaleString()}</td>
-              <td>{data.avgCost.toFixed(0).toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <h3 className={styles.sectionTitle}>Lịch Sử Sửa Chữa Chi Tiết</h3>
 
-      <div className={styles.reportContainer}>
-        <h3 className={styles.reportTitle}>Tạo báo cáo</h3>
-        <div className={styles.filterContainer}>
-          <label htmlFor="devices" className={styles.filterLabel}>
-            Chọn thiết bị:
+      {/* Filter controls for the detailed table */}
+      <div className={styles.filtersSection}>
+        <div className={styles.filterGroup}>
+          <label htmlFor="filterStartDate" className={styles.filterLabel}>
+            <FaCalendarAlt /> Từ ngày:
+          </label>
+          <input
+            type="date"
+            id="filterStartDate"
+            value={filterStartDate}
+            onChange={(e) => setFilterStartDate(e.target.value)}
+            className={styles.filterInput}
+          />
+        </div>
+        <div className={styles.filterGroup}>
+          <label htmlFor="filterEndDate" className={styles.filterLabel}>
+            <FaCalendarAlt /> Đến ngày:
+          </label>
+          <input
+            type="date"
+            id="filterEndDate"
+            value={filterEndDate}
+            onChange={(e) => setFilterEndDate(e.target.value)}
+            className={styles.filterInput}
+          />
+        </div>
+        <div className={styles.filterGroup}>
+          <label htmlFor="filterRepairType" className={styles.filterLabel}>
+            <FaTools /> Loại sửa chữa:
           </label>
           <select
-            multiple
-            id="devices"
-            value={selectedDevices}
-            onChange={handleDevicesChange}
+            id="filterRepairType"
+            value={filterRepairType}
+            onChange={(e) => setFilterRepairType(e.target.value)}
             className={styles.filterSelect}
           >
-            {devices.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name || `Thiết bị ${d.id}`}
+            <option value="">Tất cả</option>
+            {Array.isArray(repairTypes) && repairTypes.map((t) => ( // Thêm kiểm tra Array.isArray
+              <option key={t.id} value={t.id}>
+                {t.type}
               </option>
             ))}
           </select>
-          <button onClick={handleGenerateReport} className={styles.button}>
-            Xem Báo Cáo
-          </button>
-          <button onClick={handleExportPdf} className={styles.button}>
-            Xuất PDF
-          </button>
         </div>
-
-        {reportData.length > 0 && (
-          <div className={styles.reportTableContainer}>
-            <h4 className={styles.reportTitle}>Báo Cáo Sửa Chữa</h4>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Thiết bị</th>
-                  <th>Ngày sửa</th>
-                  <th>Loại sửa</th>
-                  <th>Chi phí (VND)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reportData.map((r) => (
-                  <tr key={r.id}>
-                    <td>{r.deviceId?.name}</td>
-                    <td>{new Date(r.date).toLocaleDateString("vi-VN")}</td>
-                    <td>{r.typeId?.type}</td>
-                    <td>{r.cost ? r.cost.toLocaleString() : ""}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {reportData.length === 0 && (
-              <p className={styles.infoText}>
-                Không có dữ liệu sửa chữa cho thiết bị này.
-              </p>
-            )}
-          </div>
-        )}
+        <div className={styles.filterGroup}>
+          <label htmlFor="filterMinCost" className={styles.filterLabel}>
+            <FaDollarSign /> Chi phí từ:
+          </label>
+          <input
+            type="number"
+            id="filterMinCost"
+            value={filterMinCost}
+            onChange={(e) => setFilterMinCost(e.target.value)}
+            className={styles.filterInput}
+            placeholder="Min chi phí"
+          />
+        </div>
+        <div className={styles.filterGroup}>
+          <label htmlFor="filterMaxCost" className={styles.filterLabel}>
+            <FaDollarSign /> Chi phí đến:
+          </label>
+          <input
+            type="number"
+            id="filterMaxCost"
+            value={filterMaxCost}
+            onChange={(e) => setFilterMaxCost(e.target.value)}
+            className={styles.filterInput}
+            placeholder="Max chi phí"
+          />
+        </div>
       </div>
 
-      <h3 className={styles.sectionTitle}>Lịch Sử Sửa Chữa Chi Tiết</h3>
       <table className={styles.table}>
         <thead>
           <tr>
@@ -343,97 +170,24 @@ const RepairHistory = () => {
           </tr>
         </thead>
         <tbody>
-          {repairs.map((r) => (
-            <tr key={r.id}>
-              <td>{r.deviceId?.name}</td>
-              <td>{new Date(r.date).toLocaleDateString("vi-VN")}</td>
-              <td>{r.typeId?.type}</td>
-              <td>{r.cost ? r.cost.toLocaleString() : ""}</td>
+          {filteredRepairs.length > 0 ? (
+            filteredRepairs.map((r) => (
+              <tr key={r.id}>
+                <td>{r.deviceId?.name}</td>
+                <td>{new Date(r.date).toLocaleDateString("vi-VN")}</td>
+                <td>{r.typeId?.type}</td>
+                <td>{r.cost ? r.cost.toLocaleString() : ""}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" className={styles.noDataFound}>
+                Không tìm thấy lịch sử sửa chữa phù hợp.
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
-
-      <div className={styles.formContainer}>
-        <h3 className={styles.formTitle}>Thêm sửa chữa mới</h3>
-        <form onSubmit={handleAddRepair}>
-          <div className={styles.formGroup}>
-            <label htmlFor="deviceId" className={styles.formLabel}>
-              Thiết bị:
-            </label>
-            <select
-              id="deviceId"
-              name="deviceId"
-              value={newRepair.deviceId}
-              onChange={handleChange}
-              className={styles.formSelect}
-              required
-            >
-              <option value="">Chọn thiết bị</option>
-              {devices.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name || `Thiết bị ${d.id}`}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="date" className={styles.formLabel}>
-              Ngày sửa:
-            </label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={newRepair.date}
-              onChange={handleChange}
-              className={styles.formInput}
-              required
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="typeId" className={styles.formLabel}>
-              Loại sửa chữa:
-            </label>
-            <select
-              id="typeId"
-              name="typeId"
-              value={newRepair.typeId}
-              onChange={handleChange}
-              className={styles.formSelect}
-              required
-            >
-              <option value="">Chọn loại sửa chữa</option>
-              {repairTypes.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.type || `Loại ${t.id}`}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="cost" className={styles.formLabel}>
-              Chi phí:
-            </label>
-            <input
-              type="number"
-              id="cost"
-              name="cost"
-              placeholder="Chi phí"
-              value={newRepair.cost}
-              onChange={handleChange}
-              className={styles.formInput}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className={`${styles.button} ${styles.addButton}`}
-          >
-            Thêm
-          </button>
-        </form>
-      </div>
     </div>
   );
 };

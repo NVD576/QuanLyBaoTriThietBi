@@ -33,5 +33,10 @@ public class IssueServiceImpl implements IssueService{
     public Issue getIssueById(int id) {
         return this.issueRepo.getIssueById(id);
     }
+
+    @Override
+    public void deleteIssue(int id) {
+        this. issueRepo.deleteIssue(id);
+    }
     
 }

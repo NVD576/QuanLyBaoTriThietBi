@@ -7,6 +7,7 @@ package com.nvd.repository.Impl;
 import com.nvd.pojo.Account;
 import com.nvd.pojo.Base;
 import com.nvd.pojo.Category;
+import com.nvd.pojo.Issue;
 import com.nvd.repository.AccountRepository;
 import jakarta.persistence.Query;
 import java.util.List;
@@ -104,6 +105,17 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
 
         return acc;
+    }
+
+    @Override
+    public void deleteAccount(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Account p = this.getAccountById(id);
+        if (p != null) {
+            s.remove(p);
+        } else {
+            throw new IllegalArgumentException("Device không tồn tại với id = " + id);
+        }
     }
 
 }

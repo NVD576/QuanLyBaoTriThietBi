@@ -96,4 +96,15 @@ public class RepairRepositoryImpl implements RepairRepository {
         return p;
     }
 
+    @Override
+    public void deleteRepair(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Repair p = this.getRepairById(id);
+        if (p != null) {
+            s.remove(p);
+        } else {
+            throw new IllegalArgumentException("Device không tồn tại với id = " + id);
+        }
+    }
+
 }

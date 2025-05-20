@@ -1,3 +1,4 @@
+// src/components/Sidebar.js
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -6,6 +7,7 @@ import {
   FaCalendarCheck,
   FaExclamationTriangle,
   FaHistory,
+  FaChartBar, // Có thể dùng icon này cho phân tích
   FaComments,
   FaUser,
   FaCog,
@@ -70,6 +72,7 @@ const Sidebar = ({ sidebarOpen }) => {
     { to: "/maintenance", icon: <FaCalendarCheck />, title: t("MaintenanceSchedule"), key: "MaintenanceSchedule" },
     { to: "/incidents", icon: <FaExclamationTriangle />, title: t("IncidentManagement"), key: "IncidentManagement" },
     { to: "/repair-history", icon: <FaHistory />, title: t("RepairHistory"), key: "RepairHistory" },
+    { to: "/cost-analytics", icon: <FaChartBar />, title: t("CostAnalytics"), key: "CostAnalytics" }, // LIÊN KẾT MỚI
     { to: "/forum", icon: <FaComments />, title: t("Forum"), key: "Forum" },
     { to: "/profile", icon: <FaUser />, title: t("Profile"), key: "Profile" },
     { to: "/settings", icon: <FaCog />, title: t("Settings"), key: "Settings" },

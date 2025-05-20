@@ -16,6 +16,7 @@ const resources = {
       Home: "Home",
       Settings: "Settings",
       Profile: "Profile",
+      CostAnalytics: "CostAnalytics",
 
       //header
       category: "Categories",
@@ -50,6 +51,7 @@ const resources = {
       Home: "Trang Chủ",
       Settings: "Cài Đặt",
       Profile: "Hồ Sơ",
+      CostAnalytics: "Phân Tích Chi Phí", 
       //header
 
       category: "Danh mục",

@@ -15,4 +15,5 @@ public interface IssueRepository {
     List<Issue> getIssues();
     Issue getIssueById(int id);
     Issue addOrUpdateIssue(Issue p);
+    void deleteIssue(int id);
 }

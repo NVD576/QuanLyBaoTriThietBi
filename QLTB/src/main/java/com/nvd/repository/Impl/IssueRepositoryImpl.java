@@ -4,6 +4,7 @@
  */
 package com.nvd.repository.Impl;
 
+import com.nvd.pojo.Base;
 import com.nvd.pojo.IncidentLevel;
 import com.nvd.pojo.Issue;
 import com.nvd.repository.IncidentLevelRepository;
@@ -69,5 +70,16 @@ public class IssueRepositoryImpl implements IssueRepository {
     public Issue getIssueById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         return s.get(Issue.class, id);
+    }
+
+    @Override
+    public void deleteIssue(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Issue p = this.getIssueById(id);
+        if (p != null) {
+            s.remove(p);
+        } else {
+            throw new IllegalArgumentException("Device không tồn tại với id = " + id);
+        }
     }
 }

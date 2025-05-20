@@ -2,13 +2,22 @@ import React, { useState, useEffect, useContext } from "react";
 import Apis, { authApis, endpoints } from "../configs/Apis";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./DeviceManagement.module.css"; // Import CSS Module
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { DeviceContext } from "../configs/MyContexts";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import { Modal } from "react-bootstrap";
+import {
+  FaEdit,
+  FaPlus,
+  FaTrash,
+  FaEye,
+  FaSyncAlt,
+  FaBuilding, // For base
+  FaLayerGroup, // For category
+  FaRegCalendarAlt, // For date
+  FaIndustry, // For manufacturer
+  FaTag, // For status
+} from "react-icons/fa"; // Import more icons
 
 const DeviceManagement = () => {
-  // const [devices, setDevices] = useState([]);
   const { devices, setDevices } = useContext(DeviceContext);
   const [categories, setCategories] = useState([]);
   const [statuses, setStatuses] = useState([]);
@@ -36,6 +45,7 @@ const DeviceManagement = () => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [isLoading, setIsLoading] = useState(false);
+
   const loadDevices = async () => {
     try {
       let url = `${endpoints.devices}?page=${page}`;
@@ -43,36 +53,44 @@ const DeviceManagement = () => {
       let cateId = q.get("cateId");
       let baseId = q.get("baseId");
 
-      // Nếu không phải ROLE_ADMIN thì thêm baseId của user vào URL
-      if (user.role !== "ROLE_ADMIN") {
+      if (user && user.role !== "ROLE_ADMIN") {
         url += `&baseId=${user.baseId.id}`;
       }
 
-      // Nếu có thêm filter từ URL
       if (kw) url += `&kw=${kw}`;
       if (cateId) url += `&cateId=${cateId}`;
-      if (baseId) url += `&baseId=${baseId}`; // Dòng này sẽ ghi đè baseId nếu có trong query string
+      if (baseId) url += `&baseId=${baseId}`;
 
       let res = await Apis.get(url);
 
-      if (res.data.length === 0) {
+      if (res.data.length === 0 && page === 1) {
+        setDevices([]);
+        setPage(0);
+      } else if (res.data.length === 0 && page > 1) {
         setPage(0);
       } else {
         if (page === 1) {
           setDevices(res.data);
         } else {
-          setDevices((prevDevices) => [...prevDevices, ...res.data]);
+          setDevices((prevDevices) => {
+            const newDevices = res.data.filter(
+              (newD) =>
+                !prevDevices.some((existingD) => existingD.id === newD.id)
+            );
+            return [...prevDevices, ...newDevices];
+          });
         }
       }
     } catch (err) {
-      alert("Lỗi khi tải thiết bị");
-      console.error(err);
+      console.error("Lỗi khi tải thiết bị:", err);
+      alert("Lỗi khi tải thiết bị.");
     }
   };
 
   const loadMore = () => {
     if (page > 0) setPage((prevPage) => prevPage + 1);
   };
+
   const loadCategories = async () => {
     try {
       const res = await Apis.get(endpoints.categories);
@@ -103,7 +121,7 @@ const DeviceManagement = () => {
   useEffect(() => {
     if (page > 0) loadDevices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, q]);
+  }, [page, q, user]);
 
   useEffect(() => {
     loadCategories();
@@ -116,6 +134,7 @@ const DeviceManagement = () => {
     setDevices([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q]);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
@@ -134,6 +153,7 @@ const DeviceManagement = () => {
       manufacturer: "",
       date: "",
       image: null,
+      file: null,
       baseId: "",
       categoryId: "",
       statusId: 1,
@@ -190,17 +210,16 @@ const DeviceManagement = () => {
       : "";
 
     setNewDevice({
-      id: device.id, // Thêm id vào form chỉnh sửa
+      id: device.id,
       name: device.name,
       manufacturer: device.manufacturer,
       date: formattedDate,
-      file: device.file,
+      file: null,
       image: device.image,
       baseId: device.baseId?.id || "",
       categoryId: device.categoryId?.id || "",
       statusId: device.statusId?.id || "",
     });
-    console.log("Editing device:", device);
     setImagePreview(device.image || "");
   };
 
@@ -209,12 +228,17 @@ const DeviceManagement = () => {
       try {
         await authApis().delete(`${endpoints.devices}/${id}`);
         loadDevices();
+        alert("Thiết bị đã được xóa!");
       } catch (err) {
-        console.error(err);
-        alert("Lỗi khi xóa thiết bị");
+        console.error("Lỗi khi xóa thiết bị:", err);
+        alert("Lỗi khi xóa thiết bị.");
       }
     }
   };
+
+  if (!user) {
+    return <p>Vui lòng đăng nhập để xem trang này.</p>;
+  }
 
   return (
     <div className={styles.container}>
@@ -223,16 +247,20 @@ const DeviceManagement = () => {
         <button
           onClick={() => {
             resetForm();
-            setShowForm(!showForm);
+            setShowForm(true);
           }}
           className={styles.addButton}
         >
-          {editingDevice ? "Cập nhật thiết bị" : "Thêm thiết bị"}
+          <FaPlus /> Thêm thiết bị mới
         </button>
       )}
+
       <Modal
         show={showForm}
-        onHide={() => setShowForm(false)}
+        onHide={() => {
+          setShowForm(false);
+          resetForm();
+        }}
         centered
         size="lg"
       >
@@ -244,238 +272,247 @@ const DeviceManagement = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {showForm && (
-            <div className={styles.formContainer}>
-              <div className={styles.formGrid}>
-                {/* Cột trái */}
-                <div className={styles.formColumn}>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="name" className={styles.formLabel}>
-                      Tên thiết bị:
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      placeholder="Tên thiết bị"
-                      value={newDevice.name}
-                      onChange={handleChange}
-                      className={styles.formInput}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="manufacturer" className={styles.formLabel}>
-                      Nhà sản xuất:
-                    </label>
-                    <input
-                      type="text"
-                      id="manufacturer"
-                      name="manufacturer"
-                      placeholder="Nhà sản xuất"
-                      value={newDevice.manufacturer}
-                      onChange={handleChange}
-                      className={styles.formInput}
-                    />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="image" className={styles.formLabel}>
-                      Hình ảnh:
-                    </label>
-                    <input
-                      type="file"
-                      id="image"
-                      name="image"
-                      onChange={handleChange}
-                      className={styles.formInput}
-                    />
-                    {imagePreview && (
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className={styles.formImagePreview}
-                      />
-                    )}
-                  </div>
+          <div className={styles.formContainer}>
+            <div className={styles.formGrid}>
+              {/* Left Column */}
+              <div className={styles.formColumn}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="name" className={styles.formLabel}>
+                    Tên thiết bị:
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Tên thiết bị"
+                    value={newDevice.name}
+                    onChange={handleChange}
+                    className={styles.formInput}
+                  />
                 </div>
-
-                {/* Cột phải */}
-
-                <div className={styles.formColumn}>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="date" className={styles.formLabel}>
-                      Ngày mua:
-                    </label>
-                    <input
-                      type="date"
-                      id="date"
-                      name="date"
-                      value={newDevice.date}
-                      onChange={handleChange}
-                      className={styles.formInput}
+                <div className={styles.formGroup}>
+                  <label htmlFor="manufacturer" className={styles.formLabel}>
+                    Nhà sản xuất:
+                  </label>
+                  <input
+                    type="text"
+                    id="manufacturer"
+                    name="manufacturer"
+                    placeholder="Nhà sản xuất"
+                    value={newDevice.manufacturer}
+                    onChange={handleChange}
+                    className={styles.formInput}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="image" className={styles.formLabel}>
+                    Hình ảnh:
+                  </label>
+                  <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    onChange={handleChange}
+                    className={styles.formInput}
+                  />
+                  {(imagePreview || newDevice.image) && (
+                    <img
+                      src={imagePreview || newDevice.image}
+                      alt="Preview"
+                      className={styles.formImagePreview}
                     />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="baseId" className={styles.formLabel}>
-                      Cơ sở:
-                    </label>
-                    <select
-                      id="baseId"
-                      name="baseId"
-                      value={newDevice.baseId}
-                      onChange={handleChange}
-                      className={styles.formSelect}
-                    >
-                      <option value="">-- Chọn cơ sở --</option>
-                      {bases.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="categoryId" className={styles.formLabel}>
-                      Loại thiết bị:
-                    </label>
-                    <select
-                      id="categoryId"
-                      name="categoryId"
-                      value={newDevice.categoryId}
-                      onChange={handleChange}
-                      className={styles.formSelect}
-                    >
-                      <option value="">-- Chọn loại thiết bị --</option>
-                      {categories.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="statusId" className={styles.formLabel}>
-                      Trạng thái:
-                    </label>
-                    <select
-                      id="statusId"
-                      name="statusId"
-                      value={newDevice.statusId}
-                      onChange={handleChange}
-                      className={styles.formSelect}
-                    >
-                      <option value="">-- Chọn trạng thái --</option>
-                      {statuses.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  )}
                 </div>
               </div>
 
-              <div className={styles.formButtonContainer}>
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  className={styles.formSubmitButton}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      Đang xử lý <span className={styles.spinner}></span>
-                    </>
-                  ) : editingDevice ? (
-                    "Cập nhật"
-                  ) : (
-                    "Thêm thiết bị"
-                  )}
-                </button>
-                {user.role === "ROLE_ADMIN" && (
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    className={styles.formResetButton}
+              {/* Right Column */}
+              <div className={styles.formColumn}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="date" className={styles.formLabel}>
+                    Ngày mua:
+                  </label>
+                  <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    value={newDevice.date}
+                    onChange={handleChange}
+                    className={styles.formInput}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="baseId" className={styles.formLabel}>
+                    Cơ sở:
+                  </label>
+                  <select
+                    id="baseId"
+                    name="baseId"
+                    value={newDevice.baseId}
+                    onChange={handleChange}
+                    className={styles.formSelect}
+                    disabled={user.role !== "ROLE_ADMIN"}
                   >
-                    Xóa trắng
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className={styles.formResetButton}
-                >
-                  Hủy
-                </button>
+                    <option value="">-- Chọn cơ sở --</option>
+                    {bases.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="categoryId" className={styles.formLabel}>
+                    Loại thiết bị:
+                  </label>
+                  <select
+                    id="categoryId"
+                    name="categoryId"
+                    value={newDevice.categoryId}
+                    onChange={handleChange}
+                    className={styles.formSelect}
+                  >
+                    <option value="">-- Chọn loại thiết bị --</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="statusId" className={styles.formLabel}>
+                    Trạng thái:
+                  </label>
+                  <select
+                    id="statusId"
+                    name="statusId"
+                    value={newDevice.statusId}
+                    onChange={handleChange}
+                    className={styles.formSelect}
+                  >
+                    <option value="">-- Chọn trạng thái --</option>
+                    {statuses.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
-          )}
+
+            <div className={styles.formButtonContainer}>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className={styles.formSubmitButton}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    Đang xử lý <FaSyncAlt className={styles.spinner} />
+                  </>
+                ) : editingDevice ? (
+                  "Cập nhật"
+                ) : (
+                  "Thêm thiết bị"
+                )}
+              </button>
+              {user.role === "ROLE_ADMIN" && ( // Only show reset for ADMIN when adding
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className={styles.formResetButton}
+                >
+                  Xóa trắng
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForm(false);
+                  resetForm();
+                }}
+                className={styles.formResetButton}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
         </Modal.Body>
       </Modal>
 
-      <h3 className={styles.deviceListTitle}>Danh sách thiết bị</h3>
-      <table className={styles.deviceTable}>
-        <thead>
-          <tr>
-            <th>Tên</th>
-            <th>NSX</th>
-            <th>Ngày mua</th>
-            <th>Hình ảnh</th>
-            <th>Cơ sở</th>
-            <th>Danh mục</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {devices.map((d) => (
-            <tr key={d.id}>
-              <td>{d.name}</td>
-              <td>{d.manufacturer}</td>
-              <td>
-                {d.date
-                  ? new Date(Number(d.date)).toLocaleDateString("vi-VN")
-                  : ""}
-              </td>
-              <td>
+      {/* <h3 className={styles.deviceListTitle}>Danh sách thiết bị</h3> */}
+      <div className={styles.deviceCardsContainer}>
+        {devices.length > 0 ? (
+          devices.map((d) => (
+            <div key={d.id} className={styles.deviceCard}>
+              <div className={styles.deviceCardImageContainer}>
                 {d.image ? (
-                  <img src={d.image} alt="img" className={styles.deviceImage} />
+                  <img
+                    src={d.image}
+                    alt={d.name}
+                    className={styles.deviceCardImage}
+                  />
                 ) : (
-                  "Không có"
+                  <p>Không có hình ảnh</p>
                 )}
-              </td>
-              <td>{d.baseId?.name || ""}</td>
-              <td>{d.categoryId?.name || ""}</td>
-              <td>{d.statusId?.name || ""}</td>
-              <td className={styles.actionButtonContainer}>
-                <button
-                  onClick={() => nav(`/device/${d.id}`)}
-                  className={`${styles.viewButton}`}
-                >
-                  <FaPlus /> Xem
-                </button>
-                <button
-                  onClick={() => startEditing(d)}
-                  className={`${styles.editButton}`}
-                >
-                  <FaEdit /> Sửa
-                </button>
-                {user.role === "ROLE_ADMIN" && (
+              </div>
+              <div className={styles.deviceCardInfo}>
+                <h4 className={styles.deviceCardName}>{d.name}</h4>
+                <p className={styles.deviceCardDetail}>
+                  <FaIndustry /> <strong>NSX:</strong> {d.manufacturer}
+                </p>
+                <p className={styles.deviceCardDetail}>
+                  <FaRegCalendarAlt /> <strong>Ngày mua:</strong>{" "}
+                  {d.date
+                    ? new Date(Number(d.date)).toLocaleDateString("vi-VN")
+                    : ""}
+                </p>
+                <p className={styles.deviceCardDetail}>
+                  <FaBuilding /> <strong>Cơ sở:</strong> {d.baseId?.name || ""}
+                </p>
+                <p className={styles.deviceCardDetail}>
+                  <FaLayerGroup /> <strong>Danh mục:</strong>{" "}
+                  {d.categoryId?.name || ""}
+                </p>
+                <p className={styles.deviceCardDetail}>
+                  <FaTag /> <strong>Trạng thái:</strong>{" "}
+                  {d.statusId?.name || ""}
+                </p>
+                <div className={styles.deviceCardActions}>
                   <button
-                    onClick={() => deleteDevice(d.id)}
-                    className={`${styles.deleteButton}`}
+                    onClick={() => nav(`/device/${d.id}`)}
+                    className={`${styles.viewButton}`}
                   >
-                    <FaTrash /> Xoá
+                    <FaEye /> Xem
                   </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <button
+                    onClick={() => startEditing(d)}
+                    className={`${styles.editButton}`}
+                  >
+                    <FaEdit /> Sửa
+                  </button>
+                  {user.role === "ROLE_ADMIN" && (
+                    <button
+                      onClick={() => deleteDevice(d.id)}
+                      className={`${styles.deleteButton}`}
+                    >
+                      <FaTrash /> Xoá
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-center" style={{ gridColumn: "1 / -1" }}>
+            Không có thiết bị nào.
+          </p>
+        )}
+      </div>
       {page > 0 && (
-        <div className="text-center my-3 ">
+        <div className="text-center my-3">
           <Button onClick={loadMore}>Tải thêm</Button>
         </div>
       )}

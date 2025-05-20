@@ -39,7 +39,7 @@ public class ApiRepairControllers {
     @DeleteMapping("/repair/{id}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
-
+        this.repairService.deleteRepair(id);
     }
 
     @GetMapping("/repairs")

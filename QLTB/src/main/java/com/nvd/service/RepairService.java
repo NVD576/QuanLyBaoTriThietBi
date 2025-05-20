@@ -19,4 +19,5 @@ public interface RepairService {
     Repair getRepairById(int id);
     Repair addOrUpdateRepair(Repair p);
     Repair addNewMaintenancyOrIssue(Repair p, BigDecimal cost, Device deviceID, RepairType repairTypeId ,int accountId);
+    void deleteRepair(int id);
 }

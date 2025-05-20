@@ -15,4 +15,5 @@ public interface IssueService {
     List<Issue> getIssues();
     Issue addOrUpdateIssue(Issue p);
     Issue getIssueById(int id);
+    void deleteIssue(int id);
 }

@@ -1,167 +1,311 @@
 /* RepairHistory.module.css */
+
 .container {
-  padding: 40px;
+  padding: 50px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa; /* Rất nhạt, gần như trắng */
+  border-radius: 12px; /* Góc bo tròn lớn hơn */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* Bóng đổ mềm mại hơn, lan rộng hơn */
+  margin: 30px auto; /* Center the container with more margin */
+  max-width: 1300px; /* Tăng chiều rộng tối đa */
+  animation: fadeIn 0.8s ease-out; /* Hiệu ứng mờ dần khi tải trang */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .heading {
-  color: #337ab7;
-  margin-bottom: 20px;
+  color: #3f51b5; /* Màu tiêu đề chính */
+  margin-bottom: 40px;
   text-align: center;
+  font-size: 3rem; /* Rất lớn */
+  font-weight: 800; /* Đậm hơn */
+  letter-spacing: 1px; /* Khoảng cách chữ */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Bóng chữ nhẹ */
 }
 
 .sectionTitle {
-  color: #5cb85c;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #5cb85c;
-  padding-bottom: 5px;
+  color: #2e7d32; /* Màu xanh đậm cho các phần */
+  margin-top: 40px;
+  margin-bottom: 25px;
+  border-bottom: 3px solid #4caf50; /* Đường kẻ xanh lá cây đậm hơn */
+  padding-bottom: 12px;
+  font-size: 2.2rem; /* Lớn hơn */
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase; /* Chữ hoa */
+  letter-spacing: 0.5px;
 }
 
-.infoText {
-  color: #777;
-  margin-bottom: 10px;
+/* Chart container */
+.chartContainer {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  margin-bottom: 40px;
+  border: 1px solid #e0e0e0; /* Viền nhẹ */
 }
 
+/* Table styles */
 .table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  overflow: hidden;
+  border-collapse: separate; /* Để dùng border-radius trên tr */
+  border-spacing: 0; /* Loại bỏ khoảng cách giữa các cell */
+  margin-top: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  overflow: hidden; /* Quan trọng để border-radius hoạt động */
   background-color: white;
 }
 
 .table thead tr {
-  background-color: #f0f0f0;
+  background-color: #bbdefb; /* Màu xanh nhạt cho header bảng */
   color: #333;
-  font-weight: bold;
+  font-weight: 600; /* Đậm hơn */
+  font-size: 1.05rem;
 }
 
 .table th,
 .table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #ddd;
+  padding: 16px 20px; /* Tăng padding */
   text-align: left;
+  border-bottom: 1px solid #e0e0e0; /* Đường kẻ nhạt và mềm mại hơn */
 }
+
+.table th:first-child { border-top-left-radius: 10px; }
+.table th:last-child { border-top-right-radius: 10px; }
 
 .table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f5f5f5; /* Zebra striping nhẹ nhàng */
 }
 
+.table tbody tr:hover {
+  background-color: #e3f2fd; /* Hiệu ứng hover cho dòng */
+  cursor: pointer;
+}
+
+.noDataFound {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+  font-style: italic;
+  font-size: 1.1rem;
+  background-color: #fdfdfd;
+}
+
+
+/* Report and Filter Section */
 .reportContainer {
-  margin-top: 30px;
-  padding: 20px;
   background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  margin-top: 40px;
+  margin-bottom: 40px;
+  border: 1px solid #e0e0e0;
 }
 
 .reportTitle {
-  color: #d9534f;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #d9534f;
-  padding-bottom: 5px;
+  color: #1976d2; /* Màu xanh đậm cho tiêu đề báo cáo */
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 3px solid #2196f3;
+  padding-bottom: 10px;
 }
 
 .filterContainer {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 20px; /* Tăng khoảng cách */
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
 .filterLabel {
-  font-weight: bold;
-  color: #333;
+  font-weight: 600;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Khoảng cách giữa icon và text */
+  font-size: 1.1rem;
 }
 
 .filterSelect {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 12px 15px; /* Tăng padding */
+  border: 1px solid #bdbdbd; /* Màu viền nhẹ hơn */
+  border-radius: 8px; /* Góc bo tròn */
+  font-size: 1.05rem;
+  flex-grow: 1;
+  min-width: 180px; /* Tăng min-width */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); /* Bóng đổ inset */
 }
 
+.filterSelect:focus {
+  outline: none;
+  border-color: #42a5f5; /* Màu viền khi focus */
+  box-shadow: 0 0 0 0.2rem rgba(66, 165, 245, 0.25); /* Bóng đổ khi focus */
+}
+
+
 .button {
-  padding: 10px 15px;
+  padding: 12px 25px; /* Tăng padding */
   border: none;
-  border-radius: 4px;
+  border-radius: 8px; /* Góc bo tròn */
   color: white;
-  background-color: #007bff;
+  background-color: #2196f3; /* Màu xanh dương chính */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); /* Bóng đổ lớn hơn */
+  text-transform: uppercase; /* Chữ hoa */
+  letter-spacing: 0.5px;
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: #1976d2; /* Màu xanh đậm hơn khi hover */
+  transform: translateY(-2px); /* Nhấc nhẹ lên */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18); /* Bóng đổ lớn hơn khi hover */
 }
 
-.addButton {
-  background-color: #5cb85c;
-}
-
-.addButton:hover {
-  background-color: #4cae4c;
-}
-
-.chartContainer {
-  margin-top: 40px;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-}
-
-.formContainer {
+.reportTableContainer {
   margin-top: 30px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.formTitle {
-  color: #007bff;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #007bff;
-  padding-bottom: 5px;
+
+/* --- New and improved styles for filter controls in "Lịch Sử Sửa Chữa Chi Tiết" section --- */
+.filtersSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* responsive hơn */
+  gap: 25px; /* Khoảng cách lớn hơn giữa các nhóm lọc */
+  margin-bottom: 35px;
+  padding: 30px; /* Tăng padding */
+  background-color: #e8f5e9; /* Light green background for filters */
+  border-radius: 10px; /* Góc bo tròn */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06); /* Bóng đổ mềm mại */
+  border: 1px solid #c8e6c9; /* Viền xanh lá nhạt */
 }
 
-.formGroup {
+.filterGroup {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-  align-items: center;
+  flex-direction: column;
 }
 
-.formLabel {
-  min-width: 120px;
-  font-weight: bold;
+.filterGroup label {
+  margin-bottom: 10px; /* Tăng khoảng cách */
+  font-weight: 700; /* Đậm hơn */
   color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa icon và text */
+  font-size: 1.15rem; /* Kích thước chữ lớn hơn */
+}
+.filterGroup label svg {
+  color: #4caf50; /* Green icon for filters */
+  font-size: 1.3rem; /* Kích thước icon lớn hơn */
 }
 
-.formInput,
-.formSelect {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  flex-grow: 1;
+.filterInput,
+.filterSelect {
+  width: 100%;
+  padding: 14px; /* Tăng padding */
+  border: 1px solid #b2dfdb; /* Light blue-green border */
+  border-radius: 8px; /* Góc bo tròn */
+  font-size: 1.05rem; /* Kích thước chữ lớn hơn */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  background-color: white; /* Đảm bảo nền trắng */
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Bóng đổ inset nhẹ */
 }
 
-.formButton {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  background-color: #28a745;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.filterInput:focus,
+.filterSelect:focus {
+  outline: none;
+  border-color: #26a69a; /* Darker blue-green on focus */
+  box-shadow: 0 0 0 0.3rem rgba(38, 166, 154, 0.35); /* Bóng đổ khi focus rõ ràng hơn */
 }
 
-.formButton:hover {
-  background-color: #218838;
+/* Placeholder styling */
+.filterInput::placeholder {
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .filtersSection {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 25px;
+  }
+  .filterInput, .filterSelect {
+    padding: 12px;
+  }
+  .sectionTitle {
+    font-size: 1.9rem;
+  }
+  .heading {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 25px;
+    margin: 15px auto;
+  }
+  .heading {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  .sectionTitle {
+    font-size: 1.7rem;
+    margin-top: 30px;
+  }
+  .filtersSection {
+    grid-template-columns: 1fr; /* Stack filters vertically on small screens */
+    gap: 15px;
+    padding: 20px;
+  }
+  .filterContainer {
+    flex-direction: column; /* Stack report filters vertically */
+    align-items: stretch;
+  }
+  .filterSelect, .button {
+    width: 100%;
+  }
+  .table th, .table td {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+  .heading {
+    font-size: 1.6rem;
+  }
+  .sectionTitle {
+    font-size: 1.4rem;
+  }
+  .button {
+    padding: 10px 18px;
+    font-size: 0.95rem;
+  }
+  .table th, .table td {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
 }

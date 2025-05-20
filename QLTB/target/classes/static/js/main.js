@@ -11,7 +11,59 @@ function deleteDevice(endpoint, id) {
         });
     }
 }
+function deleteMaintenance(endpoint) {
+    if (confirm("Bạn chắc chắn xóa không?") === true) {
+        fetch(endpoint, {
+            method: "delete"
+        }).then(res => {
+            if (res.status === 204) {
+                alert("Xóa thành công!");
+                location.reload();
+            } else
+                alert("Có lỗi xảy ra!");
+        });
+    }
+}
 
+function deleteIssue(endpoint) {
+    if (confirm("Bạn chắc chắn xóa không?") === true) {
+        fetch(endpoint, {
+            method: "delete"
+        }).then(res => {
+            if (res.status === 204) {
+                alert("Xóa thành công!");
+                location.reload();
+            } else
+                alert("Có lỗi xảy ra!");
+        });
+    }
+}
+function deleteRepair(endpoint) {
+    if (confirm("Bạn chắc chắn xóa không?") === true) {
+        fetch(endpoint, {
+            method: "delete"
+        }).then(res => {
+            if (res.status === 204) {
+                alert("Xóa thành công!");
+                location.reload();
+            } else
+                alert("Có lỗi xảy ra!");
+        });
+    }
+}
+function deleteAccount(endpoint) {
+    if (confirm("Bạn chắc chắn xóa không?") === true) {
+        fetch(endpoint, {
+            method: "delete"
+        }).then(res => {
+            if (res.status === 204) {
+                alert("Xóa thành công!");
+                location.reload();
+            } else
+                alert("Có lỗi xảy ra!");
+        });
+    }
+}
 function showCostForm(button) {
     const id = button.getAttribute("data-id");
     const form = document.getElementById("cost-form-" + id);

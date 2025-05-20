@@ -97,7 +97,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account addOrUpdateAccount(Account acc) {
-        Account currentAcc = this.getAccountById(acc.getId());
+        Account currentAcc = null;
+
+        if (acc.getId() != null) {
+            currentAcc = this.getAccountById(acc.getId());
+        }
         if (acc.getId() == null) {
             // Trường hợp thêm mới: mã hóa password bắt buộc
             acc.setPassword(this.passwordEncoder.encode(acc.getPassword()));
@@ -124,5 +128,10 @@ public class AccountServiceImpl implements AccountService {
             acc.setAvatar(currentAcc.getAvatar());
         }
         return this.accountRepo.addOrUpdateAccount(acc);
+    }
+
+    @Override
+    public void deleteAccount(int id) {
+        this.accountRepo.deleteAccount(id);
     }
 }

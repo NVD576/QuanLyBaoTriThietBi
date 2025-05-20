@@ -41,11 +41,16 @@
                        class="btn btn-outline-primary btn-sm">
                         <i class="bi bi-pencil-square me-1"></i> Sửa thông tin
                     </a>
+                    <a href="#" class="btn btn-sm btn-outline-danger"
+                       th:onclick="'deleteAccount(\'' + @{/api/account/{id}/delete(id=${a.id})} + '\')'" >
+                        Xóa
+                    </a>
                 </div>
             </li>
         </ul>
     </div>
     <div th:replace="base :: footer"></div>
+    <script th:src="@{/js/main.js}"></script>
 
 </body>
 
