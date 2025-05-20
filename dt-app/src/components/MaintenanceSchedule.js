@@ -120,7 +120,7 @@ const MaintenanceSchedule = () => {
   };
 
   // Hàm thêm lịch bảo trì
-  const handleAdd = async () => {
+  const handleAdd = async (newSchedule) => {
     if (
       !newSchedule.deviceId ||
       !newSchedule.frequencyId ||
@@ -190,16 +190,52 @@ const MaintenanceSchedule = () => {
     setShow(true);
   };
 
-  const confirmResolved = async (id, cost) => {
+ const confirmResolved = async (id, cost) => {
     try {
       const data = new FormData();
       data.append("cost", cost);
       data.append("accountId", user.id);
       console.log("URL:", endpoints["maintenance-confirm"](id));
-      await Apis.delete(endpoints["maintenance-confirm"](id), { data });
+      // Change from Apis.delete to authApis().post since it's an update operation with body
+      await Apis.delete(endpoints["maintenance-confirm"](id), {data});
 
-      // Gọi lại fetchSchedules để làm mới dữ liệu từ server
-      await fetchSchedules();
+      // Find the resolved schedule to get its details
+      const resolvedSchedule = schedules.find(s => s.id === id);
+
+      if (resolvedSchedule) {
+        const nextDate = moment(resolvedSchedule.date);
+        const frequency = frequencies.find(f => f.id === resolvedSchedule.frequencyId.id);
+
+        if (frequency) {
+          switch (frequency.frequency) {
+            case "Hàng tháng":
+              nextDate.add(1, 'months');
+              break;
+            case "6 tháng":
+              nextDate.add(6, 'months');
+              break;
+            case "Hàng năm":
+              nextDate.add(1, 'years');
+              break;
+            default:
+              // Handle other frequencies or do nothing
+              break;
+          }
+
+          const newMaintenanceSchedule = {
+            deviceId: resolvedSchedule.deviceId.id,
+            frequencyId: resolvedSchedule.frequencyId.id,
+            typeId: resolvedSchedule.typeId.id,
+            date: nextDate.format("YYYY-MM-DD"),
+          };
+          console.log("New Maintenance Schedule:", newMaintenanceSchedule);
+          await handleAdd(newMaintenanceSchedule);
+        }
+      } // Filter out the resolved schedule from the current state
+      const updatedSchedulesAfterResolve = schedules.filter(s => s.id !== id);
+      setSchedules(updatedSchedulesAfterResolve);
+      checkNotifications(updatedSchedulesAfterResolve);
+
 
       setSelectedEvent(null);
       setCostInput("");
@@ -209,6 +245,7 @@ const MaintenanceSchedule = () => {
       alert("Lỗi khi xác nhận xử lý!");
     }
   };
+
 
   return (
     <div style={{ padding: "20px" }}>
@@ -446,7 +483,7 @@ const MaintenanceSchedule = () => {
           <Button variant="secondary" onClick={() => setShow(false)}>
             Huỷ
           </Button>
-          <Button variant="primary" onClick={handleAdd}>
+          <Button variant="primary" onClick={()=>handleAdd(newSchedule)}>
             Lưu
           </Button>
         </Modal.Footer>

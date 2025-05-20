@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Apis, { endpoints } from "../configs/Apis";
 import "./IncidentManagement.css"; // Import file CSS
-import { useContext } from "react";
-import {  MyUserContext } from "../configs/MyContexts";
+import { MyUserContext } from "../configs/MyContexts";
 
 const IncidentManagement = () => {
   const [issues, setIssues] = useState([]);
   const [levels, setLevels] = useState([]);
   const [devices, setDevices] = useState([]);
-  // const{devices} = useContext(DeviceContext);
   const [formData, setFormData] = useState({
     deviceId: "",
     des: "",
@@ -18,10 +16,19 @@ const IncidentManagement = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showAddForm, setShowAddForm] = useState(false); // State để kiểm soát hiển thị form
+  const [showAddForm, setShowAddForm] = useState(false);
   const [selectedIssueId, setSelectedIssueId] = useState(null);
   const [costInput, setCostInput] = useState("");
   const user = useContext(MyUserContext);
+
+  // Lấy ngày hiện tại ở định dạng YYYY-MM-DD
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +38,6 @@ const IncidentManagement = () => {
         const [issuesRes, levelsRes] = await Promise.all([
           Apis.get(endpoints.issues),
           Apis.get(endpoints.levels),
-          // Apis.get(endpoints.devices),
         ]);
         const filteredIssues =
           user.role === "ROLE_ADMIN"
@@ -41,7 +47,6 @@ const IncidentManagement = () => {
               );
         setIssues(filteredIssues);
         setLevels(levelsRes.data);
-        // setDevices(devicesRes.data);
       } catch (err) {
         console.error(err);
         setError("Lỗi khi tải dữ liệu!");
@@ -51,13 +56,11 @@ const IncidentManagement = () => {
     };
     fetchDevices();
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.baseId.id, user.role]);
 
   const fetchDevices = async () => {
     try {
       let url = `${endpoints.devices}?`;
-      // Nếu không phải ROLE_ADMIN thì thêm baseId của user vào URL
       if (user.role !== "ROLE_ADMIN") {
         url += `&baseId=${user.baseId.id}`;
       }
@@ -70,7 +73,8 @@ const IncidentManagement = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ ...formData,
+    setFormData({
+      ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
   };
@@ -86,7 +90,7 @@ const IncidentManagement = () => {
         date: "",
         isResolved: false,
       });
-      setShowAddForm(false); // Ẩn form sau khi thêm thành công
+      setShowAddForm(false);
       alert("Ghi nhận sự cố thành công!");
     } catch (err) {
       console.error(err);
@@ -106,14 +110,13 @@ const IncidentManagement = () => {
         issue.id === id ? { ...issue, isResolved: true } : issue
       );
       setIssues(updatedIssues);
-      setSelectedIssueId(null); // ẩn input sau khi submit
+      setSelectedIssueId(null);
       setCostInput("");
     } catch (err) {
       console.error(err);
       alert("Lỗi khi xác nhận xử lý!");
     }
   };
-
 
   if (loading) {
     return <div className="loading-spinner">Đang tải dữ liệu...</div>;
@@ -192,6 +195,8 @@ const IncidentManagement = () => {
               value={formData.date}
               onChange={handleChange}
               className="form-control"
+              // THAY ĐỔI TẠI ĐÂY: Thêm thuộc tính max
+              max={getTodayDate()}
             />
           </div>
 
