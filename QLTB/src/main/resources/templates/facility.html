@@ -12,17 +12,17 @@
         <h2 class="fw-bold mb-3">Danh sách cơ sở</h2>
 
         <!-- Form thêm / sửa -->
-        <form th:action="@{/base-add}" method="post" class="mb-4 d-flex align-items-end gap-2">
-            <input type="hidden" name="id" id="baseId" th:value="0" />
+        <form th:action="@{/base/add}" method="post" class="mb-4 d-flex align-items-end gap-2">
+            <input type="hidden" name="id" id="id" th:if="*{id != null}" th:field="*{id}" />
 
             <div class="mb-0 flex-grow-2">
                 <label for="baseName" class="form-label">Tên cơ sở</label>
-                <input type="text" class="form-control" id="baseName" name="name" required placeholder="Nhập tên cơ sở" />
+                <input type="text" class="form-control" id="name" name="name" required placeholder="Nhập tên cơ sở" />
             </div>
 
             <div class="mb-0 flex-grow-1">
                 <label for="baseAddress" class="form-label">Địa chỉ</label>
-                <input type="text" class="form-control" id="baseAddress" name="address" required placeholder="Nhập địa chỉ" />
+                <input type="text" class="form-control" id="address" name="address" required placeholder="Nhập địa chỉ" />
             </div>
 
             <button type="submit" class="btn btn-primary mb-0">Lưu</button>
@@ -42,12 +42,20 @@
                         </div>
                     </div>
 
-                    <!-- Nút sửa -->
-                    <button type="button"
-                            class="btn btn-outline-primary btn-sm btnEditBase"
-                            th:attr="data-id=${b.id}, data-name=${b.name}, data-address=${b.address}">
-                        <i class="bi bi-pencil-square me-1"></i> Sửa thông tin
-                    </button>
+                    <!-- Các nút hành động -->
+                    <div class="ms-3 d-flex gap-2">
+                        <button type="button"
+                                class="btn btn-outline-primary btn-sm btnEditBase"
+                                th:attr="data-id=${b.id}, data-name=${b.name}, data-address=${b.address}">
+                            <i class="bi bi-pencil-square me-1"></i> Sửa thông tin
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-outline-danger btn-sm btnDeleteBase"
+                                th:attr="data-id=${b.id}, data-name=${b.name}">
+                            <i class="bi bi-trash me-1"></i> Xóa
+                        </button>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -58,9 +66,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Lấy form inputs
-            const inputId = document.getElementById('baseId');
-            const inputName = document.getElementById('baseName');
-            const inputAddress = document.getElementById('baseAddress');
+            const inputId = document.getElementById('id');
+            const inputName = document.getElementById('name');
+            const inputAddress = document.getElementById('address');
 
             // Bắt sự kiện click các nút sửa
             document.querySelectorAll('.btnEditBase').forEach(btn => {
@@ -78,6 +86,27 @@
                     // Optionally: cuộn lên form
                     inputName.focus();
                 });
+            });
+        });
+
+        document.querySelectorAll('.btnDeleteBase').forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                const name = button.getAttribute('data-name');
+
+                if (confirm(`Bạn có chắc chắn muốn xóa cơ sở "${name}"?`)) {
+                    fetch(`/base/delete?id=${id}`, {
+                        method: 'DELETE'
+                    })
+                        .then(res => {
+                            if (res.ok) {
+                                location.reload(); // Tải lại trang để cập nhật danh sách
+                            } else {
+                                alert("Xóa thất bại!");
+                            }
+                        })
+                        .catch(err => alert("Lỗi khi gửi yêu cầu xóa!"));
+                }
             });
         });
     </script>
