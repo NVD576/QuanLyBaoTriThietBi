@@ -36,4 +36,14 @@ public class CategoryServiveImpl implements  CategoryService{
     public Category getCategotryById(int id) {
         return this.cateRepo.getCategotryById(id);
     }
+
+    @Override
+    public Category addOrUpdateCategory(Category p) {
+        return this.cateRepo.addOrUpdateCategory(p);
+    }
+
+    @Override
+    public void deleteCategory(int id) {
+        this.cateRepo.deleteCategory(id);
+    }
 }

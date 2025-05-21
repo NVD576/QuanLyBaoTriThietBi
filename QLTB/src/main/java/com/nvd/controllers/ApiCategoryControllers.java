@@ -27,14 +27,16 @@ public class ApiCategoryControllers {
     @Autowired
     private CategoryService categoryService;
 
+    
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getCategories() {
         return new ResponseEntity<>(categoryService.getCates(), HttpStatus.OK);
     }
-    @DeleteMapping("/categories/{id}")
+    
+    @DeleteMapping("/category/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
-        
+        this.categoryService.deleteCategory(id);
     }
 
     @GetMapping("/category/{categoryId}/devices")
@@ -45,7 +47,7 @@ public class ApiCategoryControllers {
 
     
 //    @PostMapping("/categories/add")
-//    public ResponseEntity<Status> create(@RequestBody Status p) {
+//    public ResponseEntity<Status> create(@RequestBody Category p) {
 //        return new ResponseEntity<>(this.categoryService.addOrUpdateDevice(p), HttpStatus.CREATED);
 //    }
 }

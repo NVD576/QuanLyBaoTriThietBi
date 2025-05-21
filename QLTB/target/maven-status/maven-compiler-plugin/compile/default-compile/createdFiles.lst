@@ -21,6 +21,7 @@ com\nvd\repository\Impl\DeviceRepositoryImpl.class
 com\nvd\controllers\BaseControllers.class
 com\nvd\configs\ThymeleafConfig.class
 com\nvd\repository\Impl\FrequencyRepositoryImpl.class
+com\nvd\controllers\CategoryControllers.class
 com\nvd\controllers\ApiMaintenanceControllers.class
 com\nvd\formatters\CategoryFormatter.class
 com\nvd\repository\FrequencyRepository.class

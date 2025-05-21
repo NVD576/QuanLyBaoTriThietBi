@@ -37,16 +37,25 @@ public class IndexController {
     private BaseService baseService;
 
     @ModelAttribute
-    public void commonAttr(Model model){
+    public void commonAttr(Model model) {
         model.addAttribute("categories", this.categoryService.getCates());
     }
-    
+
     @RequestMapping("/")
     public String index(Model model, @RequestParam Map<String, String> params, @RequestParam(value = "page", defaultValue = "1") int page) {
         // Lấy danh sách các cơ sở
         model.addAttribute("bases", this.baseService.getBases());
         
-        if(params==null || params.isEmpty()){
+        if (params.containsKey("baseId")) {
+            try {
+                int baseId = Integer.parseInt(params.get("baseId"));
+                model.addAttribute("baseId", baseId);
+            } catch (NumberFormatException e) {
+                model.addAttribute("baseId", null);
+            }
+        }
+        
+        if (params == null || params.isEmpty()) {
             params.put("page", "1");
         }
         model.addAttribute("devices", this.deviceService.getDevices(params));

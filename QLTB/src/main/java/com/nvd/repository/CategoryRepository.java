@@ -16,4 +16,6 @@ public interface CategoryRepository {
     List<Category> getCates();
     List<Device> getDevicesByCateId(int categoryId);
     Category getCategotryById(int id);
+    Category addOrUpdateCategory(Category p);
+    void deleteCategory(int id);
 }

@@ -4,6 +4,7 @@
  */
 package com.nvd.repository.Impl;
 
+import com.nvd.pojo.Base;
 import com.nvd.pojo.Category;
 import com.nvd.pojo.Device;
 import jakarta.persistence.Query;
@@ -26,7 +27,8 @@ import org.hibernate.HibernateException;
  */
 @Repository
 @Transactional
-public class CategoryRepositoryImpl implements CategoryRepository{
+public class CategoryRepositoryImpl implements CategoryRepository {
+
     @Autowired
     private LocalSessionFactoryBean factory;
 
@@ -60,5 +62,38 @@ public class CategoryRepositoryImpl implements CategoryRepository{
         Session session = this.factory.getObject().getCurrentSession();
         return session.get(Category.class, id);
     }
-    
+
+    @Override
+    public Category addOrUpdateCategory(Category p) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            if (p.getId() == null) {
+                System.out.println("Saving new base: " + p);
+                if (p.getName() == null || p.getName().isEmpty()) {
+                    p.setName("Cơ sở TpHCM");
+                }
+
+                s.persist(p);
+            } else {
+                System.out.println("Updating base with ID: " + p.getId());
+                s.merge(p);
+            }
+            s.refresh(p);
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return p;
+    }
+
+    @Override
+    public void deleteCategory(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Category p = this.getCategotryById(id);
+        if (p != null) {
+            s.remove(p);
+        } else {
+            throw new IllegalArgumentException("Device không tồn tại với id = " + id);
+        }
+    }
+
 }

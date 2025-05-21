@@ -13,15 +13,16 @@
 
         <!-- Form thêm / sửa -->
         <form th:action="@{/base/add}" method="post" class="mb-4 d-flex align-items-end gap-2">
-            <input type="hidden" name="id" id="id" th:if="*{id != null}" th:field="*{id}" />
+            <input type="hidden" name="id" id="id" value="" />
+
 
             <div class="mb-0 flex-grow-2">
-                <label for="baseName" class="form-label">Tên cơ sở</label>
+                <label for="name" class="form-label">Tên cơ sở</label>
                 <input type="text" class="form-control" id="name" name="name" required placeholder="Nhập tên cơ sở" />
             </div>
 
             <div class="mb-0 flex-grow-1">
-                <label for="baseAddress" class="form-label">Địa chỉ</label>
+                <label for="address" class="form-label">Địa chỉ</label>
                 <input type="text" class="form-control" id="address" name="address" required placeholder="Nhập địa chỉ" />
             </div>
 
@@ -50,18 +51,18 @@
                             <i class="bi bi-pencil-square me-1"></i> Sửa thông tin
                         </button>
 
-                        <button type="button"
-                                class="btn btn-outline-danger btn-sm btnDeleteBase"
-                                th:attr="data-id=${b.id}, data-name=${b.name}">
-                            <i class="bi bi-trash me-1"></i> Xóa
-                        </button>
+                        <!-- Xóa -->
+                        <a href="#" class="btn btn-sm btn-outline-danger"
+                           th:onclick="'deleteBase(\''+@{/api/base/}+'\','+${b.id}+')'">
+                            Xóa
+                        </a>
                     </div>
                 </div>
             </li>
         </ul>
     </div>
 
-
+    <!--<script th:src="@{/js/main.js}"></script>-->
     <div th:replace="base :: footer"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -88,27 +89,47 @@
                 });
             });
         });
-
-        document.querySelectorAll('.btnDeleteBase').forEach(button => {
-            button.addEventListener('click', () => {
-                const id = button.getAttribute('data-id');
-                const name = button.getAttribute('data-name');
-
-                if (confirm(`Bạn có chắc chắn muốn xóa cơ sở "${name}"?`)) {
-                    fetch(`/base/delete?id=${id}`, {
-                        method: 'DELETE'
-                    })
-                        .then(res => {
-                            if (res.ok) {
-                                location.reload(); // Tải lại trang để cập nhật danh sách
-                            } else {
-                                alert("Xóa thất bại!");
-                            }
-                        })
-                        .catch(err => alert("Lỗi khi gửi yêu cầu xóa!"));
-                }
-            });
+        document.querySelector('form').addEventListener('submit', function (e) {
+            // Chờ form submit xong (sau 100ms), rồi reset
+            setTimeout(() => {
+                this.reset(); // xóa dữ liệu name và address
+                document.getElementById('id').value = ''; // xóa riêng id
+            }, 100); // delay ngắn để không cản trở submit
         });
+
+        function deleteBase(endpoint, id) {
+            if (confirm("Bạn chắc chắn xóa không?") === true) {
+                fetch(endpoint + id, {
+                    method: "delete"
+                }).then(res => {
+                    if (res.status === 204) {
+                        alert("Xóa thành công!");
+                        location.reload();
+                    } else
+                        alert("Có lỗi xảy ra!");
+                });
+            }
+        }
+//        document.querySelectorAll('.btnDeleteBase').forEach(button => {
+//            button.addEventListener('click', () => {
+//                const id = button.getAttribute('data-id');
+//                const name = button.getAttribute('data-name');
+//
+//                if (confirm(`Bạn có chắc chắn muốn xóa cơ sở "${name}"?`)) {
+//                    fetch(`/base/delete?id=${id}`, {
+//                        method: 'DELETE'
+//                    })
+//                            .then(res => {
+//                                if (res.ok) {
+//                                    location.reload(); // Tải lại trang để cập nhật danh sách
+//                                } else {
+//                                    alert("Xóa thất bại!");
+//                                }
+//                            })
+//                            .catch(err => alert("Lỗi khi gửi yêu cầu xóa!"));
+//                }
+//            });
+//        });
     </script>
 
 </body>

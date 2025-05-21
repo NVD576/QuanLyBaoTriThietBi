@@ -47,7 +47,7 @@ public class BaseControllers {
     public String add (@ModelAttribute(value = "base") Base p, BindingResult result,
             Model model) {
         this.baseService.addOrUpdateBase(p);
-        return "facility";
+        return "redirect:/bases";
     }
 
     @DeleteMapping("/base/delete")

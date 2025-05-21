@@ -37,7 +37,7 @@ public class ApiBaseControllers {
     @DeleteMapping("/base/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable(value = "id") int id) {
-        
+        this.baseService.deleteBase(id);
     }
     @GetMapping("/base")
     public ResponseEntity<List<Base>> getBases(@RequestParam Map<String, String> params) {

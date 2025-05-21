@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Trang quản lý sự cố</title>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+    <div th:replace="base :: header"></div>
+
+    <div class="container my-4">
+        <h2 class="fw-bold mb-3">Danh sách loại thiết bị</h2>
+
+        <!-- Form thêm / sửa -->
+        <form th:action="@{/category/add}" method="post" class="mb-4 d-flex align-items-end gap-2">
+            <input type="hidden" name="id" id="id" value="" />
+
+            <div class="mb-0 flex-grow-2">
+                <label for="name" class="form-label">Tên cơ sở</label>
+                <input type="text" class="form-control" id="name" name="name" required placeholder="Nhập tên " />
+            </div>
+
+
+
+            <button type="submit" class="btn btn-primary mb-0">Lưu</button>
+        </form>
+
+        <!-- Danh sách cơ sở -->
+        <ul class="list-group">
+            <li class="list-group-item" th:each="b : ${categories}">
+                <div class="d-flex align-items-start justify-content-between">
+                    <!-- Thông tin cơ sở -->
+                    <div class="flex-grow-1">
+                        <div class="fw-bold fs-5" th:text="${b.name}">Tên cơ sở</div>
+
+                    </div>
+
+                    <!-- Các nút hành động -->
+                    <div class="ms-3 d-flex gap-2">
+                        <button type="button"
+                                class="btn btn-outline-primary btn-sm btnEditBase"
+                                th:attr="data-id=${b.id}, data-name=${b.name},">
+                            <i class="bi bi-pencil-square me-1"></i> Sửa thông tin
+                        </button>
+
+                        <!-- Xóa -->
+                        <a href="#" class="btn btn-sm btn-outline-danger"
+                           th:onclick="'deleteCategory(\''+@{/api/category/}+'\','+${b.id}+')'">
+                            Xóa
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+    <div th:replace="base :: footer"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy form inputs
+            const inputId = document.getElementById('id');
+            const inputName = document.getElementById('name');
+
+            // Bắt sự kiện click các nút sửa
+            document.querySelectorAll('.btnEditBase').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    // Lấy dữ liệu từ attributes
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+
+                    // Điền dữ liệu vào form
+                    inputId.value = id;
+                    inputName.value = name;
+
+                    // Optionally: cuộn lên form
+                    inputName.focus();
+                });
+            });
+        });
+        document.querySelector('form').addEventListener('submit', function (e) {
+            // Chờ form submit xong (sau 100ms), rồi reset
+            setTimeout(() => {
+                this.reset(); // xóa dữ liệu name và address
+                document.getElementById('id').value = ''; // xóa riêng id
+            }, 100); // delay ngắn để không cản trở submit
+        });
+    </script>
+
+</body>
+
+</html>
+
