@@ -39,15 +39,13 @@ public class IndexController {
     @ModelAttribute
     public void commonAttr(Model model) {
         model.addAttribute("categories", this.categoryService.getCates());
+        model.addAttribute("bases", this.baseService.getBases());
     }
 
     @RequestMapping("/")
     public String index(Model model,
             @RequestParam Map<String, String> params,
             @RequestParam(value = "page", defaultValue = "1") int page) {
-
-        // Lấy danh sách cơ sở
-        model.addAttribute("bases", this.baseService.getBases());
 
         // Trích xuất các điều kiện lọc (nếu có)
         String keyword = params.get("kw") != null ? params.get("kw").trim() : "";
