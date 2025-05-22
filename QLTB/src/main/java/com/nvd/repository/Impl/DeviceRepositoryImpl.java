@@ -111,7 +111,42 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         q.setParameter("cateId", cateId);
         return Integer.parseInt(q.getSingleResult().toString());
     }
+    
+    @Override
+    public int countDeviceByConditions(String kw, Integer baseId, Integer cateId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        String hql = "SELECT COUNT(*) FROM Device d WHERE 1=1";
 
+        if (kw != null && !kw.trim().isEmpty()) {
+            hql += " AND LOWER(d.name) LIKE :kw";
+        }
+
+        if (baseId != null) {
+            hql += " AND d.baseId.id = :baseId";
+        }
+
+        if (cateId != null) {
+            hql += " AND d.categoryId.id = :cateId";
+        }
+
+        Query q = s.createQuery(hql);
+
+        if (kw != null && !kw.trim().isEmpty()) {
+            q.setParameter("kw", "%" + kw.toLowerCase().trim() + "%");
+        }
+
+        if (baseId != null) {
+            q.setParameter("baseId", baseId);
+        }
+
+        if (cateId != null) {
+            q.setParameter("cateId", cateId);
+        }
+
+        return Integer.parseInt(q.getSingleResult().toString());
+    }
+
+    
     @Override
     public Device getDeviceById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
@@ -157,7 +192,7 @@ public class DeviceRepositoryImpl implements DeviceRepository {
             throw new IllegalArgumentException("Device không tồn tại với id = " + id);
         }
     }
-    
+
     @Override
     public List<Maintenance> getMaintenancesByDeviceId(int deviceId) {
         Session s = this.factory.getObject().getCurrentSession();

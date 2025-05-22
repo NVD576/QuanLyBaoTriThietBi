@@ -67,14 +67,22 @@
                 <!-- Hiển thị phân trang nếu tổng số trang >= 2 -->
                 <div th:if="${totalPages >= 2}" class="d-flex justify-content-end mt-3 me-3">
                     <!-- Trang trước -->
+                    <!--th:href="@{/(page=${currentPage - 1},typeId=${param.typeId})}"-->
                     <a th:if="${currentPage > 1}"
-                       th:href="@{/(page=${currentPage - 1},typeId=${param.typeId})}"
+                       th:href="@{/(page=${currentPage - 1},
+                       kw=${kw},
+                       baseId=${baseId},
+                       cateId=${cateId})}"
                        class="btn btn-outline-primary me-2">Trang trước</a>
 
                     <!-- Danh sách số trang -->
+                    <!--th:href="@{/(page=${i},typeId=${param.typeId})}"-->
                     <div class="btn-group me-2" role="group" aria-label="Pagination">
                         <a th:each="i : ${#numbers.sequence(1, totalPages)}"
-                           th:href="@{/(page=${i},typeId=${param.typeId})}"
+                           th:href="@{/(page=${i},
+                           kw=${kw},
+                           baseId=${baseId},
+                           cateId=${cateId})}"
                            th:text="${i}"
                            class="btn"
                            th:classappend="${i == currentPage} ? 'btn-primary' : 'btn-outline-primary'">
@@ -82,8 +90,12 @@
                     </div>
 
                     <!-- Trang sau -->
+                    <!--th:href="@{/(page=${currentPage + 1},typeId=${param.typeId})}"-->
                     <a th:if="${currentPage < totalPages}"
-                       th:href="@{/(page=${currentPage + 1},typeId=${param.typeId})}"
+                       th:href="@{/(page=${currentPage + 1},
+                       kw=${kw},
+                       baseId=${baseId},
+                       cateId=${cateId})}"
                        class="btn btn-outline-primary">Trang sau</a>
                 </div>
             </div>

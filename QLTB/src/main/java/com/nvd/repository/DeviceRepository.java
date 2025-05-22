@@ -26,4 +26,5 @@ public interface DeviceRepository {
     List<Maintenance> getMaintenancesByDeviceId(int deviceId);
     List<Issue> getIssuesByDeviceId(int deviceId);
     List<Repair> getRepairsByDeviceId(int deviceId);
+    int countDeviceByConditions(String kw, Integer baseId, Integer cateId);
 }

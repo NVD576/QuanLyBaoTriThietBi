@@ -42,40 +42,56 @@ public class IndexController {
     }
 
     @RequestMapping("/")
-    public String index(Model model, @RequestParam Map<String, String> params, @RequestParam(value = "page", defaultValue = "1") int page) {
-        // Lấy danh sách các cơ sở
-        model.addAttribute("bases", this.baseService.getBases());
-        
-        if (params.containsKey("baseId")) {
-            try {
-                int baseId = Integer.parseInt(params.get("baseId"));
-                model.addAttribute("baseId", baseId);
-            } catch (NumberFormatException e) {
-                model.addAttribute("baseId", null);
-            }
-        }
-        
-        if (params == null || params.isEmpty()) {
-            params.put("page", "1");
-        }
-        model.addAttribute("devices", this.deviceService.getDevices(params));
-        int pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
-        int count;
+    public String index(Model model,
+            @RequestParam Map<String, String> params,
+            @RequestParam(value = "page", defaultValue = "1") int page) {
 
-        // Đếm số sản phẩm tùy theo typeId
-        if (params.containsKey("cateId")) {
-            try {
-                int cateId = Integer.parseInt(params.get("cateId"));
-                count = this.deviceService.countDeviceByType(cateId);
-            } catch (NumberFormatException ex) {
-                count = this.deviceService.countDevice(); // fallback nếu typeId không hợp lệ
+        // Lấy danh sách cơ sở
+        model.addAttribute("bases", this.baseService.getBases());
+
+        // Trích xuất các điều kiện lọc (nếu có)
+        String keyword = params.get("kw") != null ? params.get("kw").trim() : "";
+        Integer baseId = null;
+        Integer cateId = null;
+
+        try {
+            if (params.get("baseId") != null) {
+                baseId = Integer.parseInt(params.get("baseId"));
             }
-        } else {
-            count = this.deviceService.countDevice();
+        } catch (NumberFormatException ex) {
+            baseId = null;
         }
+
+        try {
+            if (params.get("cateId") != null) {
+                cateId = Integer.parseInt(params.get("cateId"));
+            }
+        } catch (NumberFormatException ex) {
+            cateId = null;
+        }
+
+        // Gửi các biến lọc về view để giữ giá trị trong form và link phân trang
+        model.addAttribute("kw", keyword);
+        model.addAttribute("baseId", baseId);
+        model.addAttribute("cateId", cateId);
+
+        // Gửi danh sách thiết bị theo điều kiện
+        model.addAttribute("devices", this.deviceService.getDevices(params));
+
+        // Lấy page size từ cấu hình
+        int pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
+
+        // Gọi hàm đếm tổng số device theo điều kiện (hàm bạn đã combine)
+        int count = this.deviceService.countDeviceByConditions(keyword, baseId, cateId);
+
+        // Tính tổng số trang
         int totalPages = count > 0 ? (int) Math.ceil(count * 1.0 / pageSize) : 1;
+
+        // Gửi dữ liệu phân trang về view
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+
         return "index";
     }
+
 }

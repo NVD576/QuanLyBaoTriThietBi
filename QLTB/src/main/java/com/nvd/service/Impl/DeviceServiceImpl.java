@@ -90,4 +90,10 @@ public class DeviceServiceImpl implements DeviceService {
     public List<Repair> getRepairsByDeviceId(int deviceId) {
         return this.deviceRepo.getRepairsByDeviceId(deviceId);
     }
+
+    @Override
+    public int countDeviceByConditions(String kw, Integer baseId, Integer cateId) {
+        return this.deviceRepo.countDeviceByConditions(kw, baseId, cateId);
+    }
+
 }
