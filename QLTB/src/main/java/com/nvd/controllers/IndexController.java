@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.nvd.service.CategoryService;
+import com.nvd.service.StatusService;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,18 +36,20 @@ public class IndexController {
     private Environment env;
     @Autowired
     private BaseService baseService;
+    @Autowired
+    private StatusService statusService;
 
     @ModelAttribute
     public void commonAttr(Model model) {
         model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("bases", this.baseService.getBases());
+        model.addAttribute("statusId", this.statusService.getStatus());
     }
 
     @RequestMapping("/")
     public String index(Model model,
             @RequestParam Map<String, String> params,
             @RequestParam(value = "page", defaultValue = "1") int page) {
-
         // Trích xuất các điều kiện lọc (nếu có)
         String keyword = params.get("kw") != null ? params.get("kw").trim() : "";
         Integer baseId = null;
