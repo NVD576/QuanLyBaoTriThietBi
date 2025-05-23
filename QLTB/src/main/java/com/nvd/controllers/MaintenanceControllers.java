@@ -102,7 +102,7 @@ public class MaintenanceControllers {
         Maintenance maintenance = this.maintenanceService.getMaintenanceById(id);
         Repair repair = new Repair();
         repairService.addNewMaintenancyOrIssue(repair, cost, maintenance.getDeviceId(), this.repairTypeService.getTypeById(1), accountId);
-
+        this.maintenanceService.deleteMaintenance(id);
         return "redirect:/maintenances";
     }
 
