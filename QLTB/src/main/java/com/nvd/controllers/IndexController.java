@@ -75,7 +75,9 @@ public class IndexController {
         model.addAttribute("kw", keyword);
         model.addAttribute("baseId", baseId);
         model.addAttribute("cateId", cateId);
-
+        if (params.get("page") == null || params.isEmpty()) {
+            params.put("page", "1");
+        }
         // Gửi danh sách thiết bị theo điều kiện
         model.addAttribute("devices", this.deviceService.getDevices(params));
 
