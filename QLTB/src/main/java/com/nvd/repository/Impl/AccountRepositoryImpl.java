@@ -6,8 +6,6 @@ package com.nvd.repository.Impl;
 
 import com.nvd.pojo.Account;
 import com.nvd.pojo.Base;
-import com.nvd.pojo.Category;
-import com.nvd.pojo.Issue;
 import com.nvd.repository.AccountRepository;
 import jakarta.persistence.Query;
 import java.util.List;

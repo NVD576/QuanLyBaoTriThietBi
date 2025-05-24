@@ -38,7 +38,6 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
     "com.nvd.service"
 })
 public class SpringSecurityConfigs {
-//
 
     @Autowired
     private UserDetailsService userDetailsService;
