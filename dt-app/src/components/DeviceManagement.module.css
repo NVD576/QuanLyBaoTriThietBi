@@ -62,10 +62,6 @@
 
 .formTitle {
   color: #2196f3; /* Your modern form title color */
-  margin-top: 0px; /* Adjusted margin */
-  margin-bottom: 20px; /* Adjusted margin */
-  /* border-bottom: 2px solid #2196f3; /* Removed border-bottom for cleaner look */
-  padding-bottom: 0px; /* Removed padding-bottom */
   text-align: center; /* Centered title */
   font-size: 1.8rem; /* Larger font size */
   font-weight: 600;

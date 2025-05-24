@@ -263,6 +263,7 @@ const DeviceManagement = () => {
         }}
         centered
         size="lg"
+        style={{ marginTop: "30px" }  }
       >
         <Modal.Header closeButton>
           <Modal.Title>
@@ -288,6 +289,7 @@ const DeviceManagement = () => {
                     value={newDevice.name}
                     onChange={handleChange}
                     className={styles.formInput}
+                    disabled={user.role !== "ROLE_ADMIN"}
                   />
                 </div>
                 <div className={styles.formGroup}>
@@ -302,6 +304,7 @@ const DeviceManagement = () => {
                     value={newDevice.manufacturer}
                     onChange={handleChange}
                     className={styles.formInput}
+                    disabled={user.role !== "ROLE_ADMIN"}
                   />
                 </div>
                 <div className={styles.formGroup}>
@@ -314,6 +317,7 @@ const DeviceManagement = () => {
                     name="image"
                     onChange={handleChange}
                     className={styles.formInput}
+                    disabled={user.role !== "ROLE_ADMIN"}
                   />
                   {(imagePreview || newDevice.image) && (
                     <img
@@ -338,6 +342,7 @@ const DeviceManagement = () => {
                     value={newDevice.date}
                     onChange={handleChange}
                     className={styles.formInput}
+                    disabled={user.role !== "ROLE_ADMIN"}
                   />
                 </div>
                 <div className={styles.formGroup}>
@@ -370,6 +375,7 @@ const DeviceManagement = () => {
                     value={newDevice.categoryId}
                     onChange={handleChange}
                     className={styles.formSelect}
+                    disabled={user.role !== "ROLE_ADMIN"}
                   >
                     <option value="">-- Chọn loại thiết bị --</option>
                     {categories.map((c) => (

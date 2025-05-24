@@ -112,7 +112,7 @@ const App = () => {
   const calculatedMarginLeft = user && sidebarOpen ? "200px" : "0";
   const calculatedHeaderWidth = user && sidebarOpen ? "calc(100% - 200px)" : "100%";
   const calculatedHeaderLeft = user && sidebarOpen ? "200px" : "0";
-  const calculatedToggleButtonLeft = user && sidebarOpen ? "200px" : "10px";
+  const calculatedToggleButtonLeft = user && sidebarOpen ? "200px" : "0px";
 
   return (
     <>
@@ -138,7 +138,7 @@ const App = () => {
                         style={{
                           ...toggleButtonStyle,
                           left: calculatedToggleButtonLeft,
-                          top: "60px",
+                          top: "65px",
                         }}
                         aria-label="Toggle sidebar"
                       >
