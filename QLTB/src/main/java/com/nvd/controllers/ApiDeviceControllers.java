@@ -84,9 +84,7 @@ public class ApiDeviceControllers {
         return new ResponseEntity<>(this.deviceService.getRepairsByDeviceId(id), HttpStatus.OK);
     }
 
-    @PostMapping(path="/device/add",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, 
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/device/add")
     public ResponseEntity<?> addDevice(
             @ModelAttribute Device p // chứa các trường cơ bản và các quan hệ ManyToOne
             

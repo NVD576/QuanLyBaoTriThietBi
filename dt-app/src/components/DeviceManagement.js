@@ -190,7 +190,7 @@ const DeviceManagement = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      alert("Thiết bị đã được thêm!");
+      alert("Successfull!");
       loadDevices();
       resetForm();
       setShowForm(false); // Ẩn form sau khi thêm thành công
@@ -292,6 +292,7 @@ const DeviceManagement = () => {
                     disabled={user.role !== "ROLE_ADMIN"}
                   />
                 </div>
+
                 <div className={styles.formGroup}>
                   <label htmlFor="manufacturer" className={styles.formLabel}>
                     Nhà sản xuất:
