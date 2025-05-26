@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Thống Kê Sửa Chữa Thiết Bị</title>
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <th:block th:replace="base :: styles"></th:block>
+    <style>
+        .card-stat {
+            transition: transform 0.3s;
+        }
+        .card-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="base :: header"></div>
+
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-tools me-2"></i>Thống Kê Sửa Chữa Thiết Bị</h2>
+            <a th:href="@{/}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+            </a>
+        </div>
+
+        <!-- Bộ lọc -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <form class="row g-3" th:action="@{/stats}" method="get">
+                    <div class="col-md-3">
+                        <label class="form-label">Từ ngày</label>
+                        <input type="date" class="form-control" name="startDate" th:value="${startDate}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Đến ngày</label>
+                        <input type="date" class="form-control" name="endDate" th:value="${endDate}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Loại thiết bị</label>
+                        <select class="form-select" name="categoryId">
+                            <option value="">Tất cả loại</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"
+                                    th:selected="${category.id == selectedCategoryId}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" name="statusId">
+                            <option value="">Tất cả trạng thái</option>
+                            <option th:each="status : ${statuses}"
+                                    th:value="${status.id}"
+                                    th:text="${status.name}"
+                                    th:selected="${status.id == selectedStatusId}"></option>
+                        </select>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bi bi-funnel me-1"></i> Lọc
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Đặt lại
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Thống kê tổng quan -->
+        <div class="row mb-4">
+            <!-- Tổng chi phí -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card card-stat border-start-primary shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col me-2">
+                                <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                                    Tổng chi phí sửa chữa</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800">
+                                    <span th:text="${#numbers.formatDecimal(totalRepairCost, 0, 'COMMA', 2, 'POINT')}"></span> VNĐ
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cash-stack fs-2 text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Số lần sửa chữa -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card card-stat border-start-success shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col me-2">
+                                <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                                    Số lần sửa chữa</div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" th:text="${totalRepairs}"></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-tools fs-2 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thiết bị sửa nhiều nhất -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card card-stat border-start-info shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col me-2">
+                                <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                                    Thiết bị sửa nhiều nhất</div>
+                                <div class="h6 mb-0 fw-bold text-gray-800 text-truncate" 
+                                     th:if="${mostRepairedDevice != null}" 
+                                     th:text="${mostRepairedDevice.name} + ' (' + ${mostRepairedDeviceRepairCount} + ' lần)'">
+                                </div>
+                                <div class="h6 mb-0 fw-bold text-gray-800" th:unless="${mostRepairedDevice != null}">N/A</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-exclamation-triangle fs-2 text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loại sửa phổ biến -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card card-stat border-start-warning shadow h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col me-2">
+                                <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                                    Loại sửa phổ biến</div>
+                                <div class="h6 mb-0 fw-bold text-gray-800 text-truncate" 
+                                     th:if="${mostCommonRepairType != null}" 
+                                     th:text="${mostCommonRepairType.type} + ' (' + ${mostCommonRepairTypeCount} + ' lần)'">
+                                </div>
+                                <div class="h6 mb-0 fw-bold text-gray-800" th:unless="${mostCommonRepairType != null}">N/A</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-wrench fs-2 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Charts Section -->
+        <div class="row mb-4">
+            <!-- Repair Cost Over Time Chart -->
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-center bg-primary text-white">
+                        <h6 class="m-0 fw-bold">Chi phí sửa chữa theo thời gian</h6>
+                        <div class="mt-2 mt-md-0">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="timeRangeDropdown" 
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span id="selectedTimeRange">Theo tháng</span>
+                                    <i class="fas fa-calendar-alt ms-1"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="timeRangeDropdown">
+                                    <li><a class="dropdown-item time-range-btn" href="#" data-range="day"><i class="fas fa-calendar-day me-2"></i>Theo ngày</a></li>
+                                    <li><a class="dropdown-item time-range-btn" href="#" data-range="week"><i class="fas fa-calendar-week me-2"></i>Theo tuần</a></li>
+                                    <li><a class="dropdown-item time-range-btn active" href="#" data-range="month"><i class="far fa-calendar-alt me-2"></i>Theo tháng</a></li>
+                                    <li><a class="dropdown-item time-range-btn" href="#" data-range="year"><i class="far fa-calendar me-2"></i>Theo năm</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="repairCostOverTimeChart"></canvas>
+                        </div>
+                        <div id="noRepairCostData" class="text-center text-muted py-4" style="display: none;">
+                            <i class="bi bi-exclamation-circle fs-1"></i>
+                            <p class="mt-2">Không có dữ liệu chi phí sửa chữa trong khoảng thời gian này</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Repair Type Distribution Chart -->
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-success text-white">
+                        <h6 class="m-0 fw-bold">Phân bố loại sửa chữa</h6>
+                        <button class="btn btn-sm btn-light" data-bs-toggle="tooltip" title="Xem chi tiết">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="repairTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bảng thống kê chi tiết -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center bg-dark text-white">
+                <h6 class="m-0 fw-bold">Danh sách thiết bị và số lần sửa chữa</h6>
+                <div>
+                    <a th:href="@{/stats/export(
+                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')},
+                       endDate=${#dates.format(endDate, 'yyyy-MM-dd')},
+                       categoryId=${selectedCategoryId != null ? selectedCategoryId : 0},
+                       statusId=${selectedStatusId != null ? selectedStatusId : 0}
+                       )}"
+                       class="btn btn-success">
+                        Xuất Excel
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>Thiết bị</th>
+                                <th>Loại thiết bị</th>
+                                <th>Trạng thái</th>
+                                <th class="text-end">Số lần sửa</th>
+                                <th class="text-end">Tổng chi phí (VNĐ)</th>
+                                <th>Lần cuối sửa</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="stat : ${deviceRepairStats}">
+                                <td th:text="${statStat.count}"></td>
+                                <td th:text="${stat['deviceName']}"></td>
+                                <td th:text="${stat['deviceCategory']}"></td>
+                                <td>
+                                    <span class="badge" 
+                                          th:classappend="${stat['deviceStatus'] == 'Hoạt động'} ? 'bg-success' : 
+                                          (${stat['deviceStatus'] == 'Bảo trì'} ? 'bg-warning' : 'bg-danger')"
+                                          th:text="${stat['deviceStatus']}">
+                                    </span>
+                                </td>
+                                <td class="text-end" th:text="${stat['repairCount']}"></td>
+                                <td class="text-end" th:text="${#numbers.formatDecimal(stat['totalCost'], 0, 'COMMA', 2, 'POINT')}"></td>
+                                <td th:text="${stat['lastRepairDate'] != null} ? ${#dates.format(stat['lastRepairDate'], 'dd/MM/yyyy')} : 'N/A'"></td>
+                                <td class="text-center">
+                                    <a th:href="@{/device-detail/{id}(id=${stat['deviceId']})}" class="btn btn-sm btn-outline-primary" 
+                                       title="Xem chi tiết">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${deviceRepairStats.isEmpty()}">
+                                <td colspan="8" class="text-center text-muted py-3">Không có dữ liệu sửa chữa trong khoảng thời gian này</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="base :: footer"></div>
+
+    <!-- Script biểu đồ -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy dữ liệu từ Thymeleaf
+            const repairCostData = {
+                day: {
+                    labels: /*[[${repairCostByDay?.keySet()}]]*/ [],
+                    values: /*[[${repairCostByDay?.values()}]]*/ []
+                },
+                week: {
+                    labels: /*[[${repairCostByWeek?.keySet()}]]*/ [],
+                    values: /*[[${repairCostByWeek?.values()}]]*/ []
+                },
+                month: {
+                    labels: /*[[${repairCostByMonth?.keySet()}]]*/ [],
+                    values: /*[[${repairCostByMonth?.values()}]]*/ []
+                },
+                year: {
+                    labels: /*[[${repairCostByYear?.keySet()}]]*/ [],
+                    values: /*[[${repairCostByYear?.values()}]]*/ []
+                }
+            };
+
+            const repairTypeData = {
+                labels: /*[[${repairCountByType?.keySet()}]]*/ [],
+                counts: /*[[${repairCountByType?.values()}]]*/ [],
+                colors: [
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)'
+                ]
+            };
+
+            // Khởi tạo biểu đồ chi phí theo thời gian
+            const costOverTimeCtx = document.getElementById('repairCostOverTimeChart');
+            const noDataMessage = document.getElementById('noRepairCostData');
+            let costOverTimeChart = null;
+
+            function initCostOverTimeChart(labels, data) {
+                if (costOverTimeChart) {
+                    costOverTimeChart.destroy();
+                }
+
+                if (labels.length === 0 || data.length === 0) {
+                    costOverTimeCtx.style.display = 'none';
+                    noDataMessage.style.display = 'block';
+                    return;
+                }
+
+                costOverTimeCtx.style.display = 'block';
+                noDataMessage.style.display = 'none';
+
+                costOverTimeChart = new Chart(costOverTimeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                label: 'Chi phí sửa chữa (VNĐ)',
+                                data: data,
+                                backgroundColor: 'rgba(78, 115, 223, 0.7)',
+                                borderColor: 'rgba(78, 115, 223, 1)',
+                                borderWidth: 1
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function (value) {
+                                        return value.toLocaleString() + ' VNĐ';
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: true,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return context.parsed.y.toLocaleString() + ' VNĐ';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Khởi tạo lần đầu với dữ liệu theo tháng
+            initCostOverTimeChart(
+                    repairCostData.month.labels,
+                    repairCostData.month.values
+                    );
+
+            // Xử lý thay đổi khoảng thời gian
+            document.querySelectorAll('.time-range-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const range = this.getAttribute('data-range');
+
+                    // Cập nhật UI
+                    document.querySelectorAll('.time-range-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById('selectedTimeRange').textContent = this.textContent.trim();
+
+                    // Cập nhật dữ liệu biểu đồ
+                    initCostOverTimeChart(
+                            repairCostData[range].labels,
+                            repairCostData[range].values
+                            );
+                });
+            });
+            // Khởi tạo biểu đồ loại sửa chữa
+            const repairTypeCtx = document.getElementById('repairTypeChart').getContext('2d');
+            const repairTypeChart = new Chart(repairTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: repairTypeData.labels,
+                    datasets: [{
+                            data: repairTypeData.counts,
+                            backgroundColor: repairTypeData.colors
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                let percentage = (value * 100 / sum).toFixed(1) + '%';
+                                return percentage;
+                            },
+                            color: '#fff',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            // Xử lý thay đổi khoảng thời gian
+            document.querySelectorAll('.time-range-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const range = this.getAttribute('data-range');
+
+                    // Cập nhật UI
+                    document.querySelectorAll('.time-range-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById('selectedTimeRange').textContent = this.textContent;
+
+                    // Cập nhật dữ liệu biểu đồ
+                    costOverTimeChart.data.labels = repairTimeLabels[range];
+                    costOverTimeChart.data.datasets[0].data = repairTimeData[range];
+                    costOverTimeChart.update();
+                });
+            });
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

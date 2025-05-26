@@ -20,6 +20,7 @@ D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\contro
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\IssueControllers.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\MaintenanceControllers.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\RepairControllers.java
+D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\controllers\StatControllers.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\filters\JwtFilter.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\formatters\AccountFormatter.java
 D:\NVD\PhatTrienHeThongWeb\QuanLyBaoTriThietBi\QLTB\src\main\java\com\nvd\formatters\CategoryFormatter.java

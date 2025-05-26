@@ -3,6 +3,7 @@ com\nvd\pojo\IncidentLevel.class
 com\nvd\service\MaintenanceTypeService.class
 com\nvd\configs\HibernateConfig.class
 com\nvd\service\StatusService.class
+com\nvd\controllers\StatControllers.class
 com\nvd\service\MaintenanceService.class
 com\nvd\controllers\AccountControllers.class
 com\nvd\configs\DispatcherServletInit.class
