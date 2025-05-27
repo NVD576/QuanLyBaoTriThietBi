@@ -11,6 +11,7 @@ import com.nvd.service.MaintenanceTypeService;
 import com.nvd.service.RepairService;
 import com.nvd.service.RepairTypeService;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -28,10 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @ControllerAdvice
 @PropertySource("classpath:configs.properties")
 public class MaintenanceControllers {
-
+    
     @Autowired
     private MaintenanceService maintenanceService;
-
+    
     @Autowired
     private MaintenanceTypeService maintenanceTypeService;
     @Autowired
@@ -44,25 +45,25 @@ public class MaintenanceControllers {
     private RepairService repairService;
     @Autowired
     private DeviceService deviceService;
-
+    
     @GetMapping("/maintenances")
     public String show(Model model,
             @RequestParam(value = "typeId", required = false) Integer typeId,
             @RequestParam(value = "frequencyId", required = false) Integer frequencyId) {
-        
+
         // Lấy danh sách lịch bảo trì theo bộ lọc
         List<Maintenance> maintenances = this.maintenanceService.getMaintenances(typeId, frequencyId);
-        
+
         // Thêm dữ liệu vào model
         model.addAttribute("maintenances", maintenances);
         model.addAttribute("accounts", accountService.getAccount());
         model.addAttribute("maintenanceTypes", maintenanceTypeService.getMaintenanceTypes());
         model.addAttribute("frequencies", frequencyService.getFrequency());
-        
+
         // Lưu trạng thái bộ lọc để hiển thị lại
         model.addAttribute("selectedTypeId", typeId);
         model.addAttribute("selectedFrequencyId", frequencyId);
-        
+
         // Tạo thông tin về kết quả lọc
         String filteredInfo = createFilterInfo(typeId, frequencyId);
         if (filteredInfo != null) {
@@ -71,7 +72,7 @@ public class MaintenanceControllers {
         
         return "maintenances";
     }
-
+    
     private String createFilterInfo(Integer typeId, Integer frequencyId) {
         StringBuilder info = new StringBuilder();
         boolean hasFilter = false;
@@ -101,7 +102,7 @@ public class MaintenanceControllers {
         
         return hasFilter ? "Đang lọc theo - " + info.toString() : null;
     }
-
+    
     @PostMapping("/maintenance/add")
     public String add(@ModelAttribute(value = "maintenance") Maintenance p, BindingResult result,
             Model model) {
@@ -110,12 +111,12 @@ public class MaintenanceControllers {
         }
         return "maintenance-add";
     }
-
+    
     @GetMapping("/maintenance")
     public String showMaintenanceForm(Model model,
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "deviceId", required = false) Integer deviceId) {
-
+        
         Maintenance maintenance;
         if (id != null) { // Trường hợp chỉnh sửa
             maintenance = maintenanceService.getMaintenanceById(id);
@@ -130,14 +131,14 @@ public class MaintenanceControllers {
                 model.addAttribute("devices", deviceService.getDevices(null)); // Cho phép chọn thiết bị
             }
         }
-
+        
         model.addAttribute("maintenance", maintenance);
         model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
         model.addAttribute("frequencies", frequencyService.getFrequency());
-
+        
         return "maintenance-add";
     }
-
+    
     @PostMapping("/maintenance/{id}/repair/add")
     public String confirmMaintenance(@PathVariable("id") int id,
             @RequestParam("cost") BigDecimal cost,
@@ -145,7 +146,24 @@ public class MaintenanceControllers {
         Maintenance maintenance = this.maintenanceService.getMaintenanceById(id);
         Repair repair = new Repair();
         repairService.addNewMaintenancyOrIssue(repair, cost, maintenance.getDeviceId(), this.repairTypeService.getTypeById(1), accountId);
-        this.maintenanceService.deleteMaintenance(id);
+        
+        if (maintenance.getTypeId().getType() == "Định kỳ") {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(maintenance.getDate());// date ban đầu
+
+            String s = maintenance.getFrequencyId().getFrequency();
+            if (s == "Hàng tháng") {
+                cal.add(Calendar.MONTH, 1);
+            } else if (s == "Hàng năm") {
+                cal.add(Calendar.YEAR, 1);
+            } else {
+                cal.add(Calendar.MONTH, 6);
+            }
+            maintenance.setDate(cal.getTime());
+            this.maintenanceService.addOrUpdateMaintenance(maintenance);
+        } else {
+            this.maintenanceService.deleteMaintenance(id);
+        }
         return "redirect:/maintenances";
     }
 }
