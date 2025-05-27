@@ -31,7 +31,7 @@
 
                     </ul>
 \
-                    <form class="d-flex align-items-center gap-3" th:action="@{/}" method="get">
+                    <form class="d-flex align-items-center gap-3" th:action="@{/}" method="get" sec:authorize="isAuthenticated()">
                         <!-- Từ khóa -->
                         <input class="form-control" type="text" name="kw" placeholder="Nhập tên thiết bị..." th:value="${kw}">
 
