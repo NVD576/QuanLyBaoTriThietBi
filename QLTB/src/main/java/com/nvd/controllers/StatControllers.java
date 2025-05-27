@@ -91,12 +91,16 @@ public class StatControllers {
         // Dữ liệu biểu đồ
         model.addAttribute("repairCostByDay",
                 repairService.getRepairCostByTimeRange(startDate, endDate, categoryId, statusId, "day"));
+        model.addAttribute("repairCostByWeek",
+                repairService.getRepairCostByTimeRange(startDate, endDate, categoryId, statusId, "week"));
         model.addAttribute("repairCostByMonth",
                 repairService.getRepairCostByTimeRange(startDate, endDate, categoryId, statusId, "month"));
+        model.addAttribute("repairCostByYear",
+                repairService.getRepairCostByTimeRange(startDate, endDate, categoryId, statusId, "year"));
 
         Map<RepairType, Long> rawMap = repairService.getRepairCountByType(startDate, endDate, categoryId, statusId);
 
-// Chuyển từ Map<RepairType, Long> → Map<String, Long>
+        // Chuyển từ Map<RepairType, Long> → Map<String, Long>
         Map<String, Long> nameCountMap = new LinkedHashMap<>();
         for (Map.Entry<RepairType, Long> entry : rawMap.entrySet()) {
             nameCountMap.put(entry.getKey().getType(), entry.getValue());
@@ -122,7 +126,7 @@ public class StatControllers {
 
     private Date getDefaultStartDate() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -3); // 3 tháng trước
+        cal.add(Calendar.MONTH, -12); // 12 tháng trước
         return cal.getTime();
     }
 
