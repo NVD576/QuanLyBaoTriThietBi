@@ -15,72 +15,134 @@
             </a>
         </div>
 
-        <ul class="list-group">
-            <li class="list-group-item mb-3 shadow-sm"
-                th:each="p : ${maintenances}">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="me-auto">
-                        <div class="fw-bold" th:text="${p.deviceId.name}">Tên thiết bị</div>
-                        <div class="text-muted">
-                            <div th:text="'Tần suất: ' + ${p.frequencyId.frequency}"></div>
-                            <div th:text="'Ngày bảo trì: ' + ${p.date}"></div>
-                            <div th:text="'Loại bảo trì: ' + ${p.typeId.type}"></div>
+        <!-- Bộ lọc theo loại bảo trì -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">
+                    <i class="bi bi-funnel me-2"></i>Bộ lọc
+                </h5>
+                <form method="get" th:action="@{/maintenances}" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="typeFilter" class="form-label">Loại bảo trì:</label>
+                        <select name="typeId" id="typeFilter" class="form-select">
+                            <option value="">-- Tất cả loại bảo trì --</option>
+                            <option th:each="type : ${maintenanceTypes}" 
+                                    th:value="${type.id}" 
+                                    th:text="${type.type}"
+                                    th:selected="${type.id == selectedTypeId}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="frequencyFilter" class="form-label">Tần suất:</label>
+                        <select name="frequencyId" id="frequencyFilter" class="form-select">
+                            <option value="">-- Tất cả tần suất --</option>
+                            <option th:each="freq : ${frequencies}" 
+                                    th:value="${freq.id}" 
+                                    th:text="${freq.frequency}"
+                                    th:selected="${freq.id == selectedFrequencyId}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i>Lọc
+                        </button>
+                        <a th:href="@{/maintenances}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Đặt lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Hiển thị kết quả lọc -->
+        <div class="alert alert-info mb-3" th:if="${filteredInfo}">
+            <i class="bi bi-info-circle me-2"></i>
+            <span th:text="${filteredInfo}"></span>
+            <span class="fw-bold" th:text="'(' + ${maintenances.size()} + ' kết quả)'"></span>
+        </div>
+
+        <!-- Danh sách lịch bảo trì -->
+        <div th:if="${maintenances.size() > 0}">
+            <ul class="list-group">
+                <li class="list-group-item mb-3 shadow-sm"
+                    th:each="p : ${maintenances}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="me-auto">
+                            <div class="fw-bold" th:text="${p.deviceId.name}">Tên thiết bị</div>
+                            <div class="text-muted">
+                                <div th:text="'Tần suất: ' + ${p.frequencyId.frequency}"></div>
+                                <div th:text="'Ngày bảo trì: ' + ${p.date}"></div>
+                                <div>
+                                    <span class="badge bg-primary" th:text="'Loại: ' + ${p.typeId.type}"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column gap-2 align-items-end">
+                            <!-- Nút sửa -->
+                            <a th:href="@{'/maintenance?id=' + ${p.id}}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square me-1"></i> Sửa
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline-danger"
+                               th:onclick="'deleteMaintenance(\'' + @{/api/maintenance/{id}/delete(id=${p.id})} + '\')'" >
+                                Xóa
+                            </a>
+                            <!-- Nút xác nhận + form nếu chưa xử lý -->
+                            <div class="w-100">
+                                <button class="btn btn-sm btn-success w-100"
+                                        type="button"
+                                        th:attr="data-id=${p.id}"
+                                        onclick="showCostForm(this)">
+                                    <i class="bi bi-check2-circle me-1"></i> Xác nhận bảo trì
+                                </button>
+
+                                <!-- Form nhập chi phí & tài khoản -->
+                                <form th:id="'cost-form-' + ${p.id}"
+                                      th:action="@{'/maintenance/' + ${p.id} + '/repair/add'}"
+                                      method="post"
+                                      style="display: none;"
+                                      class="mt-2">
+                                    <div class="mb-2">
+                                        <input type="number" name="cost" class="form-control" placeholder="Nhập chi phí" required />
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <select name="accountId" class="form-select" required>
+                                            <option value="" disabled selected>-- Chọn tài khoản bảo trì --</option>
+                                            <option th:each="a : ${accounts}" th:value="${a.id}" th:text="${a.name}"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between">
+                                        <button type="submit" class="btn btn-outline-success btn-sm">
+                                            <i class="bi bi-send-check me-1"></i> Gửi
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-outline-secondary btn-sm"
+                                                th:attr="data-id=${p.id}"
+                                                onclick="cancelCostForm(this)">
+                                            <i class="bi bi-x-circle me-1"></i> Hủy
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                </li>
+            </ul>
+        </div>
 
-                    <div class="d-flex flex-column gap-2 align-items-end">
-                        <!-- Nút sửa -->
-                        <a th:href="@{'/maintenance?id=' + ${p.id}}"
-                           class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-pencil-square me-1"></i> Sửa
-                        </a>
-                        <a href="#" class="btn btn-sm btn-outline-danger"
-                           th:onclick="'deleteMaintenance(\'' + @{/api/maintenance/{id}/delete(id=${p.id})} + '\')'" >
-                            Xóa
-                        </a>
-                        <!-- Nút xác nhận + form nếu chưa xử lý -->
-                        <div class="w-100">
-                            <button class="btn btn-sm btn-success w-100"
-                                    type="button"
-                                    th:attr="data-id=${p.id}"
-                                    onclick="showCostForm(this)">
-                                <i class="bi bi-check2-circle me-1"></i> Xác nhận bảo trì
-                            </button>
-
-                            <!-- Form nhập chi phí & tài khoản -->
-                            <form th:id="'cost-form-' + ${p.id}"
-                                  th:action="@{'/maintenance/' + ${p.id} + '/repair/add'}"
-                                  method="post"
-                                  style="display: none;"
-                                  class="mt-2">
-                                <div class="mb-2">
-                                    <input type="number" name="cost" class="form-control" placeholder="Nhập chi phí" required />
-                                </div>
-
-                                <div class="mb-2">
-                                    <select name="accountId" class="form-select" required>
-                                        <option value="" disabled selected>-- Chọn tài khoản bảo trì --</option>
-                                        <option th:each="a : ${accounts}" th:value="${a.id}" th:text="${a.name}"></option>
-                                    </select>
-                                </div>
-
-                                <div class="d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-outline-success btn-sm">
-                                        <i class="bi bi-send-check me-1"></i> Gửi
-                                    </button>
-                                    <button type="button"
-                                            class="btn btn-outline-secondary btn-sm"
-                                            th:attr="data-id=${p.id}"
-                                            onclick="cancelCostForm(this)">
-                                        <i class="bi bi-x-circle me-1"></i> Hủy
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
+        <!-- Thông báo khi không có kết quả -->
+        <div th:if="${maintenances.size() == 0}" class="text-center py-5">
+            <div class="mb-3">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+            </div>
+            <h5 class="text-muted">Không tìm thấy lịch bảo trì nào</h5>
+            <p class="text-muted">Hãy thử thay đổi bộ lọc hoặc thêm lịch bảo trì mới.</p>
+        </div>
     </div>
 
     <div th:replace="base :: footer"></div>
