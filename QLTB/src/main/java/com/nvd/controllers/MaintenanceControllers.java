@@ -29,10 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @ControllerAdvice
 @PropertySource("classpath:configs.properties")
 public class MaintenanceControllers {
-    
+
     @Autowired
     private MaintenanceService maintenanceService;
-    
+
     @Autowired
     private MaintenanceTypeService maintenanceTypeService;
     @Autowired
@@ -45,7 +45,7 @@ public class MaintenanceControllers {
     private RepairService repairService;
     @Autowired
     private DeviceService deviceService;
-    
+
     @GetMapping("/maintenances")
     public String show(Model model,
             @RequestParam(value = "typeId", required = false) Integer typeId,
@@ -69,14 +69,14 @@ public class MaintenanceControllers {
         if (filteredInfo != null) {
             model.addAttribute("filteredInfo", filteredInfo);
         }
-        
+
         return "maintenances";
     }
-    
+
     private String createFilterInfo(Integer typeId, Integer frequencyId) {
         StringBuilder info = new StringBuilder();
         boolean hasFilter = false;
-        
+
         if (typeId != null) {
             try {
                 String typeName = maintenanceTypeService.getMaintenanceTypeById(typeId).getType();
@@ -86,7 +86,7 @@ public class MaintenanceControllers {
                 // Xử lý trường hợp không tìm thấy loại bảo trì
             }
         }
-        
+
         if (frequencyId != null) {
             try {
                 String frequencyName = frequencyService.getFrequencyById(frequencyId).getFrequency();
@@ -99,10 +99,10 @@ public class MaintenanceControllers {
                 // Xử lý trường hợp không tìm thấy tần suất
             }
         }
-        
+
         return hasFilter ? "Đang lọc theo - " + info.toString() : null;
     }
-    
+
     @PostMapping("/maintenance/add")
     public String add(@ModelAttribute(value = "maintenance") Maintenance p, BindingResult result,
             Model model) {
@@ -111,12 +111,12 @@ public class MaintenanceControllers {
         }
         return "maintenance-add";
     }
-    
+
     @GetMapping("/maintenance")
     public String showMaintenanceForm(Model model,
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "deviceId", required = false) Integer deviceId) {
-        
+
         Maintenance maintenance;
         if (id != null) { // Trường hợp chỉnh sửa
             maintenance = maintenanceService.getMaintenanceById(id);
@@ -131,14 +131,14 @@ public class MaintenanceControllers {
                 model.addAttribute("devices", deviceService.getDevices(null)); // Cho phép chọn thiết bị
             }
         }
-        
+
         model.addAttribute("maintenance", maintenance);
         model.addAttribute("types", maintenanceTypeService.getMaintenanceTypes());
         model.addAttribute("frequencies", frequencyService.getFrequency());
-        
+
         return "maintenance-add";
     }
-    
+
     @PostMapping("/maintenance/{id}/repair/add")
     public String confirmMaintenance(@PathVariable("id") int id,
             @RequestParam("cost") BigDecimal cost,
@@ -146,19 +146,21 @@ public class MaintenanceControllers {
         Maintenance maintenance = this.maintenanceService.getMaintenanceById(id);
         Repair repair = new Repair();
         repairService.addNewMaintenancyOrIssue(repair, cost, maintenance.getDeviceId(), this.repairTypeService.getTypeById(1), accountId);
-        
-        if (maintenance.getTypeId().getType() == "Định kỳ") {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(maintenance.getDate());// date ban đầu
 
-            String s = maintenance.getFrequencyId().getFrequency();
-            if (s == "Hàng tháng") {
+        if (maintenance.getTypeId() != null && "Định kỳ".equals(maintenance.getTypeId().getType())) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(maintenance.getDate());
+
+            String s = maintenance.getFrequencyId() != null ? maintenance.getFrequencyId().getFrequency() : "";
+
+            if ("Hàng tháng".equals(s)) {
                 cal.add(Calendar.MONTH, 1);
-            } else if (s == "Hàng năm") {
+            } else if ("Hàng năm".equals(s)) {
                 cal.add(Calendar.YEAR, 1);
             } else {
                 cal.add(Calendar.MONTH, 6);
             }
+
             maintenance.setDate(cal.getTime());
             this.maintenanceService.addOrUpdateMaintenance(maintenance);
         } else {
