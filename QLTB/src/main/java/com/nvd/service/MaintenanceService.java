@@ -19,4 +19,5 @@ public interface MaintenanceService {
     Maintenance addNewDevice(Maintenance p, Device d);
     Maintenance getMaintenanceById(int id);
     void deleteMaintenance(int id);
+    List<Maintenance> getMaintenances(Integer typeId, Integer frequencyId);
 }

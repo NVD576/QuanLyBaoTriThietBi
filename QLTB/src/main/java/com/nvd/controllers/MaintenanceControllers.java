@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nvd.controllers;
 
 import com.nvd.pojo.Device;
@@ -15,6 +11,7 @@ import com.nvd.service.MaintenanceTypeService;
 import com.nvd.service.RepairService;
 import com.nvd.service.RepairTypeService;
 import java.math.BigDecimal;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
@@ -27,10 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- *
- * @author ADMIN
- */
 @Controller
 @ControllerAdvice
 @PropertySource("classpath:configs.properties")
@@ -53,10 +46,60 @@ public class MaintenanceControllers {
     private DeviceService deviceService;
 
     @GetMapping("/maintenances")
-    public String show(Model model) {
-        model.addAttribute("maintenances", this.maintenanceService.getMaintenances());
+    public String show(Model model,
+            @RequestParam(value = "typeId", required = false) Integer typeId,
+            @RequestParam(value = "frequencyId", required = false) Integer frequencyId) {
+        
+        // Lấy danh sách lịch bảo trì theo bộ lọc
+        List<Maintenance> maintenances = this.maintenanceService.getMaintenances(typeId, frequencyId);
+        
+        // Thêm dữ liệu vào model
+        model.addAttribute("maintenances", maintenances);
         model.addAttribute("accounts", accountService.getAccount());
+        model.addAttribute("maintenanceTypes", maintenanceTypeService.getMaintenanceTypes());
+        model.addAttribute("frequencies", frequencyService.getFrequency());
+        
+        // Lưu trạng thái bộ lọc để hiển thị lại
+        model.addAttribute("selectedTypeId", typeId);
+        model.addAttribute("selectedFrequencyId", frequencyId);
+        
+        // Tạo thông tin về kết quả lọc
+        String filteredInfo = createFilterInfo(typeId, frequencyId);
+        if (filteredInfo != null) {
+            model.addAttribute("filteredInfo", filteredInfo);
+        }
+        
         return "maintenances";
+    }
+
+    private String createFilterInfo(Integer typeId, Integer frequencyId) {
+        StringBuilder info = new StringBuilder();
+        boolean hasFilter = false;
+        
+        if (typeId != null) {
+            try {
+                String typeName = maintenanceTypeService.getMaintenanceTypeById(typeId).getType();
+                info.append("Loại bảo trì: ").append(typeName);
+                hasFilter = true;
+            } catch (Exception e) {
+                // Xử lý trường hợp không tìm thấy loại bảo trì
+            }
+        }
+        
+        if (frequencyId != null) {
+            try {
+                String frequencyName = frequencyService.getFrequencyById(frequencyId).getFrequency();
+                if (hasFilter) {
+                    info.append(" | ");
+                }
+                info.append("Tần suất: ").append(frequencyName);
+                hasFilter = true;
+            } catch (Exception e) {
+                // Xử lý trường hợp không tìm thấy tần suất
+            }
+        }
+        
+        return hasFilter ? "Đang lọc theo - " + info.toString() : null;
     }
 
     @PostMapping("/maintenance/add")
@@ -105,5 +148,4 @@ public class MaintenanceControllers {
         this.maintenanceService.deleteMaintenance(id);
         return "redirect:/maintenances";
     }
-
 }

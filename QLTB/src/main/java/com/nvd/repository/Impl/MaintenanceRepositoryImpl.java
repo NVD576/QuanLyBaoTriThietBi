@@ -16,8 +16,10 @@ import com.nvd.repository.MaintenanceTypeRepository;
 import com.nvd.service.FrequencyService;
 import com.nvd.service.MaintenanceTypeService;
 import jakarta.persistence.Query;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.HibernateException;
@@ -143,5 +145,37 @@ public class MaintenanceRepositoryImpl implements MaintenanceRepository {
         } else {
             throw new IllegalArgumentException("Device không tồn tại với id = " + id);
         }
+    }
+    
+    @Override
+    public List<Maintenance> getMaintenances(Integer typeId, Integer frequencyId) {
+        Session s = this.factory.getObject().getCurrentSession();
+        
+        StringBuilder hql = new StringBuilder("FROM Maintenance m");
+        List<String> conditions = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        
+        if (typeId != null) {
+            conditions.add("m.typeId.id = :typeId");
+            params.put("typeId", typeId);
+        }
+        
+        if (frequencyId != null) {
+            conditions.add("m.frequencyId.id = :frequencyId");
+            params.put("frequencyId", frequencyId);
+        }
+        
+        if (!conditions.isEmpty()) {
+            hql.append(" WHERE ").append(String.join(" AND ", conditions));
+        }
+        
+        hql.append(" ORDER BY m.date DESC");
+        
+        Query query = s.createQuery(hql.toString());
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        
+        return query.getResultList();
     }
 }

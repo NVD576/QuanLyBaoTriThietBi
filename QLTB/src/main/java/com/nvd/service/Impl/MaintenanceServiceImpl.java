@@ -53,4 +53,9 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         this.maintenanceRepository.deleteMaintenance(id);
     }
 
+    @Override
+    public List<Maintenance> getMaintenances(Integer typeId, Integer frequencyId) {
+        return this.maintenanceRepository.getMaintenances(typeId, frequencyId);
+    }
+
 }
