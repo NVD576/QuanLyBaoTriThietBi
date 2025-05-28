@@ -171,7 +171,7 @@ const RepairHistory = () => {
         </thead>
         <tbody>
           {filteredRepairs.length > 0 ? (
-            filteredRepairs.map((r) => (
+            filteredRepairs.slice().reverse().map((r) => (
               <tr key={r.id}>
                 <td>{r.deviceId?.name}</td>
                 <td>{new Date(r.date).toLocaleDateString("vi-VN")}</td>

@@ -230,7 +230,7 @@ const IncidentManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {issues.map((issue) => (
+              {[...issues].reverse().map((issue) => (
                 <tr key={issue.id}>
                   <td>
                     {issue.deviceId?.name || `Thiết bị ${issue.deviceId?.id}`}
