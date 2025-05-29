@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Trang quản lý thiết bị</title>
@@ -11,7 +11,7 @@
     <div th:replace="base :: header"></div>
     <div class="container mt-5">
 
-        <!-- THÔNG TIN THIẾT BỊ -->
+         THÔNG TIN THIẾT BỊ 
         <div class="mb-4">
             <h3 th:text="'Chi tiết thiết bị: ' + ${device.name}">Tên thiết bị</h3>
             <p><strong>Loại:</strong> <span th:text="${device.categoryId.name}"></span></p>
@@ -19,7 +19,7 @@
             <p><strong>Cơ sở:</strong> <span th:text="${device.baseId.name}"></span></p>
         </div>
 
-        <!-- BẢO TRÌ -->
+         BẢO TRÌ 
         <div class="mb-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4>Lịch bảo trì</h4>
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <!-- SỰ CỐ -->
+         SỰ CỐ 
         <div class="mb-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4>Sự cố</h4>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <!-- SỬA CHỮA -->
+         SỬA CHỮA 
         <div class="mb-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4>Sửa chữa</h4>
@@ -87,5 +87,124 @@
 
     </div>
     <div th:replace="base :: footer"></div>
+</body>
+</html>-->
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Trang quản lý thiết bị</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">
+    <style>
+        .device-tabs button.active {
+            font-weight: bold;
+            border-bottom: 2px solid #007bff;
+            background-color: #e9ecef;
+        }
+        .tab-content {
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+        }
+    </style>
+    <th:block th:replace="base :: styles"> </th:block>
+</head>
+
+<body>
+<div th:replace="base :: header"></div>
+<div class="container mt-5">
+
+    <!-- Thông tin thiết bị -->
+    <div class="mb-4">
+        <h3 th:text="'Chi tiết thiết bị: ' + ${device.name}">Tên thiết bị</h3>
+        <p><strong>Loại:</strong> <span th:text="${device.categoryId.name}"></span></p>
+        <p><strong>Trạng thái:</strong> <span th:text="${device.statusId.name}"></span></p>
+        <p><strong>Cơ sở:</strong> <span th:text="${device.baseId.name}"></span></p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="device-tabs mb-3">
+        <button class="btn btn-outline-primary me-2 active" onclick="showTab('maintenance')">
+            <i class="bi bi-wrench"></i> Bảo trì
+        </button>
+        <button class="btn btn-outline-danger me-2" onclick="showTab('issue')">
+            <i class="bi bi-exclamation-triangle"></i> Sự cố
+        </button>
+        <button class="btn btn-outline-warning" onclick="showTab('repair')">
+            <i class="bi bi-tools"></i> Sửa chữa
+        </button>
+    </div>
+
+    <!-- Nội dung Bảo trì -->
+    <div id="maintenance" class="tab-content">
+        <h4><i class="bi bi-wrench"></i> Thông tin Bảo trì</h4>
+        <div class="list-group">
+            <div class="list-group-item" th:each="m : ${maintenances}" th:if="${m.typeId.type == 'Định kỳ'}">
+                <p><i class="bi bi-calendar-event"></i> Ngày: <span th:text="${#dates.format(m.date, 'dd/MM/yyyy')}"></span></p>
+                <p><i class="bi bi-repeat"></i> Tần suất: <span th:text="${m.frequencyId.frequency}"></span></p>
+                <p><i class="bi bi-tag"></i> Loại bảo trì: <span th:text="${m.typeId.type}"></span></p>
+            </div>
+            <div class="text-muted text-center mt-3" th:if="${#lists.isEmpty(maintenances)}">
+                Không có lịch bảo trì định kỳ.
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung Sự cố -->
+    <div id="issue" class="tab-content d-none">
+        <h4><i class="bi bi-exclamation-triangle"></i> Thông tin Sự cố</h4>
+        <div class="list-group">
+            <div class="list-group-item" th:each="i : ${issues}">
+                <p><i class="bi bi-calendar-event"></i> Ngày: <span th:text="${#dates.format(i.date, 'dd/MM/yyyy')}"></span></p>
+                <p><i class="bi bi-card-text"></i> Mô tả: <span th:text="${i.des}"></span></p>
+                <p><i class="bi bi-flag-fill"></i> Mức độ: 
+                    <span th:text="${i.levelId.level}" th:classappend="'badge bg-' + (${i.levelId.level.toLowerCase()} == 'cao' ? 'danger' : (${i.levelId.level.toLowerCase()} == 'trung bình' ? 'warning' : 'secondary'))"></span>
+                </p>
+                <p><i class="bi bi-check-circle"></i> Trạng thái:
+                    <span class="badge" th:classappend="${i.isResolved} ? 'bg-success' : 'bg-warning'"
+                          th:text="${i.isResolved} ? 'Đã xử lý' : 'Chưa xử lý'"></span>
+                </p>
+            </div>
+            <div class="text-muted text-center mt-3" th:if="${#lists.isEmpty(issues)}">
+                Không có sự cố nào được ghi nhận.
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung Sửa chữa -->
+    <div id="repair" class="tab-content d-none">
+        <h4><i class="bi bi-tools"></i> Lịch sử Sửa chữa</h4>
+        <div class="list-group">
+            <div class="list-group-item" th:each="r : ${repairs}">
+                <p><i class="bi bi-calendar-check"></i> Ngày sửa: <span th:text="${#dates.format(r.date, 'dd/MM/yyyy')}"></span></p>
+                <p><i class="bi bi-gear"></i> Loại sửa chữa: <span th:text="${r.typeId.type}"></span></p>
+                <p><i class="bi bi-cash-stack"></i> Chi phí: <span th:text="${#numbers.formatDecimal(r.cost, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
+                <p><i class="bi bi-person"></i> Người thực hiện: <span th:text="${r.accountId.name}"></span></p>
+            </div>
+            <div class="text-muted text-center mt-3" th:if="${#lists.isEmpty(repairs)}">
+                Chưa có lịch sử sửa chữa.
+            </div>
+        </div>
+    </div>
+
+</div>
+<div th:replace="base :: footer"></div>
+
+<!-- Script chuyển tab -->
+<script>
+    function showTab(tabId) {
+        const tabs = ["maintenance", "issue", "repair"];
+        tabs.forEach(id => {
+            document.getElementById(id).classList.add("d-none");
+        });
+        document.getElementById(tabId).classList.remove("d-none");
+
+        const buttons = document.querySelectorAll(".device-tabs button");
+        buttons.forEach(btn => btn.classList.remove("active"));
+        event.target.classList.add("active");
+    }
+</script>
 </body>
 </html>
