@@ -94,8 +94,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public int countDeviceByConditions(String kw, Integer baseId, Integer cateId) {
-        return this.deviceRepo.countDeviceByConditions(kw, baseId, cateId);
+    public int countDeviceByConditions(String kw, Integer baseId, Integer cateId, Integer statusId) {
+        return this.deviceRepo.countDeviceByConditions(kw, baseId, cateId, statusId);
     }
 
 }
