@@ -92,24 +92,7 @@ public class ApiDeviceControllers {
     ) {
 
         try {
-            // Xử lý ảnh (nếu có)
-//            if (image != null && !image.isEmpty()) {
-//                String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-//                Path path = Paths.get("uploads/" + fileName); // thư mục bạn tự cấu hình
-//                Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//                device.setImage(fileName);
-//            }
-            // Lấy các entity từ id:
 
-//            p.setBaseId(baseService.getBaseById(p.getBaseId().getId()));
-//            p.setCategoryId(categoryService.getCategotryById(p.getCategoryId().getId()));
-//            p.setStatusId(statusService.getStatusById(p.getStatusId().getId()));
-//            if (p.getFile()!=null&&!p.getFile().isEmpty()) {
-//                String filename = p.getFile().getOriginalFilename();
-//                // xử lý lưu ảnh tại đây, ví dụ:
-//                p.setImage(filename);
-//                // Files.copy(...) hoặc sử dụng service lưu ảnh
-//            }
 
             // Lưu device
             Device device = deviceService.addOrUpdateDevice(p);

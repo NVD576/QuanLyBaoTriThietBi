@@ -52,11 +52,52 @@ public class SpringSecurityConfigs {
             Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(c -> c.disable()).authorizeHttpRequests(requests
-                -> requests.requestMatchers("/", "/home").authenticated()
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/devices").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,
-                                "/devices/**").hasAnyRole("USER", "ADMIN")
+                -> requests
+                        .requestMatchers("/").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+                        //account
+                        .requestMatchers(HttpMethod.GET, "/api/secure/profile").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/accounts").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/account/edit").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/account/{id}/delete").hasRole("ADMIN")
+                        //device
+                        .requestMatchers(HttpMethod.GET, "/device").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/device/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/device/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/device/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/devices/{deviceId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/device/edit").hasRole("ADMIN")
+                        //base
+                        .requestMatchers(HttpMethod.GET, "/bases", "/base").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/base/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/base/delete").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/base/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/base/delete").hasRole("ADMIN")
+                        //maintenance
+                        .requestMatchers(HttpMethod.GET, "/maintenances", "/maintenance").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/maintenance/add").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/maintenance/{id}/repair/add").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/maintenance/{id}/delete").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/maintenances/add").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/maintenance/{id}/confirm").hasAnyRole("USER", "ADMIN")
+                        //category
+                        .requestMatchers(HttpMethod.GET, "/categories").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/category/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/category/{id}").hasRole("ADMIN")
+                        //issue
+                        .requestMatchers(HttpMethod.GET, "/issues", "/issue").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/issue/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/issue/{id}/isResolved=true/repair/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/issue/{id}/delete").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/issue/add").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/issue/{id}/confirm").hasAnyRole("USER", "ADMIN")
+                       //repair
+                        .requestMatchers(HttpMethod.GET, "/repairs", "/repair").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/repair/add").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/repair/{id}/delete").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/repair/add").hasAnyRole("USER", "ADMIN")
+                      
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
                 .loginProcessingUrl("/login")
