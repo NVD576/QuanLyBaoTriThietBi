@@ -20,7 +20,7 @@
                     <a th:href="@{/accounts}" class="btn btn-outline-success text-start">Quản lý người dùng</a>
                     <a th:href="@{/bases}" class="btn btn-outline-success text-start">Quản lý cơ sở</a>
                     <a th:href="@{/stats}" class="btn btn-outline-success text-start">Thống kê</a>
-                    
+
                 </div>
             </div>
 
@@ -67,27 +67,29 @@
                 </ul>
 
                 <!-- Hiển thị phân trang nếu tổng số trang >= 2 -->
-                <div th:if="${totalPages >= 2}" class="d-flex justify-content-end mt-3 me-3">
-                    <!-- Trang trước -->
-                    <a th:if="${currentPage > 1}"
-                       th:href="@{/(page=${currentPage - 1}, kw=${kw}, baseId=${baseId}, cateId=${cateId})}"
-                       class="btn btn-outline-primary me-2">Trang trước</a>
+                <div th:if="${totalPages >= 2}" class="d-flex justify-content-center mt-4">
+                    <div class="btn-group" role="group" aria-label="Pagination">
 
-                    <!-- Danh sách số trang -->
-                    <div class="btn-group me-2" role="group" aria-label="Pagination">
+                        <!-- Trang trước -->
+                        <a th:if="${currentPage > 1}"
+                           th:href="@{/(page=${currentPage - 1}, kw=${kw}, baseId=${baseId}, cateId=${cateId}, statusId=${statusId})}"
+                           class="btn btn-outline-primary">←</a>
+
+                        <!-- Số trang -->
                         <a th:each="i : ${#numbers.sequence(1, totalPages)}"
-                           th:href="@{/(page=${i}, kw=${kw}, baseId=${baseId}, cateId=${cateId})}"
+                           th:href="@{/(page=${i}, kw=${kw}, baseId=${baseId}, cateId=${cateId}, statusId=${statusId})}"
                            th:text="${i}"
                            class="btn"
                            th:classappend="${i == currentPage} ? 'btn-primary' : 'btn-outline-primary'">
                         </a>
-                    </div>
 
-                    <!-- Trang sau -->
-                    <a th:if="${currentPage < totalPages}"
-                       th:href="@{/(page=${currentPage + 1}, kw=${kw}, baseId=${baseId}, cateId=${cateId})}"
-                       class="btn btn-outline-primary">Trang sau</a>
+                        <!-- Trang sau -->
+                        <a th:if="${currentPage < totalPages}"
+                           th:href="@{/(page=${currentPage + 1}, kw=${kw}, baseId=${baseId}, cateId=${cateId}, statusId=${statusId})}"
+                           class="btn btn-outline-primary">→</a>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

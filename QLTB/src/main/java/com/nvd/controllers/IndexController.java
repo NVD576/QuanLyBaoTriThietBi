@@ -43,7 +43,7 @@ public class IndexController {
     public void commonAttr(Model model) {
         model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("bases", this.baseService.getBases());
-        model.addAttribute("statusId", this.statusService.getStatus());
+        model.addAttribute("status", this.statusService.getStatus());
     }
 
     @RequestMapping("/")
@@ -53,6 +53,7 @@ public class IndexController {
         // Trích xuất các điều kiện lọc (nếu có)
         String keyword = params.get("kw") != null ? params.get("kw").trim() : "";
         Integer baseId = null;
+        Integer statusId = null;
         Integer cateId = null;
 
         try {
@@ -71,10 +72,19 @@ public class IndexController {
             cateId = null;
         }
 
+        try {
+            if (params.get("statusId") != null) {
+                statusId = Integer.parseInt(params.get("statusId"));
+            }
+        } catch (NumberFormatException ex) {
+            baseId = null;
+        }
+
         // Gửi các biến lọc về view để giữ giá trị trong form và link phân trang
         model.addAttribute("kw", keyword);
         model.addAttribute("baseId", baseId);
         model.addAttribute("cateId", cateId);
+        model.addAttribute("statusId", statusId);
         if (params.get("page") == null || params.isEmpty()) {
             params.put("page", "1");
         }
@@ -85,7 +95,7 @@ public class IndexController {
         int pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
 
         // Gọi hàm đếm tổng số device theo điều kiện (hàm bạn đã combine)
-        int count = this.deviceService.countDeviceByConditions(keyword, baseId, cateId);
+        int count = this.deviceService.countDeviceByConditions(keyword, baseId, cateId, statusId);
 
         // Tính tổng số trang
         int totalPages = count > 0 ? (int) Math.ceil(count * 1.0 / pageSize) : 1;

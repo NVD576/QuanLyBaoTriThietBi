@@ -77,6 +77,12 @@ public class DeviceRepositoryImpl implements DeviceRepository {
                 predicates.add(b.equal(baseJoin.get("id"), Integer.parseInt(baseId)));
             }
 
+            String statusId = params.get("statusId");
+            if (statusId != null && !statusId.isEmpty()) {
+                Join<Device, Status> statusJoin = root.join("statusId");
+                predicates.add(b.equal(statusJoin.get("id"), Integer.parseInt(statusId)));
+            }
+
             q.where(predicates.toArray(Predicate[]::new));
         }
 
@@ -111,9 +117,9 @@ public class DeviceRepositoryImpl implements DeviceRepository {
         q.setParameter("cateId", cateId);
         return Integer.parseInt(q.getSingleResult().toString());
     }
-    
+
     @Override
-    public int countDeviceByConditions(String kw, Integer baseId, Integer cateId) {
+    public int countDeviceByConditions(String kw, Integer baseId, Integer cateId, Integer statusId) {
         Session s = this.factory.getObject().getCurrentSession();
         String hql = "SELECT COUNT(*) FROM Device d WHERE 1=1";
 
@@ -127,6 +133,10 @@ public class DeviceRepositoryImpl implements DeviceRepository {
 
         if (cateId != null) {
             hql += " AND d.categoryId.id = :cateId";
+        }
+
+        if (statusId != null) {
+            hql += " AND d.statusId.id = :statusId";
         }
 
         Query q = s.createQuery(hql);
@@ -143,10 +153,13 @@ public class DeviceRepositoryImpl implements DeviceRepository {
             q.setParameter("cateId", cateId);
         }
 
+        if (statusId != null) {
+            q.setParameter("statusId", statusId);
+        }
+
         return Integer.parseInt(q.getSingleResult().toString());
     }
 
-    
     @Override
     public Device getDeviceById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
