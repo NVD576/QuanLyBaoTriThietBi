@@ -193,7 +193,7 @@ const DeviceManagement = () => {
       alert("Successfull!");
       loadDevices();
       resetForm();
-      setShowForm(false); // Ẩn form sau khi thêm thành công
+      setShowForm(false); 
     } catch (err) {
       console.error(err);
       alert("Lỗi khi thêm thiết bị.");
