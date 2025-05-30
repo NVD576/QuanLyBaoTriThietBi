@@ -12,6 +12,7 @@ import {useContext} from "react";
 import {MyUserContext} from "../configs/MyContexts";
 import styles from "./Forum.module.css"; // Import CSS Module
 import imageCompression from "browser-image-compression";
+
 function Forum() {
 	const [posts, setPosts] = useState([]);
 	const [isCreatingPost, setIsCreatingPost] = useState(false); // State để kiểm soát hiển thị form tạo bài viết
@@ -24,6 +25,39 @@ function Forum() {
 	const [isUploading, setIsUploading] = useState(false);
 	const user = useContext(MyUserContext);
 	const fileInputRef = useRef(null);
+
+	// Hàm format thời gian
+	const formatTime = (timestamp) => {
+		if (!timestamp) return "";
+		
+		// Kiểm tra nếu timestamp là Firestore timestamp
+		const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+		
+		const now = new Date();
+		const diffInMs = now - date;
+		const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+		const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+		const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+		if (diffInMinutes < 1) {
+			return "Vừa xong";
+		} else if (diffInMinutes < 60) {
+			return `${diffInMinutes} phút trước`;
+		} else if (diffInHours < 24) {
+			return `${diffInHours} giờ trước`;
+		} else if (diffInDays < 7) {
+			return `${diffInDays} ngày trước`;
+		} else {
+			return date.toLocaleDateString("vi-VN", {
+				year: "numeric",
+				month: "short",
+				day: "numeric",
+				hour: "2-digit",
+				minute: "2-digit"
+			});
+		}
+	};
+
 	useEffect(() => {
 		const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
 		const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -64,6 +98,7 @@ function Forum() {
 	const closeCreatePostForm = () => {
 		setIsCreatingPost(false);
 	};
+	
 	const uploadImageToCloudinary = async (file) => {
 		try {
 			const options = {
@@ -151,6 +186,7 @@ function Forum() {
 		}
 		setIsUploading(false);
 	};
+	
 	// Thay đổi input file và xử lý nén ảnh ngay khi chọn
 	const handleFileChange = async (e) => {
 		const file = e.target.files[0];
@@ -240,6 +276,10 @@ function Forum() {
 								<p className={styles.postContentPreview}>
 									{post.content.substring(0, 100)}...
 								</p>
+								<div className={styles.postMeta}>
+									<div className={styles.postAuthor}>Bởi {post.name}</div>
+									<div className={styles.postTime}>{formatTime(post.createdAt)}</div>
+								</div>
 							</li>
 						))}
 					</ul>
@@ -250,6 +290,10 @@ function Forum() {
 					{selectedPost ? (
 						<div className={styles.postDetailContainer}>
 							<h3 className={styles.postDetailTitle}>{selectedPost.title}</h3>
+							<div className={styles.postDetailMeta}>
+								<div className={styles.postDetailAuthor}>Bởi {selectedPost.name}</div>
+								<div className={styles.postDetailTime}>{formatTime(selectedPost.createdAt)}</div>
+							</div>
 							<p className={styles.postDetailContent}>{selectedPost.content}</p>
 
 							<div className={styles.commentsContainer}>
@@ -258,12 +302,19 @@ function Forum() {
 								<ul className={styles.commentList}>
 									{comments.map((cmt) => (
 										<li key={cmt.id} className={styles.commentItem}>
-											<strong className={styles.commentAuthor}>
-												{cmt.name || "Ẩn danh"}:
-											</strong>{" "}
-											<span className={styles.commentContent}>
-												{cmt.content}
-											</span>
+											<div className={styles.commentHeader}>
+												<strong className={styles.commentAuthor}>
+													{cmt.name || "Ẩn danh"}
+												</strong>
+												<span className={styles.commentTime}>
+													{formatTime(cmt.createdAt)}
+												</span>
+											</div>
+											{cmt.content && (
+												<div className={styles.commentContent}>
+													{cmt.content}
+												</div>
+											)}
 											{cmt.fileUrl && (
 												<div className={styles.commentAttachment}>
 													<a
