@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Không Có Quyền Truy Cập</title>
+    <th:block th:replace="base :: styles"></th:block>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .access-denied-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .access-denied-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .error-icon {
+            font-size: 4rem;
+            color: #dc3545;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .error-title {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .error-message {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .error-details {
+            background: #f8f9fa;
+            border-left: 4px solid #dc3545;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+        }
+        
+        .error-details strong {
+            color: #333;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #007bff;
+            color: #007bff;
+        }
+        
+        .btn-outline:hover {
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .contact-info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 123, 255, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .contact-info i {
+            color: #007bff;
+            margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .access-denied-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="access-denied-container">
+        <div class="access-denied-card">
+            <!-- Icon cảnh báo -->
+            <div class="error-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            
+            <!-- Tiêu đề -->
+            <h1 class="error-title">Không Có Quyền Truy Cập</h1>
+            
+            <!-- Thông báo chính -->
+            <p class="error-message">
+                Xin lỗi, bạn không có quyền thực hiện thao tác này. 
+                Vui lòng liên hệ quản trị viên để được cấp quyền truy cập.
+            </p>
+            
+            <!-- Chi tiết lỗi (có thể tùy chỉnh) -->
+            <div class="error-details" th:if="${errorDetails}">
+                <strong>Chi tiết:</strong>
+                <span th:text="${errorDetails}">Bạn cần quyền ADMIN để truy cập trang này</span>
+            </div>
+            
+            <div class="error-details" th:unless="${errorDetails}">
+                <strong>Yêu cầu:</strong> Cần quyền quản trị viên
+                <br>
+                <strong>Trang:</strong> <span th:text="${pageName} ?: 'Trang hiện tại'"></span>
+                <br>
+                <strong>Người dùng:</strong> <span th:text="${username} ?: 'Chưa xác định'"></span>
+            </div>
+            
+            <!-- Nút hành động -->
+            <div class="action-buttons">
+                <a href="javascript:history.back()" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Quay Lại
+                </a>
+                
+                <a th:href="@{/}" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Trang Chủ
+                </a>
+                
+                <a th:href="@{/login}" class="btn btn-outline" th:if="${!isAuthenticated}">
+                    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                </a>
+            </div>
+            
+            <!-- Thông tin liên hệ -->
+            <div class="contact-info">
+                <p><i class="fas fa-info-circle"></i> 
+                   Nếu bạn cho rằng đây là lỗi, vui lòng liên hệ:
+                </p>
+                <p>
+                    <i class="fas fa-envelope"></i> Email: admin@company.com<br>
+                    <i class="fas fa-phone"></i> Hotline: 1900-xxxx
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Script để tự động chuyển hướng sau một thời gian (tùy chọn) -->
+    <script th:if="${autoRedirect}">
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 5000); // Chuyển về trang chủ sau 5 giây
+    </script>
+</body>
+</html>

@@ -6,6 +6,7 @@ package com.nvd.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import java.net.URLEncoder;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -54,7 +56,7 @@ public class SpringSecurityConfigs {
                 .csrf(c -> c.disable()).authorizeHttpRequests(requests
                 -> requests
                         .requestMatchers("/").authenticated()
-                        .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         //account
                         .requestMatchers(HttpMethod.GET, "/api/secure/profile").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/accounts").permitAll()
@@ -99,16 +101,27 @@ public class SpringSecurityConfigs {
                         .requestMatchers(HttpMethod.POST, "/api/repair/add").hasAnyRole("USER", "ADMIN")
                       
                         .anyRequest().authenticated())
+            .exceptionHandling(ex -> ex
+                .accessDeniedHandler(customAccessDeniedHandler())
+            )
                 .formLogin(form -> form.loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true").permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/login").permitAll());
+        
 //                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
+    @Bean
+    public AccessDeniedHandler customAccessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            String page = request.getRequestURI();
+            response.sendRedirect("/access-denied?page=" + page + "&details=" + 
+                                URLEncoder.encode("Bạn cần quyền cao hơn để truy cập trang này", "UTF-8"));
+        };
+    }
     @Bean
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
         return new HandlerMappingIntrospector();

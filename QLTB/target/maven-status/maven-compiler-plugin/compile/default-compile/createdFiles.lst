@@ -31,6 +31,7 @@ com\nvd\service\Impl\RepairTypeServiceImpl.class
 com\nvd\pojo\MaintenanceType.class
 com\nvd\filters\JwtFilter.class
 com\nvd\pojo\RepairType.class
+com\nvd\controllers\ErrorController.class
 com\nvd\repository\BaseRepository.class
 com\nvd\service\IncidentLevelService.class
 com\nvd\service\Impl\MaintenanceServiceImpl.class

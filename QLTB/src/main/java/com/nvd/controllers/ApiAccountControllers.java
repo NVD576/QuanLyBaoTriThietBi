@@ -81,7 +81,7 @@ public class ApiAccountControllers {
         if (p == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
+        p.setPassword(null);
         if (name != null && !name.trim().isEmpty()) {
             p.setName(name.trim());
         }

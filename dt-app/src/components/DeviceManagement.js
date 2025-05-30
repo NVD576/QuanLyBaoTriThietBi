@@ -61,7 +61,7 @@ const DeviceManagement = () => {
       if (cateId) url += `&cateId=${cateId}`;
       if (baseId) url += `&baseId=${baseId}`;
 
-      let res = await Apis.get(url);
+      let res = await authApis().get(url);
 
       if (res.data.length === 0 && page === 1) {
         setDevices([]);
