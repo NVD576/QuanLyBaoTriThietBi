@@ -101,9 +101,7 @@ public class SpringSecurityConfigs {
                         .requestMatchers(HttpMethod.POST, "/api/repair/add").hasAnyRole("USER", "ADMIN")
                       
                         .anyRequest().authenticated())
-            .exceptionHandling(ex -> ex
-                .accessDeniedHandler(customAccessDeniedHandler())
-            )
+
                 .formLogin(form -> form.loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/", true)
@@ -114,14 +112,7 @@ public class SpringSecurityConfigs {
 
         return http.build();
     }
-    @Bean
-    public AccessDeniedHandler customAccessDeniedHandler() {
-        return (request, response, accessDeniedException) -> {
-            String page = request.getRequestURI();
-            response.sendRedirect("/access-denied?page=" + page + "&details=" + 
-                                URLEncoder.encode("Bạn cần quyền cao hơn để truy cập trang này", "UTF-8"));
-        };
-    }
+
     @Bean
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
         return new HandlerMappingIntrospector();
