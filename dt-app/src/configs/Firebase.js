@@ -4,9 +4,9 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDynCi5ieCeNbjxq90S5USgaA-_CoB4NIk",
-  authDomain: "login-53f05.firebaseapp.com",
-  projectId: "login-53f05",
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
   // các config khác
 };
 
